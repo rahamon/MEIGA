@@ -1,0 +1,70 @@
+- Extraer Secciones:
+	una a una: ok
+	todas ok
+
+- Standard sin compilación
+	salir a error, fin del programa
+- Standard de la compilacion
+	ok
+	
+- Beeper con screen o sin screen en directorio
+	Screen vacía o Screeen
+- Beeper sin musica; sin efectos
+	moc objects
+- Beeper con musica o efectos
+	ok
+	
+- AY con ningun screen
+	crea screen vacio siempre, compila bank con 1 screens
+- AY con screen2
+	crea screen vacio siempre, compila bank con 2 screens
+- AY sin Levels
+	ok
+- AY sin Levels y sin musica
+	ok
+_ AY detecta Fx
+	ok
+- AY detecta music
+	ok
+- AY AK sin Levels y sin musica
+	ok
+_ AY Ak detecta Fx
+	ok
+- AY AK detecta music
+	ok
+- AYs Screens sin Levels
+	ok
+
+_ Flujo del menu:
+	
+_ Levels 48k
+	eliminar stage ok
+	cargar ZEro ok
+	informe: Stages/asm,taps y music ok
+	Ignora Screener ok
+- Levels 48 select stage
+	Sin escgoer nada:
+		carga stage 1 por defecto al salir:
+			corregido: DefTape_ptr en header.asm no re-carga Stage por defecto
+	Evitar Cargar la misma: fallo
+	Cargar otra con volumen de pistas: fallo
+		resolver: usar DefTape_ptr como lastTape
+	Comprobar datos:
+		Error si se pasa de 16k: corregido, evitar si es modelo 48k:
+		TEST: Solucionados
+		***Problema con seccion_screens_asm,
+	hay que coordinar las dos mediciones de proyectos diferentes? Resuelto, testeado.
+- level 48 default to ZERO: HECHO!
+
+_Levels 128k
+	-Comprueba Bank7 memory: ok
+	_compila sin stages: No, no encuentra sec*asm: resuelto
+Tests:
+dos juegos:
+juaego A				Juego B
+
+
+	
+
+	
+

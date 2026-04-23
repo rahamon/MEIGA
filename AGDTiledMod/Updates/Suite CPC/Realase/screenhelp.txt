@@ -1,0 +1,13 @@
+Lista de pantallas:		
+Screen vacio		
+Packed Screen vacio		
+		
+Invoke screens with the following instruction:		
+		
+			LET A = 1		
+			CALL 8195		
+		
+Includes five screens (.scr) (if you need) in the screens directory 
+Advanced: You can section into 3 parts to incorporate them	
+then in 3 different positions according to the included diagram		
+in the VIDEO DATA.xlsx schema in the Release directory		

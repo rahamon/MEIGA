@@ -1,0 +1,206 @@
+DEFINECONTROLS
+Defines the default control keys for a game.  DEFINECONTROLS expects a list of up to 11 keys either as ASCII codes or as characters defined within apostrophes.  The order is strictly UP, DOWN, LEFT, RIGHT, FIRE1, FIRE2, FIRE3, OPTION1, OPTION2, OPTION3, OPTION4.  The enter/return key is defined as 13, left shift as the tilde character ‘~’.  On the Spectrum, symbol shift is defined as ‘,’ or ‘.’.
+
+Example:
+DEFINECONTROLS  '2' 'W' '9' '0' 'M' 'Z' 'H' '1' '2' '3' '4'
+
+DEFINEFONT
+Defines the character set to be used in a game.  This is 768-byte 96 character, 8x8 pixel font.  On the CPC only the leftmost 5 pixels are displayed due to the screen resolution used.
+
+Example:
+DEFINEFONT      0 0 0 0 0 0 0 0
+                20 28 8 16 16 0 48 0
+                34 102 68 136 0 0 0 0
+                108 36 126 72 252 72 144 0
+                8 28 42 16 24 108 56 32
+                0 62 84 104 22 58 76 0
+                24 44 40 50 84 204 114 0
+                8 24 16 32 0 0 0 0
+                8 16 32 32 32 48 28 0
+                16 8 4 4 4 12 56 0
+                0 34 52 30 120 44 68 0
+                0 8 8 126 16 16 0 0
+                0 0 0 0 8 24 16 32
+                0 0 0 47 244 0 0 0
+                0 0 0 0 0 24 16 0
+                4 8 24 16 32 64 96 0
+                28 38 66 66 66 100 56 0
+                16 48 16 16 16 20 56 0
+                24 36 70 4 24 34 126 0
+                56 36 2 28 6 68 56 0
+                4 20 36 68 126 8 8 0
+                62 32 92 102 2 70 60 0
+                28 50 96 76 82 102 60 0
+                126 132 8 24 16 32 48 0
+                60 98 38 24 100 70 60 0
+                60 102 74 50 6 76 56 0
+                0 0 24 16 0 24 16 0
+                0 0 24 16 8 24 16 32
+                0 0 8 16 48 24 12 0
+                0 0 126 0 126 0 0 0
+                0 0 16 8 12 24 48 0
+                28 38 4 8 28 0 24 0
+                56 68 148 168 178 196 120 0
+                12 12 20 36 108 86 132 0
+                92 226 68 92 98 66 124 0
+                28 34 66 128 128 130 124 0
+                56 196 66 66 68 76 240 0
+                92 226 64 120 192 66 124 0
+                124 194 64 248 64 64 192 0
+                28 34 64 142 132 140 122 0
+                66 198 66 126 66 66 66 132
+                56 80 16 16 16 20 56 0
+                62 8 8 4 132 136 112 0
+                66 198 72 112 72 68 66 128
+                64 192 64 64 64 98 220 0
+                132 204 180 148 132 197 134 0
+                198 98 82 74 70 66 66 4
+                24 36 66 130 130 132 120 0
+                92 226 68 88 96 64 96 128
+                28 38 66 130 146 204 121 6
+                92 226 68 88 104 69 198 0
+                12 20 32 28 2 134 124 0
+                124 146 16 16 16 16 48 0
+                68 66 66 130 132 200 112 0
+                102 162 34 36 40 48 32 0
+                66 198 66 82 90 102 66 0
+                50 84 24 24 40 74 140 0
+                98 164 36 24 16 16 24 0
+                60 68 8 16 32 66 252 0
+                60 32 32 32 32 48 76 0
+                96 48 16 8 12 4 2 0
+                50 12 4 4 4 4 60 0
+                16 16 40 108 170 40 40 40
+                0 0 0 0 0 0 0 255
+                12 18 16 126 16 32 114 140
+                0 52 76 132 132 140 114 0
+                64 204 82 98 66 100 88 0
+                0 24 36 64 64 68 56 0
+                6 50 74 70 66 70 58 0
+                0 24 36 72 80 100 56 0
+                28 36 32 120 32 32 48 64
+                0 26 36 68 56 4 66 252
+                192 64 88 100 66 67 66 0
+                24 16 8 24 8 8 12 0
+                12 8 4 12 4 4 8 48
+                192 64 76 84 104 90 196 0
+                48 16 16 16 16 20 56 0
+                0 108 212 84 84 86 84 0
+                0 72 212 100 68 70 68 0
+                0 28 34 66 66 100 56 0
+                0 88 228 66 98 92 64 64
+                0 60 68 132 140 116 6 4
+                0 54 90 16 16 24 32 0
+                0 26 36 16 72 132 120 0
+                8 16 126 16 16 20 24 0
+                0 76 132 132 132 206 116 0
+                0 70 194 66 68 104 48 0
+                0 66 129 129 137 217 110 0
+                0 34 84 24 24 164 66 0
+                0 98 34 68 60 4 114 140
+                0 62 68 8 16 34 124 0
+                4 8 16 112 16 24 14 0
+                8 8 8 8 16 16 16 16
+                32 16 8 14 8 24 112 0
+                1 50 94 204 0 0 0 0
+                60 102 219 177 177 219 102 60
+
+DEFINEPALETTE
+AGD uses ULAplus on standard Spectrums and ULANext on the Timex/Next machines.  If no palette is defined AGD will use its own default palette.  A separate PALETTE command can be used in the program code to change individual palette entries.
+
+Spectrum
+AGD’s ULAplus palette consists of 64 different RGB values, 8 INK and 8 PAPER values, repeated for all 4 combinations of BRIGHT and FLASH.  The entire palette for a game can be defined with a single DEFINEPALETTE declaration followed by a list of 64 RGB values for the palette.
+
+Next
+AGD Next’s palette consists of 32 different RGB values, 16 for INK and 16 for PAPER.  The entire palette for a game can be defined with a single DEFINEPALETTE declaration followed by a list of 32 RGB values for the palette.
+
+Amstrad CPC
+The CPC’s palette consists of 16 different values ranging from 0 to 26 to represent the 27 available colours.  The entire palette for a game can be defined with a single DEFINEPALETTE declaration followed by a list of 16 colours.
+
+Example:
+DEFINEPALETTE   0 3 28 31 224 227 252 255 0 15 156 30 248 131 190 253
+                0 3 28 31 224 227 252 255 0 15 156 30 248 131 190 253
+                0 3 28 31 224 227 252 255 0 15 156 30 248 131 190 253
+                0 3 28 31 224 227 252 255 0 15 156 30 248 131 190 253
+
+MAP
+Map describes the layout of screens that make up the world the sprites inhabit.  It requires 2 parameters to start with: the WIDTH and STARTSCREEN. Width tells the compiler how many screens are arranged horizontally, STARTSCREEN tells AGD the screen number on which to start.  There is no need to specify a starting row and column, the compiler will automatically locate the STARTSCREEN in the map, wherever it is located.  Grid positions which contain no screen should be filled with the number 255.
+
+Example:
+; 4 screens wide, 4 down.  Player start at 2nd row, 3rd Column.
+MAP  WIDTH 4 STARTSCREEN 0
+     001 002 004 005
+     003 006 000 255
+     255 007 008 255
+     255 255 009 010
+
+DEFINEWINDOW
+Defines the size of the play area in character cells.  DEFINEWINDOW must be followed by 4 numbers: the distance from the edge, the distance from the left edge, the height and the width. 
+
+Example:
+DEFINEWINDOW 1 1 22 30
+
+DEFINESPRITE
+This defines the sprite graphics.  The first number following DEFINESPRITE specifies the number of frames.  This must then be followed by 32 bytes of graphic data (Spectrum and Next/Timex) or 80 (Amstrad CPC).  For the Spectrum, data order is bitmap row 0 left, bitmap row 0 right, bitmap row 1 left, bitmap row 1 right etc.  For the Amstrad data is organised top-left to top-right, then second row left to second row right and so on.  For those who understand these things, sprites are applied to the screen using the exclusive-or method for speed.  This means that on the CPC, sprites change colour when they move over different backgrounds.  When exporting CPC source, AGD looks at the top-left pixel colour of block 0, assumes all sprites will be moving over this colour, and adjusts the sprite data accordingly.  On other formats, areas of sprites that move over pixels that have already been set will be inverted.
+
+Example (Spectrum):
+DEFINESPRITE 1  ; 1 frame
+             7 224 31 248 63 252 127 254
+             127 254 255 255 255 255 255 255
+             255 255 255 255 255 255 127 254
+             127 254 63 252 31 248 7 224
+
+DEFINESCREEN
+This is used to set up the layouts of all the rooms, levels, screens or whatever you wish to call them and the parameters required will depend on the size of the play area defined in DEFINEWINDOW.  Each screen must consist of one byte for every row and column, so if your screen size is 30 characters across by 16 down you should arrange the numbers following each DEFINESCREEN declaration as 16 rows of 30 numbers.  It is recommended that spaces are used to separate the bytes and align the columns as this aids clarity.  AGD will automatically compress each screen to reduce its size.
+
+
+SPRITEPOSITION
+Any sprites to be placed on a screen should follow on from DEFINESCREEN.  SPRITEPOSITION requires 4 parameters for the sprite type (eg PLAYER). sprite image number, starting Y coordinate and starting X coordinate respectively.
+It is a good idea to have a SPRITEPOSITION for the player sprite on each screen so that AGD will know where to respawn the player should he lose a life on any particular screen.  The CPC compiler uses Spectrum coordinates in order to make conversions simpler.
+
+Example:
+DEFINESCREEN    ; 24 blocks across by 16 down
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+SPRITEPOSITION 0 0 64 80      ; Player, image 0 at 64,80
+SPRITEPOSITION 1 2 104 136    ; type 1, image 2 at 104,136
+
+DEFINEOBJECT
+Spectrum
+Each DEFINEOBJECT requires 36 parameters.  The first byte is the object’s attribute.  The next byte defines the screen upon which the object appears and the third and fourth define the y and x coordinates respectively.  The following 32 (Spectrum and Next/Timex) or 80 (CPC) bytes define the graphic image of the object and are ordered in an identical fashion to the bytes which define sprites.  So Spectrum data is ordered bitmap top left, bitmap top right, bitmap second row left, bitmap row second right down to the bottom row left and bottom row right.  CPC data is organised top-left to bottom right in the same way with 4 bytes for each line making up an image that is 8 pixels wide by 16 pixels high.
+
+Example (Spectrum):
+; Barrel, bright red, room 5, 32 pixels down, 128 across
+DEFINEOBJECT 66 5 32 128
+             31 240 42 168 86 212 64 4
+             128 2 182 218 182 218 182 218
+             182 218 182 218 182 218 128 2
+             64 4 86 212 42 168 31 240
+
+Timex/Next
+Each DEFINEOBJECT requires 35 parameters.  The first defines the screen upon which the object appears and the second and third define the y and x coordinates respectively.  The following 32 bytes define the graphic image of the object and are ordered in an identical fashion to the 32 bytes which define sprites.  So data is ordered bitmap top left, bitmap top right, bitmap second row left, bitmap row second right down to the bottom row left and bottom row right.
+
+Example:
+; Barrel, room 5, 32 pixels down, 128 across
+DEFINEOBJECT 5 32 128
+             31 240 42 168 86 212 64 4
+             128 2 182 218 182 218 182 218
+             182 218 182 218 182 218 128 2
+             64 4 86 212 42 168 31 240
+
+
+

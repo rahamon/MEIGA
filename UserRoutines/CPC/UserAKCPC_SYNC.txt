@@ -1,0 +1,201 @@
+Versión sincronizada.
+
+Con unos pequeñor cambios no será necesario que incluyas USER 96 en el MAINLOOP de tus juegos para escuchar tus músicas y efectos.
+En esta versión se ejecuta el sonido sincronizado con el EngineCPC.
+
+A continuación se muestran los pasos a seguir con la nueva versión:
+
+Primera parte
+
+Instalación de los programas dentro del directorio "SuiteCPC":
+Puedes descargar el archivo UserAK_CPC_SYNC.rar dentro de tu directorio "SuiteCPC". Este archivo hace las siguientes tareas por ti:
+
+-Crea dos nuevos directorios llamados "resources" y "Rasm" ambos dentro de "SuiteCPC"
+-Copia los Players "PlayerAkg.asm" y "PlayerAkg_SoundEffects.asm" que se incluyen en la instalación de "ARKOS TRACKET 2" a nuestro directorio "Rasm"
+-Copia plsnd.asm al directorio "Rasm"
+-Copia dos compilaciones ejemplo: AKMusic.asm y AKFX.asm al directorio "resources".
+-Copia "Music_Empty.asm" que se incluye en la instalación de "ARKOS TRACKET 2" en el directorio "resources" también.
+-Copia rasm.exe y fart.exe al directorio "Rasm"
+-Hace una copia de seguridad de tu "Build.bat" dentro del directorio "SuiteCPC" de tu instalación de MPAGD.
+-Crea un nuevo Build.bat para compilar la música. Compatible para otros propósitos.
+-Copia UserPlayerAkgWithSoundEffect_CPC.asm al directorio "SuiteCPC"
+
+Segunda Parte
+
+Deberás sustituir las dos compilaciones ejemplo: AKMusic.asm y AKFX.asm por las de tu juego con los mismos nombres:
+
+1-Edita tu música en tu editor favorito ARKOS TRACKET 2, https://www.julien-nevo.com/arkostracker/
+2-Construye una "Pieza Musical" o "Song". ARKOS TRACKET 2 permite agregar pequeñas "subsongs" en una compilación. Aprovecharemos esta propiedad del Arkos Tracker 2 para usar el comando selector de música "USER n"
+3-Crea otra "Song" a parte. Esta vez crea tus efectos de sonido como si fuerean istrumentos. Sigue las instrucciones en https://www.julien-nevo.com/arkostracker/index.php/sound-effects/
+Tambien puedes intentar este tutorial en https://pacmanzxspectrum.blogspot.com/2021/01/sesion-arkos-traker.html
+Ahora podrás invocar tus efectos de sonido con USER "100+n"
+4-Compila tu musica siguiendo las estrategias descritas en los enlaces anteriores.
+5-La intención de todo esto es conseguir dos archivos AKMusic.asm (paso 2) y AKFX.asm (paso 3) donde se guardará la información de las músicas y los efectos respectivamente.
+
+Tercera Parte
+
+1-Selecciona UserPlayerAkgWithSoundEffect_CPC.asm como tu rutina de usuario en tu editor MPAGD.
+2-Incluye en tu evento favorito "USER n" para invocar la subsong n de tu compilación musical.
+3-Incluye USER 18 para detener el player.
+4-Incluye USER 100+n para invocar el efecto n en tu banco de efectos
+5-El master player está ahora sincronizado con el motor del juego por lo que no hace falta nada más.
+6-Debes incluir "DELAY 2" en tu evento INTROMENU si quieres que suene tu música; ya que aquí no hay sincronización automática. Abajo hay un ejemplo.
+
+En inglés:
+
+Synchronized version.
+
+With a few small changes it will not be necessary to include USER 96 in the MAINLOOP of your games to listen to your music and effects.
+In this version the sound is executed in sync with the EngineCPC.
+
+Below are the steps to follow with the new version:
+
+First part
+
+Installing the programs inside the "SuiteCPC" directory:
+You can download the UserAK_CPC_SYNC.rar file inside your "SuiteCPC" directory. This file does the following tasks for you:
+
+-Create two new directories called "resources" and "Rasm" both inside "SuiteCPC"
+-Copy the Players "PlayerAkg.asm" and "PlayerAkg_SoundEffects.asm" that are included in the "ARKOS TRACKET 2" installation to our "Rasm" directory
+-Copy two sample builds: AKMusic.asm and AKFX.asm to the "resources" directory.
+-Copy "Music_Empty.asm" that is included in the "ARKOS TRACKET 2" installation in the "resources" directory as well.
+-Copy plsnd.asm to the "Rasm" directory
+-Copy rasm.exe and fart.exe to the "Rasm" directory
+-Make a backup of your "Build.bat" inside the "SuiteCPC" directory of your MPAGD installation.
+-Create a new Build.bat to compile the music. Compatible for other purposes.
+-Copy UserPlayerAkgWithSoundEffect_CPC.asm to the "SuiteCPC" directory
+
+Second part
+
+You must replace the two example compilations: AKMusic.asm and AKFX.asm for those of your game with the same names:
+
+1-Edit your music in your favorite editor: ARKOS TRACKET 2 , https://www.julien-nevo.com/arkostracker/
+2-Build a "Musical Piece" or "Song". ARKOS TRACKET 2 allows you to add "subsongs" in a compilation. We will take advantage of this Arkos Tracker 2 property to use the music selector command "USER n"
+3-Create another "Song". This time create your sound effects as if they were instruments. Follow the instructions at https://www.julien-nevo.com/arkostracker/index.php/sound-effects/
+You can also try this tutorial at https://pacmanzxspectrum.blogspot.com/2021/01/sesion-arkos-traker.html
+Now you can play your sound effects with USER "100+n"
+4-Compile your music following the strategies described in the previous links.
+5-The intention of all this is to get two files AKMusic.asm (step 2) and AKFX.asm (step 3) where the information of the music and the effects will be saved respectively.
+
+Third part
+
+1-Select UserPlayerAkgWithSoundEffect_CPC.asm as your user routine in your MPAGD editor.
+2-Include "USER n" in your favorite event to invoke subsong n of your music compilation.
+3-Include USER 18 to stop the player.
+4-Include USER 100+n to summon effect n in your effects bank
+5-The master player is now synchronized with the game engine so nothing else is needed.
+6-You must include "DELAY 2" in your INTROMENU event if you want your music to play; since there is no automatic synchronization here. Below is an example.
+
+Example: "DIAMOND GEEZER EVENT INTROMENU"
+
+EVENT INTROMENU
+
+INK 15
+PAPER 0
+CLS
+AT 4 9
+
+LET CONTROL = 99
+WHILE CONTROL >= 99
+    CLS
+    AT 5 9
+    PRINTMODE 1
+    PRINT "DIAMOND GEEZER"
+    PRINTMODE 0
+    AT 9 10
+    PRINT "1. KEYBOARD"
+    AT 11 10
+    PRINT "2. KEMPSTON"
+    AT 13 10
+    PRINT "3. SINCLAIR"
+    LET CONTROL = 99
+	USER 0			; play music subsong 0
+    WHILE CONTROL = 99
+		DELAY 2		; sync necesary in intro menu event.
+        IF KEY OPTION1
+            LET CONTROL = 0
+        ENDIF
+        IF KEY OPTION2
+            LET CONTROL = 1
+        ENDIF
+        IF KEY OPTION3
+            LET CONTROL = 2
+        ENDIF
+    ENDWHILE
+	USER 18			; stop the player
+ENDWHILE
+CLS
+
+Example: "DIAMOND GEEZER EVENT SPRITETYPE2"
+
+EVENT SPRITETYPE2
+
+IF SETTINGA = 0
+    IF SETTINGB = 66
+        LET SETTINGA = 1
+    ELSE
+        SUBTRACT 1 FROM SETTINGB
+    ENDIF
+ELSE
+    IF SETTINGB = 70
+        LET SETTINGA = 0
+    ELSE
+        ADD 1 TO SETTINGB
+    ENDIF
+ENDIF
+
+SPRITEINK SETTINGB
+
+IF COLLISION 0
+    REMOVE
+    EXPLODE 25
+    SPRITEINK 7
+    SCORE 100
+    USER 104		; sound effect 4
+    SUBTRACT 1 FROM A
+    IF A = 0
+        DELAY 50
+        WHILE T > 0
+            SUBTRACT 1 FROM T
+            SCORE 1
+            AT 12 26
+            DISPLAY SECONDS T
+            AT 3 25
+            SHOWSCORE
+            BEEP 50
+            DELAY 2
+        ENDWHILE
+        NEXTLEVEL
+    ENDIF
+    AT 3 25
+    SHOWSCORE
+ENDIF
+
+Example: "DIAMOND GEEZER EVENT LOSTGAME"
+
+EVENT LOSTGAME
+
+USER 18
+
+DELAY 50
+
+No olvides:
+Example: "DIAMOND GEEZER EVENT MAINLOOP1"
+
+EVENT MAINLOOP1
+
+; The master player is now synchronized with the game engine so nothing else is needed.
+
+; Update the bonus timer.
+ADD 1 TO S
+IF S > 25
+    SUBTRACT 25 FROM S
+    IF T > 0
+        SUBTRACT 1 FROM T
+    ENDIF
+    AT 12 26
+    DISPLAY SECONDS T
+ENDIF
+
+
+

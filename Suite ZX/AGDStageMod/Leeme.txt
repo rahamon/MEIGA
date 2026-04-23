@@ -1,0 +1,25 @@
+Para convertir un deleteme en archivo de nivel usar:
+
+MAKE.exe Nombre_de_nivel
+
+Relativiza todas las direcciones a una celde de memoria del origen de datos.
+
+Para unir archivos:
+for %f in (*.txt) do type "%f" >> unionsimple.txt
+
+ToDo:
+Por cada archivo deleteme.asm:
+	- Si es deleteme.asm entonces Contruye Nivel 0
+	- Si no Construye nivel 1,...,n
+	- Primero los tipo SPRITE
+	- Despues los tipo SREEN
+Para todos Almacena en banco7 direcciona bloque de memoria y edita seleccionde bloques.
+Para todos mide y establece Límite de memoria.
+
+EQU, que es el equivalente a ==
+NEQ, Sirve para comprobar que No es Igual.
+LSS, Para verificar si el numero es Menor
+LEQ, Para verificar si es menor o igual.
+GTR, Si es mayor
+GEQ, Si es Mayor e igual.
+

@@ -1,0 +1,356 @@
+[
+    {
+        "id": 1,
+        "name": "Block",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "PLATFORMBLOCK",
+            "WALLBLOCK",
+            "LADDERBLOCK",
+            "FODDERBLOCK",
+            "DEADLYBLOCK",
+            "CUSTOMBLOCK",
+            "WATERBLOCK",
+            "COLLECTABLE",
+            "EMPTYBLOCK",
+            "NO Data (Deleteme)",
+            "NULL"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 2,
+        "name": "Frame",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Frame",
+            "Last Frame",
+            "Skip"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 8,
+        "name": "Handling",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Hidden",
+            "Carrying",
+            "NoData (deleteme)"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 3,
+        "members": [
+            {
+                "name": "Type",
+                "propertyType": "Block",
+                "type": "string",
+                "value": "NULL"
+            }
+        ],
+        "name": "MPAGD.Block",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tile",
+            "tileset",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 14,
+        "members": [
+            {
+                "name": "DOWN",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "FIRE 1",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "FIRE 2",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "FIRE 3",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "LEFT",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "OPTION 1",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "OPTION 2",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "OPTION 3",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "OPTION 4",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "RIGHT",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "UP",
+                "type": "string",
+                "value": ""
+            }
+        ],
+        "name": "MPAGD.Controls",
+        "type": "class",
+        "useAs": [
+            "property",
+            "layer",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 5,
+        "members": [
+            {
+                "name": "Item of FRAMES",
+                "propertyType": "Frame",
+                "type": "string",
+                "value": "Frame"
+            }
+        ],
+        "name": "MPAGD.Image",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tile",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 19,
+        "members": [
+        ],
+        "name": "MPAGD.Inventary",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tileset",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 17,
+        "members": [
+            {
+                "name": "Room",
+                "type": "int",
+                "value": 0
+            }
+        ],
+        "name": "MPAGD.Location",
+        "type": "class",
+        "useAs": [
+            "property",
+            "object",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 7,
+        "members": [
+            {
+                "name": "StartRoom",
+                "propertyType": "Handling",
+                "type": "string",
+                "value": "Hidden"
+            }
+        ],
+        "name": "MPAGD.Object",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tile",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": false,
+        "id": 4,
+        "members": [
+            {
+                "name": "Type",
+                "propertyType": "Type",
+                "type": "string",
+                "value": "NULL"
+            }
+        ],
+        "name": "MPAGD.Position",
+        "type": "class",
+        "useAs": [
+            "object",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 11,
+        "members": [
+            {
+                "name": "Nombre",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "StartRoom",
+                "type": "bool",
+                "value": false
+            }
+        ],
+        "name": "MPAGD.Screen",
+        "type": "class",
+        "useAs": [
+            "property",
+            "map",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 15,
+        "members": [
+        ],
+        "name": "MPAGD.Sprite",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tileset",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 13,
+        "members": [
+            {
+                "name": "Nombre",
+                "type": "string",
+                "value": "Screen000"
+            }
+        ],
+        "name": "MPAGD.StartScreen",
+        "type": "class",
+        "useAs": [
+            "property",
+            "layer",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 12,
+        "members": [
+        ],
+        "name": "MPAGD.Window",
+        "type": "class",
+        "useAs": [
+            "property",
+            "object",
+            "project"
+        ]
+    },
+    {
+        "id": 18,
+        "name": "Screen",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Screen000",
+            "Screen001",
+            "Screen002"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 16,
+        "name": "Sprite",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Sprite000",
+            "Sprite001",
+            "Sprite002",
+            "Sprite003",
+            "Sprite004",
+            "Sprite005",
+            "Sprite006",
+            "Sprite007",
+            "Sprite008",
+            "Sprite009",
+            "Sprite010",
+            "Sprite011",
+            "Sprite012",
+            "Sprite013",
+            "Sprite014",
+            "Sprite015",
+            "Sprite016"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 10,
+        "name": "Type",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Player",
+            "Type1",
+            "Type2",
+            "Type3",
+            "Type4",
+            "Type5",
+            "Type6",
+            "Type7",
+            "Type8",
+            "NULL"
+        ],
+        "valuesAsFlags": false
+    }
+]

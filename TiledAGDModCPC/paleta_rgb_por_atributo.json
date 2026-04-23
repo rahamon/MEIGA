@@ -1,0 +1,210 @@
+[
+    {
+        "Indice atributo": 0,
+        "Bright": 0,
+        "Paleta indice": 0,
+        "RGB": [
+            0,
+            0,
+            0
+        ],
+        "R": 0,
+        "G": 0,
+        "B": 0
+    },
+    {
+        "Indice atributo": 1,
+        "Bright": 0,
+        "Paleta indice": 1,
+        "RGB": [
+            0,
+            0,
+            191
+        ],
+        "R": 0,
+        "G": 0,
+        "B": 191
+    },
+    {
+        "Indice atributo": 2,
+        "Bright": 0,
+        "Paleta indice": 2,
+        "RGB": [
+            191,
+            0,
+            0
+        ],
+        "R": 191,
+        "G": 0,
+        "B": 0
+    },
+    {
+        "Indice atributo": 3,
+        "Bright": 0,
+        "Paleta indice": 3,
+        "RGB": [
+            191,
+            0,
+            191
+        ],
+        "R": 191,
+        "G": 0,
+        "B": 191
+    },
+    {
+        "Indice atributo": 4,
+        "Bright": 0,
+        "Paleta indice": 4,
+        "RGB": [
+            0,
+            191,
+            0
+        ],
+        "R": 0,
+        "G": 191,
+        "B": 0
+    },
+    {
+        "Indice atributo": 5,
+        "Bright": 0,
+        "Paleta indice": 5,
+        "RGB": [
+            0,
+            191,
+            191
+        ],
+        "R": 0,
+        "G": 191,
+        "B": 191
+    },
+    {
+        "Indice atributo": 6,
+        "Bright": 0,
+        "Paleta indice": 6,
+        "RGB": [
+            191,
+            191,
+            0
+        ],
+        "R": 191,
+        "G": 191,
+        "B": 0
+    },
+    {
+        "Indice atributo": 7,
+        "Bright": 0,
+        "Paleta indice": 7,
+        "RGB": [
+            191,
+            191,
+            191
+        ],
+        "R": 191,
+        "G": 191,
+        "B": 191
+    },
+    {
+        "Indice atributo": 8,
+        "Bright": 1,
+        "Paleta indice": 8,
+        "RGB": [
+            0,
+            0,
+            0
+        ],
+        "R": 0,
+        "G": 0,
+        "B": 0
+    },
+    {
+        "Indice atributo": 9,
+        "Bright": 1,
+        "Paleta indice": 9,
+        "RGB": [
+            109,
+            36,
+            0
+        ],
+        "R": 109,
+        "G": 36,
+        "B": 0
+    },
+    {
+        "Indice atributo": 10,
+        "Bright": 1,
+        "Paleta indice": 10,
+        "RGB": [
+            255,
+            145,
+            0
+        ],
+        "R": 255,
+        "G": 145,
+        "B": 0
+    },
+    {
+        "Indice atributo": 11,
+        "Bright": 1,
+        "Paleta indice": 11,
+        "RGB": [
+            109,
+            0,
+            255
+        ],
+        "R": 109,
+        "G": 0,
+        "B": 255
+    },
+    {
+        "Indice atributo": 12,
+        "Bright": 1,
+        "Paleta indice": 12,
+        "RGB": [
+            218,
+            255,
+            0
+        ],
+        "R": 218,
+        "G": 255,
+        "B": 0
+    },
+    {
+        "Indice atributo": 13,
+        "Bright": 1,
+        "Paleta indice": 13,
+        "RGB": [
+            0,
+            145,
+            255
+        ],
+        "R": 0,
+        "G": 145,
+        "B": 255
+    },
+    {
+        "Indice atributo": 14,
+        "Bright": 1,
+        "Paleta indice": 14,
+        "RGB": [
+            255,
+            182,
+            182
+        ],
+        "R": 255,
+        "G": 182,
+        "B": 182
+    },
+    {
+        "Indice atributo": 15,
+        "Bright": 1,
+        "Paleta indice": 15,
+        "RGB": [
+            255,
+            255,
+            72
+        ],
+        "R": 255,
+        "G": 255,
+        "B": 72
+    }
+]

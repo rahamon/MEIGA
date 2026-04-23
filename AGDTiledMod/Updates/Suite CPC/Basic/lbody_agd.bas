@@ -1,0 +1,3 @@
+
+90 LOAD "AGDgame.bin",&2000
+100 CALL &2000

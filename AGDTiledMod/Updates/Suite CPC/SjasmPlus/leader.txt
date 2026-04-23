@@ -1,0 +1,4 @@
+	device AMSTRADCPC6128
+
+
+	org 2000+768

@@ -1,0 +1,118 @@
+; Rutinas para leer y escribir en DATA AGDScript		
+
+; rptrNN: direccion de datos para eventos NN
+rptrNN 	defw $				; direccion del puntero = rptr19
+rDataNN	defw $				; direccion de los datos = rdata19
+
+; WRITE en eventos NN
+; Necesita haber ejecutado GETPTRD previamente
+; por ejemplo para RESTARTSCREEN rptr14
+; --- Entradas:
+;		rptrNN  = defw <dir de rptrXX>   , p.ej. rptr19
+;		rDataNN = defw <dir de rdataXX>  , p.ej. rdata19
+;		vara  = byte a escribir
+; --- Efecto:
+;		*DE = (vara), DE++ y (rptrXX)=DE
+; --- Registros tocados: AF, DE, HL
+
+writeNN
+    ld hl,(rptrNN)     ; HL = &rptrXX (dirección del puntero)
+    ld e,(hl)        ; DE = (rptrXX)
+    inc hl
+    ld d,(hl)
+
+    ld a,d         ; ¿puntero sin inicializar? ($FFFF)
+    cp 255
+    jr nz,have_ptr
+    ld de,(rDataNN)    ; DE = base DATA
+    dec hl          ; HL -> low de rptrXX
+    ld a,e
+    ld (hl),a
+    inc hl
+    ld a,d
+    ld (hl),a        ; (rptrXX) = rDataNN
+
+have_ptr
+    ld a,(vara)      ; A = dato a escribir
+    ld (de),a        ; *DE = A
+    inc de          ; DE++
+
+    ; Actualizar (rptrXX) = DE
+    dec hl          ; HL -> low de rptrXX
+    ld a,e
+    ld (hl),a
+    inc hl
+    ld a,d
+    ld (hl),a
+    ret
+
+; -------------------------------------------------
+; Rutina: GETPTRD
+; Entrada: llamada con "CALL Getptrd"
+; Salida : HL = (PC después de CALL) + 3 para llegar a rdatNN
+; dos más atras esta el puntero (+1) para llegar a rptrNN
+; -------------------------------------------------
+; Captura automaticamente la direccion del puntero de datos
+; del evento para eso debes invocarla justo antes de RESTORE o DATA
+; Es neceasrio antes de nada para poder usar WRITE
+; ejemplo:
+;	USER n		
+;   RESTORE
+;
+Getptrd pop hl			; Recupera dirección de retorno (PC después del CALL)
+		push hl
+		ld de,3			; Offset de 3 bytes
+		add hl,de		; HL = retorno + 3
+		ld e,(hl)
+		inc hl
+		ld d,(hl)
+		push de
+		pop hl
+		ld (rptrNN),hl	; direccion del puntero en el evento NN
+		inc hl
+		inc hl
+		ld (rDataNN),hl	; direccion de los datos en el evento NN
+		ret
+
+; Establece el puntero en DATA + A
+; Para eventos NN usar SetPtr
+; Mueve puntero puntero A posiciones desde indice 0
+SetPtr	ld hl,(rDataNN)    ; HL = base DATA
+    ld a,(vara)      ; A = indice
+    ld b,0
+    ld c,a
+    add hl,bc         ; HL = DATA + A
+    ld de,(rptrNN)     ; DE = &rptrXX  (direccion del puntero)
+    ld a,l
+    ld (de),a        ; guardar low
+    inc de
+    ld a,h
+    ld (de),a        ; guardar high
+    ret
+		
+; Para sprites 0-8 usar MovePtr 
+; Para sprites mueve el puntero A posiciones desde el puntero actual
+MovePtr ld l,(ix+15)       ; HL = puntero actual
+    ld h,(ix+16)
+    ld a,(vara)      ; A = desplazamiento
+    ld b,0
+    ld c,a
+    add hl,bc         ; HL = HL + A
+    ld (ix+15),l       ; guardar nuevo puntero
+    ld (ix+16),h
+    ret
+
+; WRITE valor en Data en sprites solamente
+; Entrada: (vara) = dato a guardar
+; Efecto : escribe el dato en (ptr data sprite) y avanza el puntero
+; Regs   : modifica A, HL
+writeSP:
+    ld  l,(ix+15)
+    ld  h,(ix+16)     ; HL = puntero actual
+    ld  a,(vara)    ; A = dato a escribir
+    ld  (hl),a      ; [HL] = A
+    inc hl        ; HL = HL + 1
+    ld  (ix+15),l     ; guardar puntero actualizado
+    ld  (ix+16),h
+    ret
+

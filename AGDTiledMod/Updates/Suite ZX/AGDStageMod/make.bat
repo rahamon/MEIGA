@@ -1,0 +1,626 @@
+@echo off
+rem En AssemblyStage procede a la edicion
+setlocal enabledelayedexpansion
+set mmodel=%1
+
+REM test conversion
+	set modo=%2
+	if /I "%modo%"=="ConvertGame" goto ConvertGame
+	if /I "%modo%"=="EditStages" (
+		goto main
+	) else (
+		echo ERROR al escoger modo Levels
+		exit
+	)
+	
+
+:main
+set tipoSPR=0
+set tipoSCR=0
+set tipoBLK=0
+set tipoMSG=0
+set tipoOBJ=0
+set tipoEVE=0
+
+rem --------------------------------------------------------------------
+rem Menu Principal
+rem Stage Mod MEIGA 2024 por Ramon Fernandez Ameijeiras
+rem --------------------------------------------------------------------
+
+:Menu
+	cls
+	rem pause
+	call :BorrarZEROASMs
+	rem reset memory test
+		set "compilaresc="
+		rem test
+			rem goto CompileGameStages
+	echo "- Just ask if you want to Extract SECTIONS of data."
+		echo+
+		echo 	1.- YES, Extract Data now
+		echo 	2.- NO. What I want is to Edit a Scenario
+		echo 	3.- help
+		echo 	4.- Exit without compiling
+		echo 	ENTER.- To only compile the Game
+		echo+
+		set /p compilaresc=Answer number:
+		if "%compilaresc%" == "" goto CompileGameStages
+		if %compilaresc% == 1 goto FormExtraccion 
+		if %compilaresc% == 2 (
+			IF exist ..\Stages\SEC_*.asm (
+				goto FormStage
+				) else (
+					echo No data sections available.
+					echo Extract data or Compile the Game
+					pause
+					goto Menu
+				)
+			)
+		if %compilaresc% == 3 goto ayuda
+		if %compilaresc% == 4 (
+			echo Program completed.
+			exit
+			)
+	goto Menu
+
+	rem Opciones del menu:
+	rem CompileGameStages
+	rem FormExtraccion
+	rem FormStage
+	rem Menu
+	rem Exit
+
+rem --------------------------------------------------------------------
+rem I Extracción de Secciones, FormExtraccion
+rem --------------------------------------------------------------------
+		
+:FormExtraccion
+	cls
+	rem pause
+	rem reset memory test
+		set tiposec=""
+	call :ListaSlots
+	echo "- Solo preguntar el tipo de datos que quieres Extraer:"
+		if %tipoSPR% == 0 echo	1.- Sprites 
+		if %tipoSCR% == 0 echo	2.- Rooms 
+		if %tipoBLK% == 0 echo	3.- Bloks
+		if %tipoMSG% == 0 echo	4.- Messages
+		if %tipoOBJ% == 0 echo	5.- Objects
+		if %tipoEVE% == 0 echo	6.- Events
+		echo	7.- all
+		echo	8.- cancel all
+		echo	9.- help
+		echo	10.- Exit
+		echo+
+		set /p tiposec=Answer number:
+		if %tiposec% == "" goto FormExtraccion
+	rem comprobar que no se repite la eleccion		
+		if %tiposec% == 1 set tipoSPR=1
+		if %tiposec% == 2 set tipoSCR=1
+		if %tiposec% == 3 set tipoBLK=1
+		if %tiposec% == 4 set tipoMSG=1
+		if %tiposec% == 5 set tipoOBJ=1
+		if %tiposec% == 6 set tipoEVE=1
+		if %tiposec% == 7 (
+			set tipoSPR=1
+			set tipoSCR=1
+			set tipoBLK=1
+			set tipoMSG=1
+			set tipoOBJ=1
+			set tipoEVE=1
+			goto FormSecName
+		)
+		if %tiposec% == 8 goto main
+		if %tiposec% == 9 goto ayuda
+		if %tiposec% == 10 goto Menu
+		if %tiposec% gtr 10 goto FormExtraccion
+		set /a Slots=%tipoSPR%+%tipoSCR%+%tipoBLK%+%tipoMSG%+%tipoOBJ%+%tipoEVE%
+		if %Slots% leq 5 (
+			goto FormAddSlot
+			) else (
+			goto FormSecName 
+			)
+		goto FormExtraccion
+
+	rem Opciones del menu Extracción de Secciones:
+	rem FormAddSlot
+	rem FormSecName
+	rem FormExtraccion
+	rem main
+	rem ayuda
+	rem Menu
+	
+:FormAddSlot
+	cls
+	rem pause
+	set compilaresc=""
+	call :ListaSlots
+	echo "- Do you want to extract some more?"
+		echo+
+		echo 	1.- Yes, Extract other Data
+		echo 	2.- No, Compile the Data selection
+		echo	3.- cancel all
+		echo 	4.- help
+		echo+
+		set /p compilaresc=Answer number:
+		if %compilaresc% == 1 goto FormExtraccion 
+		if %compilaresc% == 2 goto FormSecName
+		if %compilaresc% == 3 goto main 
+		if %compilaresc% == 4 goto ayuda 
+	goto FormAddSlot
+
+	rem Opciones del dialogo FormAddSlot:
+	rem FormExtraccion
+	rem FormSecName
+	rem main
+	rem ayuda
+	rem FormAddSlot
+	
+rem --------------------------------------------------------------------
+rem Compilación de Stage, FormSecName
+rem --------------------------------------------------------------------
+	
+:FormSecName
+	cls
+	rem pause
+	set "nStage="
+	call :ListaSlots
+	echo " - What name will the sections have?? (6 letras)
+	echo+
+	set /p nStage=name:
+	set Stage_name=%nStage:~0,6%
+	if "%nStage%" == "" goto FormSecName
+
+	echo Processing... Wait...
+	call :EstractSEC	>nul
+	goto Menu
+
+	rem Opciones del formulario FormSecName:
+	rem FormSecName
+	rem EstractSEC
+	rem Menu
+	
+rem --------------------------------------------------------------------
+rem Rutinas Extraccion de datos
+rem --------------------------------------------------------------------
+
+:EstractSEC
+rem Secciona
+	call Seccionar %Stage_name%
+rem escoge secciones
+	if %tipoSPR% == 1 move SEC_%Stage_name%_SPR.asm ..\Stages\		>nul
+	if %tipoSCR% == 1 (
+		move SEC_%Stage_name%_SCR.asm ..\Stages\		>nul
+		rem Añadir map ***
+		move SEC_%Stage_name%_Map.asm ..\Stages\		>nul
+		move SEC_%Stage_name%_Ene.asm ..\Stages\		>nul
+		)
+	if %tipoBLK% == 1 move SEC_%Stage_name%_BLK.asm ..\Stages\		>nul
+	if %tipoMSG% == 1 move SEC_%Stage_name%_MSG.asm ..\Stages\		>nul
+	if %tipoOBJ% == 1 move SEC_%Stage_name%_OBJ.asm ..\Stages\		>nul
+	if %tipoEVE% == 1 move SEC_%Stage_name%_EVE.asm ..\Stages\		>nul
+	rem borra el resto
+		if exist SEC_%Stage_name%_*.asm del SEC_%Stage_name%_*.asm			
+	GOTO:EOF	
+	
+:ListaSlots
+	echo	"The following sections of data will be compiled:"
+		if %tipoSPR% == 1 echo	1.- Sprites 
+		if %tipoSCR% == 1 echo	2.- Rooms 
+		if %tipoBLK% == 1 echo	3.- Bloks
+		if %tipoMSG% == 1 echo	4.- Mesages
+		if %tipoOBJ% == 1 echo	5.- Objects
+		if %tipoEVE% == 1 echo	6.- Events
+		echo+
+	GOTO:EOF	
+	
+rem --------------------------------------------------------------------
+rem Formulario de Stages, FormStage
+rem --------------------------------------------------------------------
+
+:FormStage
+	cls
+	rem pause
+	rem call :BorrarZEROASMs
+	set "nStage="
+	call :ListaStages
+	echo " - Enter the name of the Scenario to Create/Edit? (6 letters)
+		echo+
+		set /p nStage=name:
+		set Stage_name=%nStage:~0,6%
+		if "%nStage%" == "" goto FormStage
+	
+	call :LoadStageSecs
+	rem call :BorrarStageASMs
+
+	rem Opciones del Formulario de Stages:
+	rem FormStage
+	rem LoadStageSecs
+	
+rem --------------------------------------------------------------------
+rem II Menu de Stages, FormStage
+rem --------------------------------------------------------------------
+	
+:FormStageSlots
+	cls
+	rem pause
+	set anular=""
+	set ayuda=""
+	set Compilar=""
+	set salir=""
+	set tiposlot=""
+	echo Working with the stage %Stage_name%
+	call :ListaSeccionesDatos
+		if %secciones% == 0 (
+			goto Menu
+			)
+		set /a anular=secciones+1
+		set /a ayuda=secciones+2
+		set /a Compilar=secciones+3
+		set /a salir=secciones+4
+		echo		%anular%.- Delete Stage
+		echo		%ayuda%.- Help
+		echo		%Compilar% - Compile Stage
+		echo		%salir%.- Exit
+		echo+
+		call :listaSelectedSlots
+	echo "- Just ask what SECTION you want to include in your Stage."
+		REM set anular=%secciones%
+		set /p tiposlot=Respuesta numero:
+	rem comprobar que no se repite la eleccion
+		rem call :checkSlots
+		if %tiposlot% == "" goto FormStageSlots 
+		if %tiposlot% == %anular% (
+			goto EliminarStage
+			)
+		if %tiposlot% == %ayuda% goto ayuda
+		if %tiposlot% == %Compilar% goto CreaStage
+		if %tiposlot% == %salir% (
+			if exist ..\Stages\Selected\*.asm del ..\Stages\Selected\*.asm
+			goto main
+			rem goto CompileGameStages?
+			)
+		if %tiposlot% gtr 0 (
+			if %tiposlot% leq %secciones% goto AddSlotToStage
+			)
+		goto FormStageSlots
+
+	rem Opciones del Menu de Stages:
+	rem EliminarStage
+	rem ayuda
+	rem CreaStage
+	rem main
+	rem AddSlotToStage
+	rem FormStageSlots
+	rem Menu
+
+rem --------------------------------------------------------------------
+rem Add Data Stages
+rem --------------------------------------------------------------------
+			
+:AddSlotToStage
+	set /a count=0
+	for %%a in ( "..\Stages\SEC_*.asm" ) do (
+			set selected=%%~nxa
+			rem nombre sin extension
+				set selected_nombre=%%~na
+			call :checkmatch
+			)
+	rem checkSlot
+	set slot=%nombre_seccion:~-3%
+	IF exist ..\Stages\Selected\*%slot%* (
+		echo Slot %slot% busy! choose another
+		pause
+		) else (
+			copy ..\Stages\%nombre_seccion%.asm ..\Stages\Selected\		>nul
+		)
+	goto FormStageSlots
+	exit
+
+rem --------------------------------------------------------------------
+rem Persiste Stage Dialogo 
+rem --------------------------------------------------------------------
+
+:CreaStage
+	rem borra toda Persistencia de los asm del Escenario en Stages y AssemblyStage
+		call :BorrarStageASMs
+	rem WriteStage Stage_name a partir de la seleccion de datos y actualiza el banco
+		if exist ..\Stages\Selected\*.asm (
+			call WriteStage %Stage_name%
+			echo Stage %Stage_name% generated!
+			call :AcualizaStageBank
+			rem limpia
+				if exist ..\Stages\Selected\SEC*.asm del ..\Stages\Selected\SEC*.asm
+		) else (
+			echo Empty stage, choose at least one section
+			pause
+			goto FormStageSlots
+		)
+
+	:AddStage
+		cls
+		set compilaresc=""
+		call :ListaStages
+		echo "- Do you want to edit a Scenario?"
+			echo+
+			echo 	1.- Yes, Edit a Scenario
+			echo 	2.- No, Exit and Return to Menu
+			echo 	3.- help
+			echo+
+			set /p compilaresc=Answer number:
+			REM if %compilaresc% == "" goto AddStage
+			if %compilaresc% == 1 goto FormStage 
+			if %compilaresc% == 2 goto main 
+			if %compilaresc% == 3 goto ayuda 
+		goto AddStage
+		
+	rem Opciones del Dialogo:
+	rem FormStage
+	rem main
+	rem ayuda
+	
+rem --------------------------------------------------------------------
+rem Resto de Rutinas Stages
+rem --------------------------------------------------------------------
+
+:EliminarStage
+
+	rem borra todos los asm del Escenario
+		if exist ..\Stages\Selected\SEC_*.asm del ..\Stages\Selected\SEC_*.asm
+		call :BorrarStageASMs
+		call :AcualizaStageBank
+		goto FormStageSlots
+		
+:AcualizaStageBank
+	rem Actualiza Bank para volver a crear
+		echo+		>> StagesBank.txt
+		echo Stages list:		>> StagesBank.txt
+	rem limpia
+		if exist ..\Stages\Bank\SEC_*.asm del ..\Stages\Bank\SEC_*.asm
+		if exist ..\Stages\Bank\*bin* del ..\Stages\Bank\*bin*
+	rem actualiza
+		set /a bancos=0
+		for %%e in ( "..\Stages\Stage_*.asm" ) do (
+			set /a bancos+=1
+			echo !bancos! %%~ne		>> StagesBank.txt
+			for /f "tokens=2" %%a in (..\Stages\%%~ne.asm) do (
+				set "thisStage=%%~ne"
+				if "!thisStage:~6!" == "ZERO" (
+					REM skip Datos sección ZERO
+				) else (
+				echo 		%%~na		>> StagesBank.txt
+				)
+				copy ..\Stages\%%a.asm ..\Stages\Bank		>nul
+			)
+		)
+		echo+ 		>> StagesBank.txt
+		echo		Use in your scripts:		>> StagesBank.txt
+		echo			LET A = n			; n = Stage to Select 		>> StagesBank.txt
+		echo			CALL 24835			; LOAD from BANK		>> StagesBank.txt
+		echo+ 		>> StagesBank.txt
+	GOTO:EOF
+	
+:LoadStageSecs	
+	rem carga secciones en Selected
+		for /f "tokens=2" %%a in (..\Stages\Stage_%Stage_name%.asm) do (
+			copy ..\Stages\%%a.asm ..\Stages\Selected		>nul
+		)
+	GOTO:EOF
+
+:BorrarStageASMs
+	rem limpia Persistencia de ..\Stages
+		if exist ..\Stages\Tap%nStage%*.asm del ..\Stages\Tap%nStage%*.asm
+		if exist ..\Stages\Stage_%nStage%*.asm del ..\Stages\Stage_%nStage%*.asm
+		if exist ..\AssemblyStage\Stage_%Stage_name%.asm del ..\AssemblyStage\Stage_%Stage_name%.asm
+		if exist ..\AssemblyStage\Tap%Stage_name%*.asm del ..\AssemblyStage\Tap%Stage_name%*.asm	
+	GOTO:EOF
+	
+:BorrarZEROASMs
+	rem limpia ZERO también
+	rem if %modsnd% gtr 1 (
+		if exist ..\Stages\Stage_ZERO.asm del ..\Stages\Stage_ZERO.asm
+		if exist ..\Stages\*ZERO*.* del ..\Stages\*ZERO*.* 
+		if exist ..\Stages\SEC_*.bin del ..\Stages\SEC_*.bin
+	rem	)
+	GOTO:EOF
+
+:ListaStages
+	echo - Stages:
+		echo+
+		for %%a in ( "..\Stages\Stage*.asm" ) do (
+				rem nombre sin extension
+					echo 	%%~na
+					for /f "tokens=2" %%a in (..\Stages\%%~na.asm) do (
+						echo 		%%~na
+						rem	)
+					)
+				)
+	GOTO:EOF
+		
+:checkmatch
+	set /a count+=1
+	if %count% == %tiposlot% (
+		set nombre_seccion=%selected_nombre%
+		)
+	GOTO:EOF	
+	
+:ayuda
+	rem textos aquí....
+	GOTO:EOF
+
+:ListaSeccionesDatos		
+	echo - I present to you this list OF compiled SECTIONS available:
+		echo+
+		set/A secciones=0
+		for %%a in ( "..\Stages\SEC_*.asm" ) do (
+				set nombre_seccion=%%~nxa
+				rem nombre sin extension
+					set nombre=%%~na
+				set /a secciones+=1
+				call :Presenta
+				)
+	GOTO:EOF
+	
+:listaSelectedSlots
+	echo - Stage %Stage_name% composed by:
+		echo+
+		for %%a in ( "..\Stages\Selected\*.asm" ) do (
+				rem nombre sin extension
+					echo 	%%~na
+				)
+	GOTO:EOF
+	
+:Presenta
+	echo 	%secciones%.- %nombre%
+	GOTO:EOF
+
+rem --------------------------------------------------------------------
+rem Stage Mod MEIGA 2024 por Ramon Fernandez Ameijeiras
+rem --------------------------------------------------------------------
+	
+:ConvertGame
+rem limpieza inicial
+	if exist ..\Stages\Tap*.asm del ..\Stages\Tap*.asm		>nul
+	if exist ..\Stages\*ZERO*.asm del ..\Stages\*ZERO*.asm		>nul
+	if exist ..\Stages\Common\*ZERO*.asm del ..\Stages\Common\*ZERO*.asm		>nul
+
+rem ReLoad Bank
+	call :AcualizaStageBank
+		
+rem Selecciona Datos del JUEGO en AssemblyStage
+	call Seccionar ZERO
+	rem SELECCIONA SECCIONES Stage ZERO
+		for %%a in (Spr Scr Blk Msg Ene Map Obj Eve) do (
+			move SEC_ZERO_%%a.asm ..\Stages\		>nul
+			)
+	rem SELECCIONA el resto para agrupar en CommonData
+		move SEC_ZERO_*.asm ..\Stages\Common\		>nul
+	rem AGRUPA SECCIONES CommonData
+		for %%f in ( "..\Stages\Common\SEC_*.asm" ) do (
+				rem echo %%f
+				type "%%f" >> CommonData.asm
+			)
+	rem CORRECCION codificacion texto
+		..\tools\fart --remove --c-style CommonData.asm "\xA0"		>nul
+
+	rem MIDE y Edita Slots.asm y Poninters.asm a partir de asms en Bank, 128k y 48k
+		copy ..\Stages\SEC_ZERO*.asm ..\Stages\Bank\		>nul
+		call BuildSlots %mmodel%
+	rem Edita Stage ZERO, 128k y 48k
+		copy ..\Stages\SEC_ZERO*.asm ..\Stages\Selected\		>nul
+		call WriteStage ZERO
+		call :AcualizaStageBank
+		if exist ..\Stages\Selected\*.asm del ..\Stages\Selected\*.asm		>nul
+	REM rem trae fuentes ZERO para AssemblyStage, 48k y 128k
+		copy ..\Stages\SEC_ZERO*.asm ..\AssemblyStage\		>nul
+
+:CompilaTODO		
+	rem Compila TODO Data in Bank, bin para 48k y para el 128k los zx7
+		for %%a in ( "..\Stages\Bank\*.asm" ) do (
+			set nombre=%%~na
+			if "%%~nxa" == "SEC_ZERO_Eve.asm" (
+				rem reserva original
+				copy ..\Stages\Bank\SEC_ZERO_Eve.asm ..\Stages\Bank\SEC_ZERO_Eve_temp.asm
+				copy Symbol.asm ..\Stages\Bank\
+				echo 		include "Symbol.asm" >> ..\Stages\Bank\SEC_ZERO_Eve_temp.asm
+				..\tools\Pasmo.exe ..\Stages\Bank\SEC_ZERO_Eve_temp.asm ..\Stages\Bank\SEC_ZERO_Eve.bin	>nul
+				..\tools\zx7 ..\Stages\Bank\SEC_ZERO_Eve.bin		>nul
+				del ..\Stages\Bank\Symbol.asm
+				del ..\Stages\Bank\SEC_ZERO_Eve_temp.asm
+			) else (
+				if "!nombre:~-3!" == "Eve" (
+					rem reserva original
+					copy ..\Stages\Bank\%%~nxa ..\Stages\Bank\%%~na_temp.asm
+					copy Symbol.asm ..\Stages\Bank\
+					echo 		include "Symbol.asm" >> ..\Stages\Bank\%%~na_temp.asm
+					..\tools\Pasmo.exe ..\Stages\Bank\%%~na_temp.asm ..\Stages\Bank\%%~na.bin
+					..\tools\zx7 ..\Stages\Bank\%%~na.bin		>nul
+					del ..\Stages\Bank\Symbol.asm
+					del ..\Stages\Bank\%%~na_temp.asm
+				) else (		
+					..\tools\Pasmo.exe --bin ..\Stages\Bank\%%~nxa ..\Stages\Bank\%%~na.bin
+					..\tools\zx7 ..\Stages\Bank\%%~na.bin		>nul
+				)
+			)
+		)
+	rem Por cada Seccion bin informa
+		echo+ 	>> StagesBank.txt
+		echo Tamaño de Datos en Game		>> StagesBank.txt
+		for %%a in ("..\Stages\Bank\*.bin") do (
+			echo 	%%~na	%%~za		>> StagesBank.txt
+		)
+		echo+ 			>> StagesBank.txt
+	rem Trae Binarios a AssemblyStage, 128k
+		copy ..\Stages\Bank\SEC_*.zx7 ..\AssemblyStage\		>nul
+		
+	rem Edita resto de asembles Para Banco de datos, 128k
+		call Stagesizer
+		rem Limpia todos los binarios
+			if exist ..\Stages\Bank\*.bin* del ..\Stages\Bank\*.bin*		>nul
+
+	rem Genera Stages Packs, 128k		<------ estamos aqui
+		call CreateStages
+
+:TapVoumenConstructor
+	:: Construye Volumen cinta			<------ Crear ALLGame.tap a partir de seccionarlo todo
+		if %mmodel% == 1 (
+			:: Por cada "stage" inspecciona sus secciones, copialas a select y escribe los "stage"
+				for %%e in ( "..\Stages\Stage_*.asm" ) do (
+					set nombre=%%~ne
+					set tnombre=!nombre:~6!
+					rem echo !tnombre!
+					for /f "tokens=2" %%s in (..\Stages\%%~ne.asm) do (
+						rem echo 		%%~ns
+						copy ..\Stages\%%s.asm ..\Stages\Selected		>nul
+					)
+					call WriteTapeStage !tnombre!
+					if exist ..\Stages\Selected\SEC*.asm del ..\Stages\Selected\SEC*.asm
+				)
+				rem limpia estos trabajos
+					if exist ..\Stages\SEC*.bin del ..\Stages\SEC*.bin
+					
+				copy ..\Stages\Bank\*.asm ..\AssemblyStage\		>nul
+				:: Compila el volumen cara B en cinta, antes prepara Symbol.asm
+					rem modifica Symbol.asm en Eventos
+						copy ..\Realase\last_Symbol_Eve_48k.asm ..\AssemblyStage\Symbol_Eve.asm
+						..\Tools\fart SEC*Eve.asm ";include \"Symbol.asm\"" "include \"Symbol_Eve.asm\""		>nul
+					rem compila
+						call TapVolumer
+						
+					rem restaura Symbol.asm en Eventos
+						..\Tools\fart SEC*Eve.asm "include \"Symbol_Eve.asm\"" ";include \"Symbol.asm\""		>nul
+					if exist Symbol_Eve.asm del Symbol_Eve.asm
+				rem Construye CARA B
+					rem move *.tap ..\AssemblyStage\		>nul
+					for %%a in ( "*00.tap" ) do (
+						type "%%a" >> VT.tap
+						rem echo %%a
+						)
+			)
+		
+	rem Trae secciones para propósito general
+			copy ..\Stages\Bank\*.asm ..\AssemblyStage\		>nul
+			
+	GOTO:EOF
+	
+:mideBank
+	rem echo if "%etiqueta:~4,-4%" neq "ZERO" (
+	if "%etiqueta:~4,-4%" neq "ZERO" (
+		set /a SizeBank=%SizeBank%+%size%
+		)
+	GOTO:EOF	
+	
+:CompileGameStages
+	echo+
+	echo Stage Mod MEIGA 2024 por Ramon Fernandez Ameijeiras
+	call :ConvertGame
+	GOTO:EOF
+	
+:error
+	echo error
+	pause
+	exit
+	
+:RealaseStage
+	
+	GOTO:EOF

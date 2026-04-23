@@ -1,0 +1,8 @@
+5 MODE 0
+10 MEMORY &1FFF
+70 LOAD "sound.bin",&2000		
+80 CALL &2000		
+
+90 LOAD "AGDgame.bin",&2000
+100 CALL &2000
+

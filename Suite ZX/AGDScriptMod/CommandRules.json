@@ -1,0 +1,26 @@
+{
+  "LOOPOFF":   { "type": "macro", "replace": "LET RND = 0 USER 100" },
+  "STOPMUSIC": { "type": "macro", "replace": "SILENCE" },
+  "MONITOR":   { "type": "macro", "replace": "LET RND = 36 USER 100" },
+
+  "JUMPSTAGE": {
+    "type": "int_arg_line",
+    "on_ok":   "LET RND = {n} CALL 24835",
+    "on_zero": "ERROR ; JUMPSTAGE: {raw} el valor no puede ser 0"
+  },
+  "PLAYMUSIC": {
+    "type": "int_arg_line",
+    "on_ok":   "LET RND = {n} USER 100",
+    "on_zero": "ERROR ; PLAYMUSIC: {raw} no es un valor válido"
+  },
+  "PLAYFX": {
+    "type": "int_arg_line",
+    "on_ok":   "LET RND = {n} USER 101",
+    "on_zero": "ERROR ; PLAYFX: {raw} no es un valor válido"
+  },
+  "PRINTSPLASH": {
+    "type": "int_arg_line",
+    "on_ok":   "LET A = {n} CALL 24838",
+    "on_zero": "ERROR ; PRINTSPLASH: {raw} el valor no puede ser 0"
+  }
+}

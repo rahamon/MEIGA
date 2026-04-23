@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<map version="1.10" tiledversion="1.11.2" class="MPAGD.Enviroment" orientation="orthogonal" renderorder="left-up" compressionlevel="0" width="32" height="24" tilewidth="8" tileheight="8" infinite="0" parallaxoriginx="1" parallaxoriginy="1" nextlayerid="12" nextobjectid="8">
+ <editorsettings>
+  <export target="AGD.csv" format="csv" />
+ </editorsettings>
+ <group id="6" name="Enviroment" class="MPAGD.Enviroment">
+  <objectgroup id="8" name="DEFINECONTROLS" class="MPAGD.Controls" locked="1">
+   <properties>
+    <property name="DOWN" value="A" />
+    <property name="FIRE 1" value="M" />
+    <property name="FIRE 2" value="Z" />
+    <property name="FIRE 3" value="H" />
+    <property name="LEFT" value="O" />
+    <property name="OPTION 1" value="1" />
+    <property name="OPTION 2" value="2" />
+    <property name="OPTION 3" value="3" />
+    <property name="OPTION 4" value="4" />
+    <property name="RIGHT" value="P" />
+    <property name="UP" value="Q" />
+   </properties>
+  </objectgroup>
+  <objectgroup id="11" name="STARTSCREEN" class="MPAGD.StartScreen" locked="1">
+   <properties>
+    <property name="Nombre" value="SCREEN000.tmx" />
+   </properties>
+  </objectgroup>
+  <objectgroup id="3" name="DEFINEWINDOW" class="MPAGD.Window">
+   <object id="1" name="WINDOW" type="MPAGD.window" x="8" y="8" width="240" height="144" />
+   <object id="5" name="TV" type="MPAGD.TV" x="0" y="0" width="256" height="192" visible="0" />
+  </objectgroup>
+ </group>
+</map>

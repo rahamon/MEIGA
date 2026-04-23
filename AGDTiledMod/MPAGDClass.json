@@ -1,0 +1,458 @@
+[
+    {
+        "id": 1,
+        "name": "Block",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "PLATFORMBLOCK",
+            "WALLBLOCK",
+            "LADDERBLOCK",
+            "FODDERBLOCK",
+            "DEADLYBLOCK",
+            "CUSTOMBLOCK",
+            "WATERBLOCK",
+            "COLLECTABLE",
+            "EMPTYBLOCK",
+            "NO Data (Deleteme)",
+            "NULL"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 21,
+        "name": "ConvertMode",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "ConvertGame",
+            "EditStages"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 2,
+        "name": "Frame",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Frame",
+            "Last Frame",
+            "Skip"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 3,
+        "name": "Handling",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Hidden",
+            "Carrying",
+            "NoData (deleteme)"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 4,
+        "members": [
+            {
+                "name": "Compilador Stages",
+                "propertyType": "ConvertMode",
+                "type": "string",
+                "value": "ConvertGame"
+            },
+            {
+                "name": "Sound",
+                "propertyType": "SoundMod",
+                "type": "string",
+                "value": "Standard"
+            },
+            {
+                "name": "Stages",
+                "type": "bool",
+                "value": false
+            }
+        ],
+        "name": "MEIGA.Mods",
+        "type": "class",
+        "useAs": [
+            "layer",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 5,
+        "members": [
+            {
+                "name": "INFRONT",
+                "type": "bool",
+                "value": false
+            },
+            {
+                "name": "INVENTARY",
+                "type": "bool",
+                "value": false
+            },
+            {
+                "name": "MASKAGD",
+                "type": "bool",
+                "value": false
+            },
+            {
+                "name": "SCROLL",
+                "type": "bool",
+                "value": false
+            },
+            {
+                "name": "SOUNDFX",
+                "type": "bool",
+                "value": false
+            },
+            {
+                "name": "SPECIALISTS",
+                "type": "bool",
+                "value": false
+            },
+            {
+                "name": "ULABUFFER",
+                "type": "bool",
+                "value": false
+            }
+        ],
+        "name": "MEIGA.Plugins",
+        "type": "class",
+        "useAs": [
+            "layer",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 6,
+        "members": [
+            {
+                "name": "Type",
+                "propertyType": "Block",
+                "type": "string",
+                "value": "NULL"
+            }
+        ],
+        "name": "MPAGD.Block",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tile",
+            "tileset",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 7,
+        "members": [
+            {
+                "name": "DOWN",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "FIRE 1",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "FIRE 2",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "FIRE 3",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "LEFT",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "OPTION 1",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "OPTION 2",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "OPTION 3",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "OPTION 4",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "RIGHT",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "UP",
+                "type": "string",
+                "value": ""
+            }
+        ],
+        "name": "MPAGD.Controls",
+        "type": "class",
+        "useAs": [
+            "property",
+            "layer",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 8,
+        "members": [
+            {
+                "name": "Item of FRAMES",
+                "propertyType": "Frame",
+                "type": "string",
+                "value": "Frame"
+            }
+        ],
+        "name": "MPAGD.Image",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tile",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 9,
+        "members": [
+        ],
+        "name": "MPAGD.Inventary",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tileset",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 10,
+        "members": [
+            {
+                "name": "Room",
+                "type": "int",
+                "value": 0
+            }
+        ],
+        "name": "MPAGD.Location",
+        "type": "class",
+        "useAs": [
+            "property",
+            "object",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 11,
+        "members": [
+            {
+                "name": "StartRoom",
+                "propertyType": "Handling",
+                "type": "string",
+                "value": "Hidden"
+            }
+        ],
+        "name": "MPAGD.Object",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tile",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": false,
+        "id": 12,
+        "members": [
+            {
+                "name": "Type",
+                "propertyType": "Type",
+                "type": "string",
+                "value": "NULL"
+            }
+        ],
+        "name": "MPAGD.Position",
+        "type": "class",
+        "useAs": [
+            "object",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 13,
+        "members": [
+            {
+                "name": "Nombre",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "StartRoom",
+                "type": "bool",
+                "value": false
+            }
+        ],
+        "name": "MPAGD.Screen",
+        "type": "class",
+        "useAs": [
+            "property",
+            "map",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 14,
+        "members": [
+        ],
+        "name": "MPAGD.Sprite",
+        "type": "class",
+        "useAs": [
+            "property",
+            "tileset",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 15,
+        "members": [
+            {
+                "name": "Nombre",
+                "type": "string",
+                "value": "Screen000"
+            }
+        ],
+        "name": "MPAGD.StartScreen",
+        "type": "class",
+        "useAs": [
+            "property",
+            "layer",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
+        "id": 16,
+        "members": [
+        ],
+        "name": "MPAGD.Window",
+        "type": "class",
+        "useAs": [
+            "property",
+            "object",
+            "project"
+        ]
+    },
+    {
+        "id": 17,
+        "name": "Screen",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Screen000",
+            "Screen001",
+            "Screen002"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 18,
+        "name": "SoundMod",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Standard",
+            "Beeper",
+            "AY-3-8912 Vortex Tracker II",
+            "AY-3-8912 Arkos Traker"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 19,
+        "name": "Sprite",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Sprite000",
+            "Sprite001",
+            "Sprite002",
+            "Sprite003",
+            "Sprite004",
+            "Sprite005",
+            "Sprite006",
+            "Sprite007",
+            "Sprite008",
+            "Sprite009",
+            "Sprite010",
+            "Sprite011",
+            "Sprite012",
+            "Sprite013",
+            "Sprite014",
+            "Sprite015",
+            "Sprite016"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 20,
+        "name": "Type",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Player",
+            "Type1",
+            "Type2",
+            "Type3",
+            "Type4",
+            "Type5",
+            "Type6",
+            "Type7",
+            "Type8",
+            "NULL"
+        ],
+        "valuesAsFlags": false
+    }
+]

@@ -1,0 +1,7 @@
+
+5 MODE 0
+10 MEMORY &1FFF
+
+90 LOAD "AGDgame.bin",&2000
+100 CALL &2000
+
