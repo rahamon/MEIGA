@@ -4,7 +4,7 @@ Entorno de desarrollo, conversión y compilación para proyectos AGD, con integr
 
 MEIGA permite transformar, editar y compilar proyectos AGD utilizando un flujo de trabajo moderno, manteniendo compatibilidad con el formato original y extendiendo sus capacidades.
 
----
+
 
 ## Descripción
 
@@ -17,7 +17,7 @@ MEIGA es un conjunto de herramientas que permite:
 
 El objetivo es proporcionar un sistema completo, modular y controlable para el desarrollo de juegos basados en AGD.
 
----
+
 
 ## Características principales
 
@@ -34,7 +34,7 @@ El objetivo es proporcionar un sistema completo, modular y controlable para el d
 * Reconstrucción completa del archivo `.agd`
 * Separación de datos en recursos editables
 
----
+
 
 ## Extensiones del motor AGD
 
@@ -63,7 +63,7 @@ MEIGA no solo trabaja con el formato original, sino que amplía sus capacidades 
 
 Estas extensiones permiten superar las limitaciones del AGD original manteniendo compatibilidad.
 
----
+
 
 ## Flujo de trabajo
 
@@ -76,7 +76,7 @@ Estas extensiones permiten superar las limitaciones del AGD original manteniendo
 4. Reconstrucción del `.agd`
 5. Compilación final desde MEIGA
 
----
+
 
 ## Enfoque del proyecto
 
@@ -87,7 +87,7 @@ MEIGA es una implementación independiente que:
 * Permite compilación autónoma
 * Amplía las capacidades del motor original
 
----
+
 
 ## Relación con MPAGD
 
@@ -97,7 +97,7 @@ MEIGA es compatible con proyectos basados en MPAGD:
 * Implementa su propio sistema de procesamiento y compilación
 * No reutiliza código del proyecto original.
 
----
+
 
 ## Requisitos
 
@@ -105,7 +105,7 @@ MEIGA es compatible con proyectos basados en MPAGD:
 * Tiled
 * Herramientas de ensamblado (Pasmo, sjasmplus, etc.)
 
----
+
 
 ## Estructura del proyecto
 
@@ -117,22 +117,21 @@ El sistema está compuesto por múltiples módulos especializados:
 * Sistema de compilación
 * Extensiones del motor (Mods)
 
----
+
 
 ## Estado del proyecto
 
 En desarrollo activo.
 
----
+
 
 ## Licencia
 
 (Pendiente de definir)
 
----
 
-## Autor
 
-Proyecto desarrollado por Ramón Fernández Ameijeiras
+## Créditos
 
----
+- **Desarrollo**: Ramón Fernández Ameijeiras
+- **Supervisión técnica**: Guillermo Cerviño Porto @GuillermoGCP
