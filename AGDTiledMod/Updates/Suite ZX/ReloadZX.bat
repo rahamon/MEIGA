@@ -6,7 +6,7 @@
 		echo.
 		echo ERROR: ReloadZX
 		echo Este script no debe ejecutarse manualmente.
-		pause
+		pause
 		exit /b 1
 	)
 	
