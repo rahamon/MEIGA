@@ -1,5 +1,4 @@
 ;
-;; posicion X PLAYER, Necesita consultar IX!! REVISAR MEIGA
 ;
 ;----------------------------
 ;             .              
@@ -53,7 +52,7 @@ chkdir	;ld a,(scdir)
 		; jp z,scrollaba	
 		; ret
 
-; check COMAMND
+; check command
 sccom	cp 128
 		jp z,demonitor		; Devuelve DESPLAZAMIENTO en variable A del AGD
 		cp 64
@@ -61,13 +60,13 @@ sccom	cp 128
 		cp 32
 		jp z,Play_one_step	; Da un paso: usar en MAINLOOP2 AGD
 		CP 16
-		JP z,saveXYPlayer	; Conserva X del jugador en mapa: Usar in EVENT PLAYER AGD
+		JP z,saveXPlayerin	; Conserva X del jugador en mapa: Usar in EVENT PLAYER AGD
 		cp 8
 		jp z,NavtoSCNO		; kill player and ScreenNav. hack: Usar before SceenUp,...Down,...Left,...Right AGD
 		cp 4
-		jp z,EchoMonitor		; deslocalizacion de sprites monitor
+		jp z,monitroECHO		; deslocalizacion de sprites monitor
 		cp 2
-		jp z,EchoReset			; deslocalizacion de sprites set off
+		jp z,resetecho			; deslocalizacion de sprites set off
 		
 		jp user0
 		ret
@@ -76,26 +75,23 @@ scdir		defb 255		; ultima DIRECTION conocida
 scrollx		defb 0			; desp-counter DESPLAZAMIENTO
 scrolling	defb 0			; running flag
 
-; Control de sprites monitor ----------------------------------
-; devuelve direccion del scroll en B
-; devuelve echo en A
-; Si echo activo entonces mueve Sprites
-EchoMonitor
+; Control de sprites monitor
+monitroECHO
 		ld a,(scdir)		; en esta direccion
 		ld (varb),a
-		ld a,(echo)			; activado el desplazamiento con el fondo de sprites (scrolling!)
+		ld a,(echo)			; hay sprites scrolling!
 		ld (vara),a
 		and a
-		jp nz,SingleSpriteScrollingProcess		; sipi
+		jp nz,SpriteScrollingProcess		; sipi
 		ret
 
-; reset echo sprites
-EchoReset
+; reset echo sprites scrolling
+resetecho
 		xor a
 		ld (echo),a
 		ret
 		
-; Control scroll direccion PREPARA RUTINA -------------------------------------------------------------
+; Control scroll direccion----------------------------------------------------------------------------
 scrolli
 		ld (scdir),a		; nueva DIRECTION PLAYER
 
@@ -134,9 +130,9 @@ scrolld
 		ld a,$30
 		ld (eraside),a		; sprites condicion para borrado fiera del limite
 		
+; Orientado
 spined
-	; Orientado para desplazarse, CAMINA
-	; version SYNC play one step flag
+		; version SYNC play one step flag
 		ld a,1
 		ld (rolstep),a		; STEP_FLAG = 1
 		ret
@@ -144,7 +140,6 @@ spined
 ; Scroll Player Section----------------------------------------------------------
 
 Scroll_player
-; Check DESPLAZANDO o SCREEN
 chkling	ld a,(scrolling)
 		cp 1
 		jp z,rolmove		; MUEVE
@@ -161,22 +156,18 @@ checkroom
 roledge	defb WINDOWWID
 		jp z,nextsroom		; IF DESPLAZAMIENTO = hasta, cambia de habitacion
 
-printro	call sroom			; PINTA	
-
-	; activa el movimiento de Sprites
-movdrw	ld a,1
-		ld (echo),a
-	IF MASKAGD = 1
-		call renuevafondos
-	ENDIF
-	
+printro	call sroom			; pinta. asyncronica ***	
+		call movdrw			; procesa sprites desplazados, excepto objetos, tampoco adventure blocks.
+		;call sroom
 ; end of program
 		ret
+
+; Rutinas--------------------------------------------------------------------------
 
 ; PLAY
 Play_one_step
 		defb $3E			;ld a,n
-rolstep	defb 0				; TICKER STEP play step flag
+rolstep	defb 0				; play step flag
 		cp 1
 		jp z,nextep
 		ret
@@ -184,7 +175,6 @@ nextep	xor a
 		ld (rolstep),a
 		jp Scroll_player
 
-; Rutinas AUXILIARES -------------------------------------------------------------------
 
 ; Redraw patch for ZXEngine: Sustituye call droom por call modroom para redibujar correctamente.
 modroom
@@ -211,21 +201,19 @@ resde01
 		ld (scrolling),a	; skip setups flag OFF
 		ret
 		
-; Rutinas AUXILIARES PLAYER -------------------------------------------------------------------
-		
-; RESERVA Posicion X del Player, LLAMAR DESDE EL PLAYER EVENT	
-saveXYPlayer
-		ld a,(ix+9)					; get X of current Sprite
-		ld (XPlayer),a				; save in XPlayer
+; RESERVA Posicion X del Player
+saveXPlayerin
+		ld a,(ix+9)			; get X of current Sprite
+		ld (Xlocimap),a		; save in Xlocimap
 		ret
 
-; NAVEGA A Screen Works, LLAMAR DESDE EL PLAYER EVENT	
+; NAVEGA A Screen Works
 NavtoSCNO
 		; check orilla
 		ld a,(scrolling)	; skip setups flag OFF
 		cp 0
 		ret z
-	;  X offset before navigation
+		;  X offset before navigation
 		ld a,(scrollx)
 		add a,a
 		add a,a
@@ -244,21 +232,20 @@ NavtoSCNO
 		add a,b				; suma (ancho*8) ajuste...
 		; orilla derecha		
 navlado	ld (ix+9),a			; X = X + ...estos ajustes
-	; Navegar
+		; Navegar
 		call gtsSCNO
 		ret
 
-; Return SCNO PLAYER location asi si funciona
+; Return SCNO player location asi si funciona	
 gtsSCNO		
 		; B = OSCNO desde oroomtb
 		; C = SCNO hasta roomtb
-	; Get last sprite X saved
-		ld a,(XPlayer)
+		ld a,(Xlocimap)			; Get last sprite X saved
 		rra
 		rra
 		rra
 		and 31
-		ld (XPlayer),a			; XPlayer = X / 8 - 1?
+		ld (Xlocimap),a			; Xlocimap = X / 8
 		
 		ld a,(roomtb)
 		ld hl,oroomtb
@@ -266,9 +253,9 @@ gtsSCNO
 		jp nc,gts01				;IF not B > C -> gts01
 		
 		ld a,(scrollx)
-		ld hl,XPlayer
+		ld hl,Xlocimap
 		cp (hl)
-		jp nc,gts02				;IF not desplazamiento > XPlayer -> gts02
+		jp nc,gts02				;IF not desplazamiento > Xlocimap -> gts02
 		
 		;A ORIGEN
 		call prevsroom
@@ -283,9 +270,9 @@ gts01	ld a,(roomtb)
 		jp z,gts06				;IF B = C -> gts05
 		
 		ld a,(scrollx)
-		ld hl,XPlayer
+		ld hl,Xlocimap
 		cp (hl)
-		jp nc,gts06				;IF NOT desplazamiento > XPlayer -> gts06
+		jp nc,gts06				;IF NOT desplazamiento > Xlocimap -> gts06
 		
 		;A DESTINO
 		ret
@@ -293,11 +280,9 @@ gts06	;A ORIGEN
 		call prevsroom
 		ret
 
-XPlayer		defb 0					; posicion X PLAYER, Necesita actualizarse desde PLAYER Automatizado!!
-YPlayer		defb 0
-Playerptr	defw sprtab
+Xlocimap defb 0
 
-; SCROLL LOOP ------------------------------------------------------------------------
+; main scroll loop------------------------------------------------------------------------
 sroom
 		xor a               ; zero in accumulator.	   
 		ld (comcnt),a       ; reset compression counter.			LET COMCOUNTER=0
@@ -383,7 +368,7 @@ flbend	push af				; store skip counter
 ;end scroll loop
 		
 
-; Map NAVIGATION ---------------------------------------------------------------------
+; Map navigation---------------------------------------------------------------------
 prevsroom
 		ld a,(oroomtb)
 		ld (roomtb),a
@@ -409,7 +394,7 @@ nextsroom
 		ld (scrolling),a	; skip setups flag OFF
 		ret
 		
-; Setups PREPARA ROOM -------------------------------------------------------------------
+;Setups-------------------------------------------------------------------------------------------
 setuprooms
 		ld a,(scdir)
 		cp 0
@@ -468,7 +453,7 @@ zonab	defw rolromb		;<--- scroll0_zona_destino-room
 rolfrom	defb 1
 		ld (scrollx),a		;init scrollx							INIT DESPLAZAMIENTO
 
-		jp checkroom		; FIN DE PREPARACION ROOM regresa al SCROLL PLAYER
+		jp checkroom					;
 
 ;-------------------------------------------------------------------------------------
 rolroma	call setuproom
@@ -511,9 +496,14 @@ oroomtb	defb 0
 oscno	defb 0
 echo	defb 0				; 255,0,1
 	
-; PROCESA SPRITES desplazamiento sprites y borra sprites fuera de pantalla -------------------
-		
-SpriteScrollingProcess
+; procesa desplazamiento sprites y borra sprites fuera de pantalla.-----------------------------------------------
+movdrw
+		; activa el hack para solo pintar el sprite nuevo (skip sspria)
+		ld a,1
+		ld (echo),a
+		; puede que quieras controlarlos tu mism@.
+		ret					; < ----- Comenta esta línea si QUIERES controlarlos automáticamente
+							
 		push ix             ; place sprite pointer on stack.
 		;call shwob           Cannot move object, LIMITACION por ahora
 		ld b,NUMSPR         ; sprites to draw.
@@ -521,10 +511,33 @@ SpriteScrollingProcess
 movdrw0 ld a,(ix+0)         ; old sprite type.
 		inc a               ; is it enabled?
 		jr z,movdrw1         ; no, find next one.
-	; Procesa
-		call SingleSpriteScrollingProcess
 
-	; limpia (sspria) old sprites and special effects
+SpriteScrollingProcess
+		ld a,(ix+9)
+sprmov	defb $C6			;<---scroll0_MOVESPRITES add a,n ($C6) Sprites a der, sbc a,n ($DE)sprites a izq
+		defb 8
+		ld (ix+9),a
+	
+;delete sprites from edges: TODO: Oculta!
+checs0	equ $
+		defb $3E			;ld a,n	 <---scroll0_CHECK_EDGE?(-4)
+chkedge	defb ((WINDOWLFT * 8) + (WINDOWWID * 8) - 16)	;(wnrgtx)
+		;add a,4
+		cp (ix+9)
+		jr z,$+4			; salta a borra sprite
+eraside	jr nc,$+6			; ($30 $06) no desaparece por la derecha<--- CASE: Check edge
+							; jr c,$+6 ($38 $06) no desaparece por la izq<--- CASE: Check edge
+		;defb $06			
+		ld (ix+5),255		; desaparece sprites a derecho o izquierda 
+checs1
+		;ld a,(ix+3)          sprite x.
+		;cp 177				 beyond maximum? <--- La clave está aqui: si sobrepasa limite
+												;cambia direccion y entra aparece de nuevo
+		;jp nc,movdrw1       ; yes, nothing to draw.
+		
+		ret					; < ----- Comenta esta línea si QUIERES controlarlos automáticamente
+		
+; limpia (sspria) old sprites and special effects
 prints	push bc             ; store sprite counter.
 		;call sspria         ; show single sprite. *borra*
 		pop bc              ; retrieve sprite counter.
@@ -532,53 +545,11 @@ prints	push bc             ; store sprite counter.
 movdrw1 ld de,TABSIZ        ; distance to next odd/even entry.
 		add ix,de           ; next sprite.
 		djnz movdrw0         ; repeat for remaining sprites.
-	; redraw blocks if in adventure mode. LIMITACION
-		;call rbloc
-	; redraw shrapnel. LIMITACION
-		;call dshrp
+		;call rbloc           redraw blocks if in adventure mode. LIMITACION
+		call dshrp          ; redraw shrapnel.
 		pop ix              ; retrieve sprite pointer.		
 movdrw2	ret
 
-	IF MASKAGD = 1
-renuevafondos
-		push ix             ; place sprite pointer on stack.
-		ld b,NUMSPR         ; sprites to draw.
-		ld ix,sprtab        ; sprite table.
-
-renueva0
-		push bc
-	; guarda fondo desplazado
-		call GUARDA_Nuevo_fondo
-		pop bc
-
-		ld de,TABSIZ        ; distance to next odd/even entry.
-		add ix,de           ; next sprite.
-		djnz renueva0        ; repeat for remaining sprites.
-		pop ix
-		ret
-	ENDIF
-	
-; Necesita ix del Sprite -> debe llamarse desde EVENT PLAYER, o EVENT TYPE <n>, (otra idea es sktype)
-SingleSpriteScrollingProcess
-		ld a,(ix+9)
-sprmov	defb $C6			;<---scroll0_MOVESPRITES add a,n ($C6) Sprites a der, sbc a,n ($DE)sprites a izq
-		defb 8
-		ld (ix+9),a
-	; DESPLAZA con el fondo	
-checs0	equ $
-		defb $3E			;ld a,n	 <---scroll0_CHECK_EDGE?(-4)
-chkedge	defb ((WINDOWLFT * 8) + (WINDOWWID * 8) - 16)	;(wnrgtx)
-		;add a,4
-		
-	; BORRA sprites from edges: TODO: Oculta mejor: FALLA con MASK
-		cp (ix+9)
-		jr z,checs2			;$+4 salta a borra sprite
-eraside	jr nc,checs1		;$+6 ($30 $06) no desaparece por la derecha<--- CASE: Check edge
-							; jr c,$+6 ($38 $06) no desaparece por la izq<--- CASE: Check edge			
-checs2	ld (ix+0),255		; delete sprite.
-		ld (ix+5),255		; remove next type
-checs1	ret
-		
 ;-----------------------------------------------------------------------------
 mflbyt
 		ld a,(mcomcnt)       ; compression counter.

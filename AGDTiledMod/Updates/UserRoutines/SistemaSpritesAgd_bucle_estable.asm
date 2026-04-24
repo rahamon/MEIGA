@@ -5,7 +5,7 @@
 
 LASTIX	equ (NUMSPR -1 ) * TABSIZ
 
-vsync3f push hl
+vsync3f
 		ld a,(23672)        ; clock low.
 		rra
 		rra
@@ -15,7 +15,6 @@ vsync3f0
 		cp (hl)             ; are they the same?
 		jr z,vsync3f0         ; yes, wait until clock changes.
 		ld (hl),a          ; set new clock reading.
-		pop hl
 		ret
 
 MASKAGDopt	defb MASKAGD
@@ -31,15 +30,6 @@ SHOW_Sprites
 		call PRINT_Sprites_C			; pinte sprites que colisionan
 		ret
 
-SHOW_Sprites2
-		ld ix,sprtab
-		call PRINT_Sprites_NC			; borra y pinta sprites que no colisionan.
-		push ix
-		ld ix,sprtab
-		call RESTAURA_Fondo_C			; borra sprites que clisionan
-		pop ix
-		call PRINT_Sprites_C			; pinta sprites que colisionan
-		ret
 ;---------------------------------------------------------------------------
 ; Restaura Fondo en Colisiones: Recupera fondos desde delante hacia detras 
 ; Despues de ZSort: desde NUMSPR hasta NCol(excluido)
@@ -60,12 +50,11 @@ resra0	ld a,(NCol)
 
         ld a,(ix+0)         ; get sprite type.
         inc a               ; is it enabled?
-        jr nz,resra1        ; yes, habilitado
-resra5  ;ld a,(ix+5)         
+        jr nz,resra1        ; yes, necesita restaurar o no?
+resra5  ;ld a,(ix+5)         ; tipo nuevo
         ;inc a
-        ;jp nz,resra7        ; estaba des-habilitado ahora está habilitado, APARECE
+        ;jp nz,resra7        ; si está habilitado, APARECE
 		; VACIO
-		
 resra2 ld de,-TABSIZ        ; distance to next odd/even entry.
        add ix,de            ; next sprite.
        pop bc               ; retrieve loop counter.
@@ -75,8 +64,8 @@ resra2 ld de,-TABSIZ        ; distance to next odd/even entry.
 resra1 call RESTAURA_Fondo		;***
 		;ld a,(ix+5)         ; type of new sprite.
        ;inc a               ; is this enabled?
-       ;jr z,resra2         ; DESAPARECE, estaba habilitado ahora está des-habilitado
-resra7 ;call RESTAURA_Fondo	; APARECE o SE MUEVE, delete old sprite, nada mas.
+       ;jr z,resra2         ; DESAPARECE, pasa al siguiente.
+resra7 ;call RESTAURA_Fondo	; SE MUEVE, delete old sprite, nada mas.
        jp resra2
 
 resrb9	ld de,TABSIZ        ; restaura current sprite (IX(NCol+1)=IX(3))
@@ -107,10 +96,10 @@ prisc0	ld a,c
 
 		ld a,(ix+0)          ; tipo antiguo
         inc a
-        jr nz,prisc1         ; si, antiguo habilitado
+        jr nz,prisc1         ; si estaba habilitado
 prisc5: ld a,(ix+5)          ; tipo nuevo
         inc a
-        jr nz,prisc7         ; APARECE, estaba des-habilitado ahora está habilitado
+        jr nz,prisc7         ; APARECE, si está habilitado
 		; VACIO
 prisc2: push ix
         pop hl
@@ -131,8 +120,8 @@ prisc2: push ix
 	
 prisc1 ld a,(ix+5)         ; type of new sprite.
        inc a               ; is this enabled?
-       jr z,prisc2         ; REMOVEME, estaba habilitado ahora está des-habilitado.
-prisc7 call PRINT_Sprite   ; APARECE o se MUEVE, show single sprite.
+       jr z,prisc2         ; REMOVEME, pasa al siguiente.
+prisc7 call PRINT_Sprite   ; SE MUEVE, show single sprite.
        jp prisc2
 
 ;---------------------------------------------------------------------------
@@ -155,7 +144,7 @@ prisnc0 push bc				; guarda el contador
         jr nz,prisnc1		; si estaba habilitado
 prisnc5 ld a,(ix+5)			; tipo nuevo
         inc a
-        jr nz,prisnc3		; APARECE, está habilitado anteriormente estaba des-habilitado
+        jr nz,prisnc3		; APARECE, si está habilitado
 		; VACIO
 prisnc2 push ix
         pop hl
@@ -182,8 +171,8 @@ prisnc8 djnz prisnc0
 	   
 prisnc1	ld a,(ix+5)				; type of new sprite.
 		inc a					; Nuevo activo?
-		jr nz,prisnc4			; SI, antes tambien asi que se MUEVE
-prisnc6	CALL RESTAURA_Fondo		; REMOVE: antes habilitado pero ahora des-habilitado
+		jr nz,prisnc4			; 
+prisnc6	CALL RESTAURA_Fondo		; MEIGA 10
 		jp dspr2
 
 prisnc4	ld a,(ix+4)         ; old y.
@@ -263,24 +252,20 @@ dline_bk_restore:
 gsprm	ld l,(ix+8)          ; new x coordinate.
 		ld h,(ix+9)         ; new y coordinate.
 		ld (dispx),hl       ; set display coordinates.
-		
 gsprmx	ld a,(ix+66)        ; mask sprite image.
+	   
 		call gfrm           ; fetch start frame for mask sprite.
-		ld a,(hl)
-		ld b,a
+		ld a,(hl)           ; start mask frame in accumulator.
+		;jp gspra0			 descomentar para usar un frame solo de mascara
 		; Chequea animacion frames de mascara, en pruebas
-		inc hl				; apunta last_mask_frame_number
-		ld a,(hl)
-		cp 1           		; mascara un solo frame?
-		ld a,b
-		jr z,gsprm0
+		inc hl				; apunta donde esta last_mask_frame_number de la mascara
 		add a,(ix+7)        ; suma new sprite frame number.
-		;jr gsprm0
-		; inc a				 start_mask_frame + sprite_frame + 1
-		; cp (hl)              reached the last_mask_frame?
-		; jr nc,gsprm0         no, not yet.
-		; ld a,b				 fuera de rengo, frame mask reset
-gsprm0	; new frame
+		;inc a				;+1
+		cp (hl)             ; reached the last mask frame?
+		jr nc,gsprm0         ; no, not yet.
+		dec hl 				; fuera de rengo, frame mask reset
+		ld a,(hl)
+gsprm0	dec a
 		call gspra0			; DE,BC y HL del sprite (image=(ix+66), frame=(ix+7))
 		; Necesito DE dentro de BC
 		ret
@@ -293,7 +278,7 @@ PRINT_Sprite
 gsmptr	call gsprm           ; HL = pantalla destino, DE = sprite mascara, BC = SIMASK
 		exx
 		call gspran          ; HL = pantalla destino, DE = sprite, BC = SIMASK
-				
+
 prisp00	push ix              ; salvar IX original de la tabla de sprites
 		ld a,16             ; vertical lines.
 prispr0	ex af,af'           ; 'store line counter away in alternate registers.
@@ -406,7 +391,8 @@ dline_savebk_and_print_new
 ; Guarda el nuevo fondo
 ;-----------------------------------------
 GUARDA_Nuevo_fondo
-svprib	call gspran          ; HL = pantalla destino, DE = sprite, BC = máscara
+svprib
+		call gspran          ; HL = pantalla destino, DE = sprite, BC = máscara
 
 		push ix              ; salvar IX original de la tabla de sprites
 		ld a,16             ; vertical lines.
@@ -471,7 +457,7 @@ pc_loop:
         ld   a,1
 		jr sihit
 nohit	xor a
-sihit	ld   (ix+67),a			; solapamiento
+sihit	ld   (ix+67),a
 pasa	ld   de,TABSIZ
         add  ix,de
         djnz pc_loop

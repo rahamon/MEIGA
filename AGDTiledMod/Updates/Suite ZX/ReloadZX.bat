@@ -134,9 +134,6 @@ rem text-log del Compilador AGD
 			goto error
 	)
 
-rem limpieza de AGDsoundMod
-	if exist ..\AGDsoundMod\deleteme.* del /q ..\Assembly\deleteme.*
-	
 rem limpieza de Assembly
 	if exist ..\Assembly\*.* del /q ..\Assembly\*.*
 	
