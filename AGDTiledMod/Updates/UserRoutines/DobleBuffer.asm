@@ -132,11 +132,11 @@ FlipBufferSafe
 FlipBuffers
         ld a,(ULAScreen)
         or a
-        jr z,.to7
-.to5	call SetState_Show5_Bank0
+        jr z,to7
+to5	call SetState_Show5_Bank0
         ;call CopyScreen5To7
 		ret
-.to7	call CopyScreen5To7
+to7	call CopyScreen5To7
 		call SetState_Show7_Bank0
         ret
 
@@ -148,11 +148,11 @@ FlipBuffers
 PrepareVideoWrite
         ld a,(ULAScreen)
         or a
-        jr z,.prep5
-.prep7
+        jr z,prep5
+prep7
         call SetState_Show7_Draw5
         ret
-.prep5
+prep5
         call SetState_Show5_Draw7
         ret
 		
@@ -162,11 +162,11 @@ PrepareVideoWrite
 PrepareSpriteRead
         ld a,(ULAScreen)
         or a
-        jr z,.show5
-.show7
+        jr z,show5
+show7
         call SetState_Show7_Bank0
         ret
-.show5
+show5
         call SetState_Show5_Bank0
         ret
 		
@@ -178,11 +178,11 @@ PrepareSpriteRead
 FinishVideoWrite
         ld a,(ULAScreen)
         or a
-        jr z,.fin5
-.fin7
+        jr z,fin5
+fin7
         call SetState_Show7_Bank0
         ret
-.fin5
+fin5
         call SetState_Show5_Bank0
         ret
 
