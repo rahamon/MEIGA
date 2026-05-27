@@ -1,1 +1,0 @@
-; Setup music memory pointers

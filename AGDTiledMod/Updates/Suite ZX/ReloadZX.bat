@@ -134,9 +134,6 @@ rem text-log del Compilador AGD
 			goto error
 	)
 
-rem limpieza de AGDsoundMod
-	if exist ..\AGDsoundMod\deleteme.* del /q ..\Assembly\deleteme.*
-	
 rem limpieza de Assembly
 	if exist ..\Assembly\*.* del /q ..\Assembly\*.*
 	
@@ -317,6 +314,8 @@ rem editar macro ZEROMOD para activar FixScreen y navegar entre Niveles o Stages
 			..\Tools\fart %1.asm "jp gamelp " "jp game"		>nul
 		)
 
+	goto skipMediciones
+	
 rem Medir Engine y CommonData del mundo
 	if %LevelEnabled% == 1 (
 		setlocal enabledelayedexpansion
@@ -345,6 +344,7 @@ rem Medir Engine y CommonData del mundo
 		endlocal
 	)
 	
+:skipMediciones
 	
 rem medir Player Sound
 	rem ZX Spectrum 48k Beeper

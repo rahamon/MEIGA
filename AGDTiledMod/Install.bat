@@ -46,6 +46,19 @@ setlocal enabledelayedexpansion
 	REM echo parent: %parent%
 	REM pause
 	
+:: Copia Comandos
+	if exist ExtractAGD.bat copy ExtractAGD.bat ..\ExtractAGD.bat >nul
+	if exist RunAGD.bat copy RunAGD.bat ..\RunAGD.bat >nul
+	if exist NuevoAGD.bat copy NuevoAGD.bat ..\NuevoAGD.bat >nul
+	if exist OpenProject.bat copy OpenProject.bat ..\OpenProject.bat >nul
+	if exist Debugger.bat copy Debugger.bat ..\Debugger.bat >nul
+:: Copia programas
+	if exist OpenAGD.bat copy OpenAGD.bat ..\OpenAGD.bat >nul
+	if exist UpdateAGD.bat copy UpdateAGD.bat ..\UpdateAGD.bat >nul
+	if exist VersionMeiga.bat copy VersionMeiga.bat ..\VersionMeiga.bat >nul
+	if exist UpdateProject.bat copy UpdateProject.bat ..\UpdateProject.bat >nul
+	if exist GeneraProject.bat copy GeneraProject.bat ..\GeneraProject.bat >nul
+	
 :: MEIGA EXTRACTOR
 		if exist "%parent%\*.lnk" del "%parent%\*.lnk"
 	:: Ruta completa al acceso directo
@@ -102,19 +115,6 @@ setlocal enabledelayedexpansion
 		REM set "target=%parent%\Suite ZX\Realase\Test128.tap"
 
 	REM call :CrearLink
-	
-:: Copia Comandos
-	if exist ExtractAGD.bat copy ExtractAGD.bat ..\ExtractAGD.bat >nul
-	if exist RunAGD.bat copy RunAGD.bat ..\RunAGD.bat >nul
-	if exist NuevoAGD.bat copy NuevoAGD.bat ..\NuevoAGD.bat >nul
-	if exist OpenProject.bat copy OpenProject.bat ..\OpenProject.bat >nul
-	if exist Debugger.bat copy Debugger.bat ..\Debugger.bat >nul
-:: Copia programas
-	if exist OpenAGD.bat copy OpenAGD.bat ..\OpenAGD.bat >nul
-	if exist UpdateAGD.bat copy UpdateAGD.bat ..\UpdateAGD.bat >nul
-	if exist VersionMeiga.bat copy VersionMeiga.bat ..\VersionMeiga.bat >nul
-	if exist UpdateProject.bat copy UpdateProject.bat ..\UpdateProject.bat >nul
-	if exist GeneraProject.bat copy GeneraProject.bat ..\GeneraProject.bat >nul
 
 :: Check Core
 :: MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalarlo previamente
