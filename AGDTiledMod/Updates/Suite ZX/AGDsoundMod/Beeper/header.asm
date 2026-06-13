@@ -21,6 +21,8 @@ DefTape_ptr	defw TapZERO			;org+6
 			include "DobleBuffer_auxiliares.asm"
 	ENDIF
 
+FinDeCabecera	equ $
+
 
 
 

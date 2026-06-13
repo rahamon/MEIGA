@@ -1,13 +1,13 @@
 @echo off
-rem Mide y Edita Slots
+rem Mide y Crea Slots
 set /a MAXSize=0
 
 rem Si el modelo es de 48k usa org en cada sección del volumen ZERO. El modelo lo pasamos en parametro Uno
 rem Primero cargar LevelZero y después el resto si queremos eliminar org de la edicion, DEPRECATED
 	set ForzeORG=%1
 
-rem distinguir modelo ordenador
-	rem Para 48k usar org en nivel Zero, o bien 3 cargas: Loader, Zero y Game
+rem distinguir modelo ordenador
+	rem Para 48k usar org en nivel Zero, o bien 3 cargas: Loader, Zero y Game. EN DISCUSION
 	
 Rem Cabecera informe
 	echo+		>> StagesBank.txt
@@ -23,7 +23,7 @@ rem Primero compila TODAS las secciones.
 				call :Compila
 				)
 				
-rem Mide y Edita Carrier Slots
+rem Mide y Crea Carrier Slots
 	set oldtipo=STAGES
 	set oldorg=orgSlotDataCode
 rem por cada tipo ( Spr Scr Blk Msg Ene Obj Eve)
@@ -82,7 +82,7 @@ rem Primero cargar LevelZero y después el resto si queremos eliminar org de la 
 			del ..\Stages\Bank\Symbol.asm
 			del ..\Stages\Bank\%nombre%_temp.asm
 		) else (
-			..\tools\Pasmo.exe --bin ..\Stages\Bank\%nombre_Stage% ..\Stages\Bank\%nombre%.bin		
+			..\tools\Pasmo.exe --bin ..\Stages\Bank\%nombre_Stage% ..\Stages\Bank\%nombre%.bin			
 		)
 	)
 	GOTO:EOF
@@ -102,6 +102,10 @@ rem Por cada seccion de ese tipo Mide los binarios
 
 :EditaSlot
 	rem Editar Slots.asm ZERO
+		if %ForzeORG% == 1 (
+			rem echo 		org ^(%tipo%DataCode + %MAXSize%^) 	>> Slots.asm
+			echo 		org ^(org%tipo%DataCode^) 	>> Slots.asm
+		)
 		echo ; %tipo%Slot									>> Slots.asm
 		echo %tipo%DataCode	equ $							>> Slots.asm
 	rem Primero cargar LevelZero y después el resto si queremos eliminar org de la edicion, DEPRECATED
@@ -109,9 +113,7 @@ rem Por cada seccion de ese tipo Mide los binarios
 		echo 		include "SEC_ZERO_%tipo%.asm"			>> Slots.asm
 		echo+												>> Slots.asm
 	rem Primero cargar LevelZero y después el resto si queremos eliminar org de la edicion, DEPRECATED
-		if %ForzeORG% == 1 (
-			echo 		org ^(%tipo%DataCode + %MAXSize%^) 	>> Slots.asm
-		) else (
+		if %ForzeORG% gtr 1 (
 			echo 		org ^(%tipo%DataCode + %MAXSize%^)		>> Slots.asm
 		)
 		echo+												>> Slots.asm

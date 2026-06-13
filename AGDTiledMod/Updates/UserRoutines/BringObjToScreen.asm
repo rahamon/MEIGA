@@ -1,3 +1,4 @@
+; PROTOTIPO
 ; Trae un objeto a una pantalla en la posición indicada sin pintar/Borrar
 ; Necesita un objeto, su posición y la pantalla: En AGD Script: LET SCREEN = N
 ; Pensado para EdD. Usa las pantallas como tablas y guardas ahí los objetos.

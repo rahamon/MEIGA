@@ -126,8 +126,24 @@ if __name__ == "__main__":
         palette = load_palette_from_json(palette_path)
     else:
         print("No se proporcionó paleta. Usa paleta por defecto (ZX Spectrum clásico).")
-        palette = [(0, 0, 0)] * 16  # Dummy palette para evitar errores
-
+        palette = [
+            (0, 0, 0),       # 0 negro
+            (0, 0, 191),     # 1 azul
+            (191, 0, 0),     # 2 rojo
+            (191, 0, 191),   # 3 magenta
+            (0, 191, 0),     # 4 verde
+            (0, 191, 191),   # 5 cyan
+            (191, 191, 0),   # 6 amarillo
+            (191, 191, 191), # 7 blanco
+            (0, 0, 0),       # 8 negro bright
+            (0, 0, 255),     # 9 azul bright
+            (255, 0, 0),     # 10 rojo bright
+            (255, 0, 255),   # 11 magenta bright
+            (0, 255, 0),     # 12 verde bright
+            (0, 255, 255),   # 13 cyan bright
+            (255, 255, 0),   # 14 amarillo bright
+            (255, 255, 255), # 15 blanco bright
+        ]
     block_types, png_file = parse_tsx(tsx_file)
     blocks = extract_blocks_from_png(png_file, list(block_types.keys()), palette)
     generate_agd(agd_file, blocks, block_types)

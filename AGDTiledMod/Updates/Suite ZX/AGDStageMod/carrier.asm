@@ -19,8 +19,8 @@ UserScrRoutines
 ; ZEROStageData
 SlotsDataCode	equ $
 		org (SlotsDataCode)
-;orgSlotDataCode	equ $
-		;include "SlotOrgs.asm"
+orgSlotDataCode	equ $
+		include "SlotOrgs.asm"
 		include "Slots.asm"
 
 ; ZEROCommonData
@@ -44,4 +44,5 @@ GameEngineCode	equ $
 ; desplazamiento
 		include "trailer.asm"
 ;eop    equ $
+FinDeTransmision	equ $
 

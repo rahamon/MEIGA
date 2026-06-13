@@ -31,9 +31,10 @@ cls
 
 
 rem Limpieza de Realase desde Dominio AGD
-	if exist Realase\*.txt del /q Realase\*.txt
-	if exist Realase\*.asm del /q Realase\*.asm
+	if exist Realase\*txt* del /q Realase\*txt*
+	rem if exist Realase\*.asm del /q Realase\*.asm
 	if exist Realase\*.tap del /q Realase\*.tap
+
 
 rem standard packaging en Dominio AGD
 	if %mscore% == 1 (
@@ -196,10 +197,13 @@ rem editar macro ZEROMOD para activar FixScreen y navegar entre Niveles o Stages
 			rem Leer las variables de seleccion
 				call ..\..\seleccion
 			rem Actualiza proyecto
+				rem Limpieza inicial
+					if exist "%project_dir%\Stages\Stage_*.asm" del "%project_dir%\Stages\Stage_*.asm" > nul
+					if exist "%project_dir%\Stages\SEC_*.asm" del "%project_dir%\Stages\SEC_*.asm" > nul
 				if not "%project_dir%" == "" (
 					if exist "..\Stages\Stage_*.asm" copy "..\Stages\Stage_*.asm" "%project_dir%\Stages" > nul
-					if exist "..\Stages\SEC_*.asm" copy "..\Stages\SEC_*.asm" "%project_dir%\Stages" > nul
-					rem ZERO no es necesario en proyecto
+					if exist "..\Stages\Bank\SEC_*.asm" copy "..\Stages\SEC_*.asm" "%project_dir%\Stages" > nul
+					rem ZERO no es necesario en proyecto: A DISCUSION
 						if exist "%project_dir%\Stages\SEC_ZERO_*.asm" del "%project_dir%\Stages\SEC_ZERO_*.asm" > nul
 				)
 		)
@@ -285,8 +289,11 @@ rem editar macro ZEROMOD para activar FixScreen y navegar entre Niveles o Stages
 					rem ..\Tools\fart Engine0.asm "jp gamelp" "		include \"chipBASE.asm\""		>nul
 					echo+		>nul
 					echo DataWorld Loader
+					rem MODESQUEMA Cambio de cargador: Sin ZBank y con solo un PARA HACER siolo 1 screen
 					copy ..\Basic\loader128kdataZ.bas ..\assembly\		>nul
 					..\Tools\bas2tap -e -a1 -s%gamename% loader128kdataZ.bas loader.tap
+					REM copy ..\Basic\loader128kdata.bas ..\assembly\		>nul
+					REM ..\Tools\bas2tap -e -a1 -s%gamename% loader128kdata.bas loader.tap
 				) else (
 					echo+
 					echo Standard AY-3-8912 Loader
@@ -314,64 +321,6 @@ rem editar macro ZEROMOD para activar FixScreen y navegar entre Niveles o Stages
 			..\Tools\fart %1.asm "jp gamelp " "jp game"		>nul
 		)
 
-	goto skipMediciones
-	
-rem Medir Engine y CommonData del mundo
-	if %LevelEnabled% == 1 (
-		setlocal enabledelayedexpansion
-		Rem Midiendo Peso del Engine
-			echo Midiendo Peso del Engine
-			rem copy ..\AGDsoundMod\Unplugged.asm ..\Assembly\
-			copy ..\AGDsoundMod\Metro_Engine0.asm ..\assembly\
-			copy ..\AGDsoundMod\Mapa_Engine0.asm ..\assembly\
-			..\tools\Pasmo --bin Metro_Engine0.asm Metro_Engine0.bin
-			for %%a in ( "Metro_Engine0.bin" ) do (
-				set EngineSize=%%~za
-				echo+	>> ..\Realase\StagesBank.txt
-				echo Size of the Engine !EngineSize!				>> ..\Realase\StagesBank.txt
-				)
-		Rem Peso de CommonData Scripts y enviroment
-			echo Midiendo Peso de CommonData Scripts y enviroment
-			copy ..\AGDsoundMod\Metro_CommonData.asm ..\assembly\
-			copy ..\AGDsoundMod\Mapa_UnCommon.asm ..\assembly\
-			..\tools\Pasmo --bin Metro_CommonData.asm Metro_CommonData.bin
-			for %%a in ( "Metro_CommonData.bin" ) do (
-				set CommonSize=%%~za
-				echo+	>> ..\Realase\StagesBank.txt
-				)
-		set /a SizeDifference=!CommonSize!-!EngineSize!
-		echo Size of the Scripts y enviroment !SizeDifference!		>> ..\Realase\StagesBank.txt
-		endlocal
-	)
-	
-:skipMediciones
-	
-rem medir Player Sound
-	rem ZX Spectrum 48k Beeper
-	if %modsnd% == 1 (
-		..\tools\Pasmo --tap Metro.asm Metro.tap
-		for %%a in ( "Metro.tap" ) do set size128kAYEngine=%%~za
-	) else (
-		rem ZX Spectrum 128/+2/+3 AY-3-8912 Vortex Tracker II
-		echo Midiendo ZX Spectrum 128/+2/+3 AY-3-8912 Vortex Tracker II
-		if %modsnd% == 2 (
-			..\tools\Pasmo --tap Metro.asm Metro.tap
-			for %%a in ( "Metro.tap" ) do set size128kAYEngine=%%~za
-		) else (
-			rem ZX Spectrum 128/+2/+3 AY-3-8912 Arkos Traker
-			if %modsnd% == 3 (
-			..\tools\Pasmo --tap Metro.asm Metro.tap
-			rem echo y con rasm
-			rem ..\tools\rasm Metro.asm -o Metro
-			for %%a in ( "Metro.tap" ) do set size128kAYEngine=%%~za
-			)
-		)
-	)
-	
-	rem informar longitud Player en archivo Stages.txt
-		echo+	>> ..\Realase\StagesBank.txt
-		echo Size of the Sound Engine included %size128kAYEngine%		>> ..\Realase\StagesBank.txt
-
 rem modificaciones de código
 	rem Hack gravity. Si se activa los sprites asociados se mueven a la par, si no se persiguen asincronicamente MEIGA 2024
 		REM set hackgravity=0
@@ -392,10 +341,7 @@ rem modificaciones de código
 			..\tools\fart %1.asm "jp start" "include \"header.asm\""		>nul
 			rem echo ..\tools\fart Engine0.asm "vsync5 call plsnd" "vsync5 call plsnd48"
 			..\tools\fart Engine0.asm "vsync5 call plsnd" "vsync5 call plsnd48"		>nul
-			rem ..\tools\fart %1.asm "LONGPLAYER" "%size128kAYEngine%"
-			..\tools\fart %1.asm "LONGPLAYER" "0"		>nul
-			..\tools\fart %1.asm "include \"ScreenPlayer.asm\"" ";include \"ScreenPlayer.asm\""		>nul
-			rem call :ResetLONGPLAYER		
+			..\tools\fart %1.asm "include \"ScreenPlayer.asm\"" ";include \"ScreenPlayer.asm\""		>nul		
 			)
 		rem patch aventure mode
 		if %adventure% == 1 (
@@ -408,8 +354,6 @@ rem modificaciones de código
 		copy ..\AGDscreenMod\ScreenPlayer.asm ..\Assembly\		>nul
 		rem ..\tools\fart %1.asm "jp start" "include \"128kAYEngine.asm\""
 		rem ..\tools\fart %1.asm "vsync5 call plsnd" "vsync5 call PlayFxsnd"		>nul
-		..\tools\fart %1.asm "LONGPLAYER" "%size128kAYEngine%"		>nul
-		rem call :SetLONGPLAYER
 		if %LevelEnabled% == 1 (
 			..\tools\fart %1.asm "jp start" "include \"header.asm\""		>nul
 			..\tools\fart LPlayer.asm "include \"StageUser48k.asm\"" "include \"StagesPlayer.asm\""		>nul
@@ -443,8 +387,6 @@ rem modificaciones de código
 				..\tools\fart %1.asm "include \"LPlayer.asm\"" ";include \"LPlayer.asm\""				>nul
 				)
 		..\tools\fart %1.asm "jp start" "include \"128k.asm\""		>nul
-		..\tools\fart %1.asm "LONGPLAYER" "%size128kAYEngine%"		>nul
-		rem call :SetLONGPLAYER
 		rem ..\tools\fart %1.asm "jp start" "include \"header.asm\""
 		..\tools\fart %1.asm "eop    equ $" "	   include \"trailer.asm\""		>nul
 		if %adventure% == 1 (
@@ -461,6 +403,7 @@ rem modificaciones de código
 		)
 	)
 
+rem MODO RAMSCREEN para activar o desactivar este MOD tarea para hacer 2027
 rem Screens Mod MEIGA 2025 por Ramon Fernandez Ameijeiras
 	rem Compilar Screens
 		echo Screen Mod MEIGA 2024 por Ramon Fernandez Ameijeiras
@@ -569,22 +512,82 @@ rem Compilar
 						rem restaura Symbol.asm en Eventos
 							..\Tools\fart %%~na.asm "include \"Symbol_Eve.asm\"" ";include \"Symbol.asm\""		>nul
 						)
-						
 			rem Segunda pasada 48k ahora
 				echo EveVolumer Pass2
 			rem limpieza inicial
 				if exist VT.tap del VT.tap
+			rem Captura Origen de Datos
+				call :CapturaEtiqueta Offset
+				set OFFSET=!ValorEtiqueta!
+
+				call :CapturaEtiqueta USERReloadRoutine
+				set USERRELOAD=!ValorEtiqueta!
+
+				call :CapturaEtiqueta UserScrRoutines
+				set USERSCR=!ValorEtiqueta!
+
+				call :CapturaEtiqueta SlotsDataCode
+				set SLOTS=!ValorEtiqueta!
+
+				call :CapturaEtiqueta COMMONDataCode
+				set COMMON=!ValorEtiqueta!
+
+				call :CapturaEtiqueta GameEngineCode
+				set ENGINE=!ValorEtiqueta!
+				
+				call :CapturaEtiqueta FinDeTransmision
+				set FDT=!ValorEtiqueta!
+
+				echo.		>> ..\Realase\StagesBank.txt
+				echo Offset              = !OFFSET!		>> ..\Realase\StagesBank.txt
+				echo USERReloadRoutine   = !USERRELOAD!		>> ..\Realase\StagesBank.txt
+				echo UserScrRoutines     = !USERSCR!		>> ..\Realase\StagesBank.txt
+				echo SlotsDataCode       = !SLOTS!		>> ..\Realase\StagesBank.txt
+				echo COMMONDataCode      = !COMMON!		>> ..\Realase\StagesBank.txt
+				echo GameEngineCode      = !ENGINE!		>> ..\Realase\StagesBank.txt
+				echo FinDeTransmision    = !FDT!		>> ..\Realase\StagesBank.txt
+
+				echo.		>> ..\Realase\StagesBank.txt
+
+				set /a D1=!USERRELOAD!-!OFFSET!
+				echo Rutinas de Servicio y Player de sonido !D1!		>> ..\Realase\StagesBank.txt
+
+				set /a D2=!USERSCR!-!USERRELOAD!
+				echo Rutinas de Stages !D2!		>> ..\Realase\StagesBank.txt
+
+				set /a D3=!SLOTS!-!USERSCR!
+				echo Rutinas de Screens !D3!		>> ..\Realase\StagesBank.txt
+
+				set /a D4=!COMMON!-!SLOTS!
+				echo Datos del Juego y Eventos 1-8 !D4!		>> ..\Realase\StagesBank.txt
+
+				set /a D5=!ENGINE!-!COMMON!
+				echo Eventos Comunes y Fuentes !D5!		>> ..\Realase\StagesBank.txt
+				
+				set /a D6=!FDT!-!ENGINE!
+				set /a D7=!FDT!-!OFFSET!
+				echo Motor !D6!		>> ..\Realase\StagesBank.txt
+				echo.		>> ..\Realase\StagesBank.txt
+				echo Direccion Final de programa !FDT!		>> ..\Realase\StagesBank.txt
+				echo Total en memoria base !D7!		>> ..\Realase\StagesBank.txt
+
+				for /f "tokens=3" %%t in ('findstr /i /b "SlotsDataCode:" Symbol_Eve_all.asm') do (
+					set /a orgsize=%%t
+				)
+				echo SlotsDataCode es !orgsize!
+						
 			rem prepara Symbol.asm
 				..\Tools\fart SEC*Eve.asm ";include \"Symbol.asm\"" "include \"Symbol_Eve_48k.asm\""		>nul
 				setlocal EnableDelayedExpansion
 				for %%a in ( "Tap*.asm" ) do (
-					set "Tapename=%%~na000000"
+					set "Tapename=%%~na000000000"
 					if /I not "%%~nxa"=="Taps.asm" if /I not "%%~nxa"=="Tapselector.asm" (
-						echo !Tapename! y !Tapename:~3,9!
+						echo !Tapename! para !Tapename:~3,9!.tap
+						..\Tools\fart %%~nxa "24832 + 0" "!orgsize!"
 						..\Tools\Pasmo --tap --name !Tapename:~3,9! %%~nxa !Tapename:~3,9!.tap
 						rem debugg task
-							rem ..\SjasmPlus\sjasmplus.exe %%~nxa --lst=!Tapename:~3,9!.txt
-							rem move !Tapename:~3,9!.txt ..\Realase\
+							..\SjasmPlus\sjasmplus.exe %%~nxa --lst=!Tapename:~3,9!.txt
+							move !Tapename:~3,9!.txt ..\Realase\
 					)
 				)
 			rem restaura Symbol.asm en Eventos
@@ -596,17 +599,19 @@ rem Compilar
 					rem echo %%a
 					)
 			)
-		
+	
+
 	rem Datos en Banco propósito general (Stages) (esta parte antes estaba en la linea 404)
 		if %modsnd% gtr 1 (
 			if %LevelEnabled% == 1 (
 				echo+
 				echo Compiling Stages...
 				..\tools\Pasmo.exe --tap --name Data bankLdriver.asm DAT.tap
-				..\tools\Pasmo.exe --tap --name ZERO bankZdriver.asm ZERO.tap
+				rem MODESQUEMA para activar desactivar bankZdriver en este MOD para hacer en 2027
+					..\tools\Pasmo.exe --tap --name ZERO bankZdriver.asm ZERO.tap
 				rem debuging
-				rem call :printlist bankLdriver
-				rem call :printlist bankZdriver
+				call :printlist bankLdriver
+				call :printlist bankZdriver
 				)
 			)
 	
@@ -630,7 +635,49 @@ rem inspeccionar error en Assembler: VERSION 2
 			rem goto error
 			)
 		)
-		
+
+	rem Mide Distancias General
+		if %modsnd% gtr 0 (
+			if %LevelEnabled% == 0 (
+				rem Crea Symbolos
+					call :printSymbolGeneral %1
+
+				rem Captura Origen de Datos
+					set OFFSET=24832
+
+					call :CapturaEtiqueta FinDeCabecera
+					set SLOTS=!ValorEtiqueta!
+
+					call :CapturaEtiqueta Start
+					set ENGINE=!ValorEtiqueta!
+					
+					call :CapturaEtiqueta eop
+					set FDT=!ValorEtiqueta!
+
+					echo.
+					echo Offset              = !OFFSET!		>> ..\Realase\StagesBank.txt
+					echo SlotsDataCode       = !SLOTS!		>> ..\Realase\StagesBank.txt
+					echo GameEngineCode      = !ENGINE!		>> ..\Realase\StagesBank.txt
+					echo FinDeTransmision    = !FDT!		>> ..\Realase\StagesBank.txt
+
+					echo.		>> ..\Realase\StagesBank.txt
+
+					set /a D1=!SLOTS!-!OFFSET!
+					echo Rutinas de Servicio !D1!		>> ..\Realase\StagesBank.txt
+
+					set /a D2=!ENGINE!-!SLOTS!
+					echo Datos del juego !D2!		>> ..\Realase\StagesBank.txt
+					
+					set /a D6=!FDT!-!ENGINE!
+					set /a D7=!FDT!-!OFFSET!
+					echo Motor !D6!		>> ..\Realase\StagesBank.txt
+					echo.		>> ..\Realase\StagesBank.txt
+					echo Direccion Final de programa !FDT!		>> ..\Realase\StagesBank.txt
+					echo Total en memoria base !D7!		>> ..\Realase\StagesBank.txt
+
+				)
+			)
+
 	for /f "tokens=8" %%e in (..\Realase\%1.txt.asm) do (
 		if "%%e"=="16bit" (
 			echo+
@@ -642,7 +689,6 @@ rem inspeccionar error en Assembler: VERSION 2
 		)
 
 	Rem Peso del Game
-		rem pause
 		..\tools\Pasmo.exe --bin %1.asm Metro_%1.bin
 		for %%a in ( "Metro_%1.bin" ) do (
 		rem echo Size of the Engine %%~za
@@ -675,8 +721,9 @@ rem montaje
 		)
 	) else (
 		if %LevelEnabled% == 1 (
-			rem copy /b loader.tap + SCB.tap + MUD.tap + DAT.tap + AG.tap %gamename%128.tap		>nul
-			copy /b loader.tap + SCB.tap + MUD.tap + DAT.tap + ZERO.tap + AG.tap %gamename%128.tap		>nul
+			rem MODESQUEMA activar opciones de montaje aqui para 2027
+				copy /b loader.tap + SCB.tap + MUD.tap + DAT.tap + ZERO.tap + AG.tap %gamename%128.tap		>nul
+			REM copy /b loader.tap + SCB.tap + MUD.tap + DAT.tap + AG.tap %gamename%128.tap		>nul
 		) else (
 			copy /b loader.tap + SCB.tap + MUD.tap + AG.tap %gamename%128.tap		>nul
 		)
@@ -698,7 +745,7 @@ rem Start emulator
 rem limpieza en Meiga
 	del ..\..\user.asm
 rem limpieza en assembly
-	del /q *.*
+	rem del /q *.*
 rem limpieza en SuiteZX
 	if exist ..\Unplugged.asm del ..\Unplugged.asm >nul
 	if exist ..\Enviroment.bat del ..\Enviroment.bat >nul
@@ -720,7 +767,21 @@ rem limpieza en SuiteZX
 	..\SjasmPlus\sjasmplus.exe %1.asm --lst=list.txt
 	move list.txt ..\Realase\%1.txt.asm		>nul
 	GOTO:EOF
-	
+
+:CapturaEtiqueta
+	for /f "tokens=3" %%A in ('findstr /i /b "%1:" Symbol_Eve_all.asm') do (
+		set /a ValorEtiqueta=%%A
+	)
+	GOTO:EOF
+				
+:printSymbolGeneral
+	copy %1.asm ..\sjasmplus\		>nul
+	copy ..\..\user.asm ..\sjasmplus\		>nul
+	if exist ..\..\UserRoutines\*.asm copy ..\..\UserRoutines\*.asm ..\sjasmplus\		>nul
+	rem secciona Symbol_Eve.asm para eliminar symbolos antes de Start pointer. En orden --lstlab=sort 
+	..\SjasmPlus\sjasmplus.exe %1.asm --sym=Symbol_Eve_all.asm
+	GOTO:EOF
+
 :printSymbol
 	copy %1.asm ..\sjasmplus\		>nul
 	copy ..\..\user.asm ..\sjasmplus\		>nul
@@ -853,21 +914,6 @@ REM : cortado5
 		copy Symbol_Eve_48k.asm ..\Realase\last_Symbol_Eve_48k.asm
 		if exist Symbol_Eve_D*.asm del Symbol_Eve_D*.asm
 		if exist Symbol_Eve_En*.asm del Symbol_Eve_En*.asm
-	GOTO:EOF
-	
-:SetLONGPLAYER
-	rem patron para cambiar todas las etiquetas AQUI
-	for %%f in ( "*carrier*.asm" ) do (
-		rem echo cambiar variable en %%~nxf
-		..\tools\fart %%~nxf "LONGPLAYER" "%size128kAYEngine%"		>nul
-				)
-	GOTO:EOF
-	
-:ResetLONGPLAYER
-	for %%f in ( "*carrier*.asm" ) do (
-		rem echo cambio variable en %%~nxf
-		..\tools\fart %%~nxf "LONGPLAYER" "0"		>nul
-				)
 	GOTO:EOF
 
 :checkmemo

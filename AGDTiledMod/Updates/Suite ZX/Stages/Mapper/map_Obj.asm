@@ -12,7 +12,7 @@ UpdeteObjetsRooms
 				; ld bc,0				; si. No ajustes valores
 			ENDIF
 			
-UpdateLevelBankformatObjects			
+UpdateLevelBankformatObjects					
 	; Objects
 		; Variables
 			; NUMOBJ
@@ -27,6 +27,5 @@ UpdateLevelBankformatObjects
 				ld (shwob+1),hl
 				ld (findob+1),hl
 				ld (skobj+1),hl
-				
 				ret
 			

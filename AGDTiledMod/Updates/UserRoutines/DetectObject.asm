@@ -1,3 +1,4 @@
+; PROTOTIPO
 ; DETECTOBJ rutine especialista
 ; Obtiene en el acumulador el objeto, o bien, 255 si no hay nada
 ; ademas recoge en la variable A la coordenada x del objeto

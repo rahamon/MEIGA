@@ -26,13 +26,14 @@ AY 			equ $
 AYFX 		equ $
 playSelected	equ $
 
-;
-bankP	equ $				;echo
-ConectA	equ $			;echo
-VIDEOToRAM7	equ $		;echo
-bank0	equ $				;echo
-resetecho	equ $			;echo
-waitIRQ	equ $			;echo
+; Mas desde 
+FlipBuffers			equ $
+PrepareVideoWrite   equ $
+PrepareVideoWrite   equ $
+PrepareSpriteRead   equ $
+PrepareSpriteRead   equ $
+FinishVideoWrite	equ $
+FinishVideoWrite    equ $
 
 ; lo que vamos a medir
 		include "CommonData.asm"

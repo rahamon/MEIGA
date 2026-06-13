@@ -2,9 +2,13 @@
 ; Ahorro de 1188 bytes EngineZX
 
 ; Bancos
-;----0----,----1*---,----2----,----3*---,----4----,----5----,----6*---,----7----,
-; sistema ,Levelbank, sistema ,ZERObank ,musica FX,   ---   , screens ,RoomBank ,
-; sistema ,Levelbank, sistema ,ZERObank ,musica FX,ULAbuffer, RoomBank,shadowSCR,
+; Experimental
+MEMOSCHEMA		equ 0
+CASSETTEMODEL	equ 0
+;----0----,----1----,----2!---,----3----,----4----,----5----,----6!---,----7----,
+; sistema ,Levelbank, sistema ,ZERObank ,musica FX,   ---   , screens ,RoomBank ,	MODO BASICO, Sin shadowSCR
+; sistema ,Levelbank, sistema ,ZERObank ,musica FX,ULAbuffer, RoomBank,shadowSCR,	MODO shadowSCR A, No usar RAMscreens
+; sistema ,Levelbank, ZERObank, RoomBank,musica FX,ULAbuffer, BlockBank,shadowSCR,	MODO shadowSCR B, No usar ZERObank, tampoco RAMscreens
 
 ; Variables CONTENEDORES
 SOUNDFX			equ 0		; 162 bytes

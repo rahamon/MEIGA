@@ -4,10 +4,11 @@
 ; let A = n
 ; Call UserMod + 3
 ;
-STAGES	equ 49152
-Levelbank	equ 1
-RoomBank	equ 7
-ZERObank	equ 3
+STAGES		equ 49152
+Levelbank	equ 7
+ZERObank	equ 2
+RoomBank	equ 1
+BlockBank	equ 3		; MODO shadowSCR A
 
 			;call InitZEROBank
 ;AGD Stagesselector.asm
@@ -40,7 +41,7 @@ FixScreen
 			; TEST
 			;ld hl,roomtb
 			;ld a,(hl)
-			ld (varn),a
+			;ld (varn),a
 			;call droom
 			
 			ret
@@ -72,7 +73,9 @@ FixStartPos
 			
 NewStage		
 			ld (lastStage),a			; last selected screen is this now.
-
+		; resetea para Levelbank por defecto
+			ld a,Levelbank
+			ld (Lbank),a
 			;call FixScreen
 			
 			ld a,(vara)
@@ -185,17 +188,16 @@ setupEve
 
 SetupStagedata
 		ld a,(Lbank)
-		cp ZERObank
-		jp z,ldZero			; Carga Livel ZERO	
-		call UnzipB			; Carga Levels
-		ld a,Levelbank		; apuntando a levels
+		;cp ZERObank
+		;jp z,ldZero
+		call UnzipB	
+		ld a,Levelbank		; resetea para Levelbank por defecto
 swLevel	ld (Lbank),a
 		ret		
-ldZero	call UnzipB
-		ld a,ZERObank		; continuando a Level ZERO
-		jr swLevel
-
-		
+ldZero	;call UnzipB
+		;ld a,ZERObank		; continuando en Level ZERO para Pointers
+		;jr swLevel
+	
 updatepointers
 		; imitar patron 48k	
 		;call StageUpdate

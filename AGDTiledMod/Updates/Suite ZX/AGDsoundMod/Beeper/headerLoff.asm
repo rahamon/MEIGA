@@ -18,3 +18,6 @@ TAPEMODE	equ 0
 	IF MASKAGD = 1
 			include "DobleBuffer_auxiliares.asm"
 	ENDIF
+
+
+FinDeCabecera	equ $

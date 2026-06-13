@@ -20,7 +20,7 @@ uplaymusic
 		ld (ctrN),a			; guardamos control en ctrN
 	; DELAY 1
 		push ix
-		ld b,1
+		ld b,2
 		call delay
 		pop ix
 	; SALIR

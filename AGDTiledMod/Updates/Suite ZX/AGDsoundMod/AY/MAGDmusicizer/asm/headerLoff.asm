@@ -28,7 +28,11 @@ UserScrRoutines
 	   
 ; MASKAGD RUTINAS
 	IF MASKAGD = 1
+		IF INFRONT = 1
+			include "SistemaSpritesAgd_bucle_estable_infront.asm"
+		ELSE
 			include "SistemaSpritesAgd_bucle_estable.asm"
+		ENDIF
 	ENDIF
 
 	IF MASKAGD = 1
@@ -123,3 +127,6 @@ evtyp6 defw evnt06
 evtyp7 defw evnt07
 evtyp8 defw evnt08
 	ENDIF
+
+FinDeCabecera	equ $
+

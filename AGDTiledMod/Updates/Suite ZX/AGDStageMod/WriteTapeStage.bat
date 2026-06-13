@@ -1,6 +1,7 @@
 @echo off
 rem Escribe ensamblado de Escenarios
-set "orgsize=24832 + 9"
+
+set "orgsize=24832"
 set /a slotsize=0
 
 rem Primero compila TODAS las secciones de este juego, localizadas en Bank para hacer mediciones de binarios
@@ -33,7 +34,10 @@ rem Primero compila TODAS las secciones de este juego, localizadas en Bank para 
 		)
 	)
 	echo ok
-	
+
+rem Captura direccion SlotsDataCode
+
+
 :writeTapeStage
 	set Stage=%1
 	rem Mide y Edita Carrier Slots
@@ -107,7 +111,7 @@ rem nueva pagina
 rem head Tap
 	echo ;Stage %Stage% bin Code to be loaded from cinta	>> Tap%Stage%%Taps%.asm
     echo+                                                   >> Tap%Stage%%Taps%.asm
-	echo 		org ( 24832 + 0 + 9 )						>> Tap%Stage%%Taps%.asm
+	echo 		org ( 24832 + 0 )							>> Tap%Stage%%Taps%.asm
     echo+                                                   >> Tap%Stage%%Taps%.asm	
 	echo ; ZEROStageData                                    >> Tap%Stage%%Taps%.asm
 	echo SlotsDataCode	equ $                               >> Tap%Stage%%Taps%.asm

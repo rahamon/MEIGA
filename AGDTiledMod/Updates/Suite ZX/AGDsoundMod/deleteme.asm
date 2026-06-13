@@ -5,303 +5,18 @@
 
 
 
-WINDOWTOP equ 1
-WINDOWLFT equ 1
-WINDOWHGT equ 22
-WINDOWWID equ 22 ;
-MAPWID equ 3
-       defb 255,255,255
+WINDOWTOP equ 0
+WINDOWLFT equ 0
+WINDOWHGT equ 24
+WINDOWWID equ 32 ;
+MAPWID equ 4
+       defb 255,255,255,255
 mapdat equ $
-       defb 255,0,255
-       defb 255,255,255
+       defb 255,0,1,255
+       defb 255,255,255,255
 stmap  defb 1
 evnt00 equ $
-       ld a,7
-       and 7
-       ld c,a
-       call cspr
-       ld a,62
-       cp (ix+8)
-       jp c,a00035
-       jp z,a00035
-a00035 ld a,(ix+10)
-       ld (varm),a
-       ld a,(varm)
-       add a,a
-       add a,a
-       ld (varm),a
-       ld a,(varm)
-       rra
-       rra
-       and 63
-       ld (varm),a
-       ld a,(ix+10)
-       rlca
-       rlca
-       and 3
-       ld (ix+10),a
-       ld a,1
-       ld hl,varn
-       cp (hl)
-       jp nz,a00175
-       ld c,8
-       ld a,(ix+8)
-       sub c
-       ld (ix+8),a
-       ld bc,772
-       call spawn
-       ld c,8
-       ld a,(ix+8)
-       add a,c
-       ld (ix+8),a
-       ld a,2
-       ld (varn),a
-       ld a,250
-       ld (ix+12),a
-a00175 ld a,25
-       cp (ix+12)
-       jp c,a00257
-       ld a,25
-       cp (ix+12)
-       jp nz,a00219
-       ld hl,fx1
-       ld de,4305
-       add hl,de
-       call isnd
-a00219 ld c,2
-       ld a,(ix+12)
-       sub c
-       ld (ix+12),a
-       ld a,2
-       cp (ix+12)
-       jp c,a00257
-       ld a,250
-       ld (ix+12),a
-a00257 ld a,25
-       cp (ix+12)
-       jp nc,a00610
-       xor a
-       cp (ix+13)
-       jp nz,a00610
-       ld a,(joyval)
-       and 2
-       jp z,a00333
-       xor a
-       ld (ix+6),a
-       xor a
-       ld (ix+10),a
-       xor a
-       call animsp
-       xor a
-       ld (varm),a
-       jp a00429
-a00333 ld a,(joyval)
-       and 1
-       jp z,a00383
-       ld a,1
-       ld (ix+6),a
-       ld a,1
-       ld (ix+10),a
-       xor a
-       call animsp
-       ld a,1
-       ld (varm),a
-       jp a00429
-a00383 ld a,2
-       ld (ix+6),a
-       xor a
-       ld (ix+7),a
-       ld a,1
-       cp (ix+10)
-       jp nz,a00421
-       ld a,1
-       ld (ix+7),a
-a00421 ld a,8
-       ld (varm),a
-a00429 xor a
-       ld (vara),a
-       ld a,(joyval)
-       and 4
-       jp z,a00496
-       ld a,6
-       ld (ix+6),a
-       xor a
-       ld (ix+7),a
-       ld a,1
-       cp (ix+10)
-       jp nz,a00488
-       ld a,1
-       ld (ix+7),a
-a00488 ld a,20
-       ld (vara),a
-a00496 ld a,(joyval)
-       and 8
-       jp z,a00588
-       ld a,5
-       ld (ix+6),a
-       ld a,8
-       ld hl,varm
-       cp (hl)
-       jp nz,a00543
-       ld a,2
-       ld (ix+6),a
-a00543 xor a
-       ld (ix+7),a
-       ld a,1
-       cp (ix+10)
-       jp nz,a00572
-       ld a,1
-       ld (ix+7),a
-a00572 ld a,7
-       call jump
-       ld a,10
-       ld (vara),a
-a00588 ld a,(vara)
-       ld c,a
-       ld a,(varm)
-       add a,c
-       ld (varm),a
-a00610 ld a,(joyval)
-       and 16
-       jp z,a00639
-       ld a,2
-       ld (vara),a
-       call 24835
        ret
-a00639 ld a,(joyval)
-       and 32
-       jp z,a00682
-       xor a
-       ld (varn),a
-       call cls
-       ld a,5
-       ld (vara),a
-       call 24835
-       call redraw
-a00682 ld a,20
-       ld hl,varm
-       cp (hl)
-       jp c,a00962
-       jp z,a00962
-       ld a,8
-       ld hl,varm
-       cp (hl)
-       jp z,a00962
-       ld a,18
-       ld hl,varm
-       cp (hl)
-       jp z,a00962
-       xor a
-       cp (ix+10)
-       jp nz,a00849
-       ld a,(wnlftx)
-       cp (ix+9)
-       jp c,a00827
-       call scrl
-       ld a,(wnrgtx)
-       ld (ix+9),a
-       ld a,(ix+10)
-       rrca
-       rrca
-       and 192
-       ld (ix+10),a
-       ld a,(varm)
-       ld c,a
-       ld a,(ix+10)
-       add a,c
-       ld (ix+10),a
-       ret
-       jp a00845
-a00827 call cangl
-       jp nz,a00845
-       dec (ix+9)
-       dec (ix+9)
-a00845 jp a00962
-a00849 ld a,1
-       cp (ix+10)
-       jp nz,a00962
-       ld a,(wnrgtx)
-       cp (ix+9)
-       jr z,$+5
-       jp nc,a00944
-       call scrr
-       ld a,(wnlftx)
-       ld (ix+9),a
-       ld a,(ix+10)
-       rrca
-       rrca
-       and 192
-       ld (ix+10),a
-       ld a,(varm)
-       ld c,a
-       ld a,(ix+10)
-       add a,c
-       ld (ix+10),a
-       ret
-       jp a00962
-a00944 call cangr
-       jp nz,a00962
-       inc (ix+9)
-       inc (ix+9)
-a00962 ld a,(ix+14)
-       ld (vara),a
-       ld a,128
-       ld hl,vara
-       cp (hl)
-       jp c,a01024
-       jp z,a01024
-       ld a,12
-       ld hl,vara
-       cp (hl)
-       jr z,$+5
-       jp nc,a01024
-       ld a,255
-       ld (ix+12),a
-a01024 call cangd
-       jp nz,a01067
-       ld a,10
-       ld hl,varm
-       cp (hl)
-       jp c,a01063
-       jp z,a01063
-       ld a,6
-       ld (varm),a
-a01063 jp a01123
-a01067 ld a,255
-       cp (ix+12)
-       jp nz,a01123
-       ld a,25
-       ld (ix+12),a
-       ld a,2
-       ld (ix+6),a
-       ld a,2
-       call jump
-       ld a,16
-       ld (varm),a
-       ld a,100
-       ld (varh),a
-a01123 call ifall
-       ld a,(ix+9)
-       ld (varv),a
-       ld a,(ix+8)
-       ld (varw),a
-       ld hl,2560
-       ld (charx),hl
-       ld a,(varm)
-       ld bc,displ0
-       call num2dd
-       call displ1
-       ld a,(ix+10)
-       rrca
-       rrca
-       and 192
-       ld (ix+10),a
-       ld a,(varm)
-       ld c,a
-       ld a,(ix+10)
-       add a,c
-       ld (ix+10),a
-       jp grav
 evnt01 equ $
        ret
 evnt02 equ $
@@ -319,287 +34,47 @@ evnt07 equ $
 evnt08 equ $
        ret
 evnt09 equ $
-       xor a
-       cp (ix+5)
-       jp nz,j00024
-       ld a,8
-       ld (ix+11),a
-j00024 ld a,4
-       cp (ix+5)
-       jp nz,j00045
-       ld a,9
-       ld (ix+11),a
-j00045 ret
+       ret
 evnt10 equ $
-       ld a,23
-       ld (vara),a
-       ld a,(varh)
-       ld (varb),a
-       ld a,(varb)
-       ld d,a
-       ld a,20
-       ld e,a
-       call idiv
-       ld a,d
-       ld (varb),a
-       ld a,(vara)
-       ld c,a
-       ld a,(varb)
-       add a,c
-       ld (varb),a
-k00070 ld a,(varb)
-       ld hl,vara
-       cp (hl)
-       jp c,k00162
-       ld l,21
-       ld a,(vara)
-       ld h,a
-       ld (charx),hl
-       ld hl,chgfx
-       ld (grbase),hl
-       ld hl,(charx)
-       ld (dispx),hl
-       ld a,10
-       call pattr
-       ld hl,(dispx)
-       ld (charx),hl
-       ld a,(vara)
-       inc a
-       ld (vara),a
-       jp k00070
-k00162 ld l,21
-       ld a,(vara)
-       ld h,a
-       ld (charx),hl
-       ld hl,chgfx
-       ld (grbase),hl
-       ld hl,(charx)
-       ld (dispx),hl
-       xor a
-       call pattr
-       ld hl,(dispx)
-       ld (charx),hl
        ret
 evnt11 equ $
-       ld a,255
-       ld (ix+5),a
-       ld a,8
-       ld (vara),a
-       ld a,11
-       ld (varopt),a
-       xor a
-       call user
-       ld a,255
-       ld hl,vara
-       cp (hl)
-       jp z,l00269
-       ld ix,(skptr)
-       ld a,(ix+9)
-       ld (varv),a
-       ld a,(ix+8)
-       ld (varw),a
-       ld a,(ix+10)
-       ld (varc),a
-       ld a,(varc)
-       add a,a
-       add a,a
-       ld (varc),a
-       ld a,(varc)
-       rra
-       rra
-       and 63
-       ld (varc),a
-       ld a,(ix+10)
-       ld (vara),a
-       ld a,(vara)
-       rlca
-       rlca
-       and 3
-       ld (vara),a
-       ld a,(vara)
-       ld (vard),a
-       ld ix,(ogptr)
-       xor a
-       ld (ix+5),a
-       ld a,9
-       ld (vara),a
-       ld a,11
-       ld (varopt),a
-       xor a
-       call user
-       ld ix,(skptr)
-       ld hl,3845
-       ld (charx),hl
-       ld a,(varrnd)
-       ld bc,displ0
-       call num2td
-       call displ1
-       ld a,(varv)
-       ld (ix+9),a
-       ld a,(varw)
-       ld (ix+8),a
-       ld c,10
-       ld a,(ix+8)
-       sub c
-       ld (ix+8),a
-l00269 ld a,10
-       ld hl,varc
-       cp (hl)
-       jp c,l00365
-       jp z,l00365
-       ld a,3
-       ld (ix+6),a
-       ld a,1
-       ld hl,vard
-       cp (hl)
-       jp nz,l00324
-       ld a,4
-       ld (ix+6),a
-l00324 ld a,3
-       ld hl,varc
-       cp (hl)
-       jp nc,l00353
-       ld a,1
-       ld (ix+7),a
-       jp l00361
-l00353 xor a
-       call animsp
-l00361 jp l00516
-l00365 ld a,20
-       ld hl,varc
-       cp (hl)
-       jp c,l00433
-       jp z,l00433
-       ld a,3
-       ld (ix+6),a
-       ld a,1
-       ld hl,vard
-       cp (hl)
-       jp nz,l00420
-       ld a,4
-       ld (ix+6),a
-l00420 ld a,1
-       ld (ix+7),a
-       jp l00516
-l00433 ld a,30
-       ld hl,varc
-       cp (hl)
-       jp c,l00516
-       jp z,l00516
-       ld c,4
-       ld a,(ix+8)
-       add a,c
-       ld (ix+8),a
-       ld a,3
-       ld (ix+6),a
-       ld a,1
-       ld hl,vard
-       cp (hl)
-       jp nz,l00504
-       ld a,4
-       ld (ix+6),a
-l00504 xor a
-       ld (ix+7),a
-       jp l00516
-l00516 ld ix,(ogptr)
        ret
 evnt12 equ $
-       ld a,255
-       ld hl,varn
-       cp (hl)
-       jp nz,m00054
-       ld hl,2570
-       ld (charx),hl
-       xor a
-       call dmsg
-       call prskey
-       xor a
-       ld (varn),a
-       jp m00077
-m00054 ld hl,2570
-       ld (charx),hl
-       ld a,1
-       call dmsg
-       call prskey
-m00077 ret
+       ret
 evnt13 equ $
-       ld a,100
-       ld (varh),a
-       ld a,1
-       ld (varrnd),a
-       ld a,100
-       call user
+       ld a,3
+       ld (numlif),a
+       ld hl,6406
+       ld (charx),hl
+       ld a,(numlif)
+       call disply
+       ld hl,6402
+       ld (charx),hl
+       ld hl,score
+       ld b,6
+       call dscor
+       ld hl,6410
+       ld (charx),hl
+       ld hl,hiscor
+       ld b,6
+       call dscor
        ret
 evnt14 equ $
-       call cls
-       ld a,4
-       call user
-       xor a
-       ld (vart),a
-       ld a,25
-       ld (vark),a
-       ld a,1
-       ld (varn),a
-       xor a
-       ld (vare),a
-       xor a
-       ld (varp),a
-       xor a
-       ld (vara),a
-       ld a,(varh)
-       ld (varb),a
-       ld a,(varb)
-       ld d,a
-       ld a,10
-       ld e,a
-       call idiv
-       ld a,d
-       ld (varb),a
-o00101 ld a,(varb)
-       ld hl,vara
-       cp (hl)
-       jp c,o00197
-       jp z,o00197
-       ld l,19
-       ld a,(vara)
-       ld h,a
-       ld (charx),hl
-       ld hl,chgfx
-       ld (grbase),hl
-       ld hl,(charx)
-       ld (dispx),hl
-       ld a,13
-       call pattr
-       ld hl,(dispx)
-       ld (charx),hl
-       ld a,(vara)
-       inc a
-       ld (vara),a
-       jp o00101
-o00197 ld l,19
-       ld a,(vara)
-       ld h,a
-       ld (charx),hl
-       ld hl,chgfx
-       ld (grbase),hl
-       ld hl,(charx)
-       ld (dispx),hl
-       xor a
-       call pattr
-       ld hl,(dispx)
-       ld (charx),hl
        ret
 evnt15 equ $
        ret
 evnt16 equ $
+       ld a,(numlif)
+       dec a
+       ld (numlif),a
+       ld hl,6406
+       ld (charx),hl
+       ld a,(numlif)
+       call disply
        ret
 evnt17 equ $
        ret
 evnt18 equ $
-       ld a,2
-       ld (vara),a
-       call 24835
-       ret
        ret
 evnt19 equ $
        ret
@@ -607,127 +82,364 @@ evnt20 equ $
        ret
 ptcusr ret
 msgdat equ $
-       defb 'ZERO STAG',197
-       defb 'STAGE ON',197
-nummsg defb 2
+nummsg defb 0
 scdat  equ $
-       defw 138
-       defb 255,0,80,7,5,7,255,0,5,5,7,7,7,5,5,255,0,5,4,1,2,0,0,6,255,0,5,6,8,0,6,0,8
-       defb 4,1,2,255,0,53,7,9,7,7,0,0,0,1,4,4,2,1,4,4,1,255,0,7,6,8,0,6,255,0,6,3,255,0,43
-       defb 4,4,2,255,0,6,1,4,4,2,255,0,11,3,255,0,9,3,255,0,28,1,4,255,0,65,4,2,4,1,2,255,0,21
-       defb 3,255,0,26,1,4,2,255,0,21,3,255,0,6,9,9,7,7,5,7,5,7,7,9,7,7,7,5,7,7,7,9,7
-       defb 9,9,7
-numsc  defb 1
+       defw 198,198
+       defb 109,1,2,3,3,255,0,22,2,2,3,5,15,7,255,0,30,8,9,255,0,30,9,12,255,0,30,12,9,255,0,30,9
+       defb 12,255,0,30,12,255,0,31,9,255,0,31,12,255,0,31,9,255,0,31,12,255,0,0,255,0,32,2,3,2,3,2,3
+       defb 2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,2,3,0,0,0,48,49,0,76
+       defb 77,78,0,0,79,80,76,0,0,81,255,0,8,76,82,83,84,85,86,87,0,0,56,57,58,59,76,88,89,0,0,62,63
+       defb 76,0,0,90,255,0,8,76,91,92,93,94,95,96,0,0,65,0,0,0,76,66,67,0,0,68,69,76,0,0,81,255,0,8
+       defb 76,97,98,99,100,101,102,255,0,5,70,76,71,72,0,0,73,74,76,0,0,90,255,0,8,76,103,104,105,106,107,108
+       defb 109,1,10,46,11,255,0,22,10,10,11,5,15,7,255,0,30,8,22,255,0,30,22,26,255,0,30,26,22,255,0,30,22
+       defb 26,255,0,30,26,255,0,31,22,255,0,31,26,255,0,31,22,255,0,31,26,255,0,0,255,0,32,46,47,46,47,46,47
+       defb 46,47,46,47,46,47,46,47,46,47,46,47,46,47,46,47,46,47,46,47,46,47,46,47,46,47,0,0,0,48,49,0,50
+       defb 51,52,0,0,53,54,50,0,0,55,255,0,8,50,82,83,84,85,86,87,0,0,56,57,58,59,50,60,61,0,0,62,63
+       defb 50,0,0,64,255,0,8,50,91,92,93,94,95,96,0,0,65,0,0,0,50,66,67,0,0,68,69,50,0,0,55,255,0,8
+       defb 50,97,98,99,100,101,102,255,0,5,70,50,71,72,0,0,73,74,50,0,0,64,255,0,8,50,103,104,105,106,107,108
+numsc  defb 2
 chgfx  equ $
        defb 0,0,0,0,0,0,0,0
-       defb 0,255,130,68,32,112,112,32
-       defb 3,254,48,32,22,47,38,64
-       defb 48,88,120,48,0,0,0,0
-       defb 0,255,12,0,0,0,0,0
-       defb 0,4,36,38,46,118,254,95
-       defb 0,128,241,241,243,251,251,255
-       defb 0,0,0,0,0,0,52,255
-       defb 0,133,231,255,255,255,255,255
-       defb 0,0,0,0,0,0,64,255
-       defb 0,28,62,190,221,107,20,0
+       defb 0,56,124,127,85,40,18,160
+       defb 0,0,127,254,85,42,0,0
+       defb 0,0,126,255,85,170,0,0
+       defb 0,0,0,0,0,0,0,0
+       defb 0,28,62,254,170,20,72,5
+       defb 5,98,149,136,156,174,118,60
+       defb 1,28,47,94,44,88,42,24
+       defb 127,231,83,161,209,225,179,231
+       defb 8,28,44,28,44,28,44,20
+       defb 0,0,127,254,85,42,0,0
+       defb 0,0,126,255,85,170,0,0
+       defb 40,28,44,28,44,28,44,24
+       defb 0,0,126,255,213,42,0,0
+       defb 0,0,126,127,85,170,0,0
+       defb 5,98,245,184,212,226,66,60
+       defb 0,7,24,35,47,76,88,88
+       defb 0,255,0,255,255,0,0,0
+       defb 0,85,0,85,85,0,0,0
+       defb 0,170,0,170,170,0,0,0
+       defb 0,224,24,196,244,50,26,26
+       defb 127,199,11,133,203,229,171,231
+       defb 8,28,44,28,44,28,44,20
+       defb 24,28,44,28,44,28,44,24
+       defb 88,88,88,88,88,88,88,88
+       defb 26,26,26,26,26,26,26,26
+       defb 40,28,44,28,44,28,44,24
+       defb 32,28,44,28,44,28,44,24
+       defb 0,88,0,88,0,88,0,88
+       defb 0,26,0,26,0,26,0,26
+       defb 24,44,28,44,28,44,28,32
+       defb 88,0,88,0,88,0,88,0
+       defb 26,0,26,0,26,0,26,0
+       defb 24,44,28,44,28,44,28,24
+       defb 24,50,120,116,122,53,24,1
+       defb 88,88,76,47,35,24,7,0
+       defb 0,0,0,255,255,0,255,0
+       defb 0,0,0,85,85,0,85,0
+       defb 0,0,0,170,170,0,170,0
+       defb 26,26,50,244,196,24,224,0
+       defb 24,76,30,46,94,172,24,128
+       defb 60,110,117,57,145,169,70,160
+       defb 95,237,215,170,128,131,199,255
+       defb 0,0,126,255,85,42,0,0
+       defb 5,72,20,170,254,62,28,0
+       defb 60,118,174,156,137,149,98,5
+       defb 0,0,126,255,85,42,0,0
+       defb 0,0,127,254,85,170,0,0
+       defb 0,0,0,114,181,98,181,96
+       defb 0,0,88,184,62,192,40,254
+       defb 0,24,24,0,0,24,24,0
+       defb 7,31,55,111,95,94,92,92
+       defb 31,7,3,5,3,133,195,197
+       defb 0,0,52,122,124,94,110,60
+       defb 0,0,26,61,190,175,55,30
+       defb 0,0,0,32,48,56,108,70
+       defb 96,16,0,4,12,28,54,98
+       defb 76,156,78,143,254,244,231,196
+       defb 1,39,15,254,31,14,229,6
+       defb 0,128,0,0,192,192,192,192
+       defb 92,92,92,124,0,124,124,0
+       defb 60,58,60,58,0,58,58,0
+       defb 1,1,0,1,0,2,5,2
+       defb 127,127,255,255,167,71,193,63
+       defb 70,108,56,48,32,0,0,0
+       defb 98,54,28,12,4,0,16,96
+       defb 68,74,41,16,0,192,153,43
+       defb 2,36,84,136,0,40,148,168
+       defb 5,0,3,3,1,0,107,98
+       defb 40,254,254,248,240,0,192,224
+       defb 0,66,228,108,24,52,110,140
+       defb 59,59,50,195,193,152,24,0
+       defb 43,45,19,49,17,55,55,255
+       defb 1,4,6,0,0,111,0,0
+       defb 31,231,225,255,255,1,255,255
+       defb 0,0,127,254,85,170,0,0
+       defb 0,24,24,0,0,24,24,0
+       defb 7,31,55,111,95,94,92,92
+       defb 31,7,3,5,3,133,195,197
+       defb 0,0,52,122,124,94,110,60
+       defb 0,0,26,61,190,175,55,30
+       defb 0,0,0,32,48,56,108,70
+       defb 0,0,0,254,168,0,240,208
+       defb 60,254,231,219,219,231,126,60
+       defb 0,0,0,0,0,0,1,2
+       defb 0,7,8,4,15,112,143,122
+       defb 112,143,120,142,193,56,198,121
+       defb 0,56,196,2,194,100,24,0
+       defb 92,92,92,124,0,124,124,0
+       defb 60,58,60,58,0,58,58,0
+       defb 70,108,56,48,32,0,0,0
+       defb 56,84,130,214,214,130,84,56
+       defb 0,0,128,189,63,128,11,3
+       defb 5,11,23,23,47,45,47,95
+       defb 4,5,69,0,0,0,0,0
+       defb 126,255,119,255,255,254,223,191
+       defb 127,191,95,95,47,47,47,23
+       defb 1,2,2,254,166,2,2,1
+       defb 60,126,195,91,91,195,126,60
+       defb 83,83,91,83,95,47,45,47
+       defb 0,3,3,0,0,0,0,0
+       defb 127,255,255,63,207,243,253,255
+       defb 42,172,174,42,200,144,144,16
+       defb 28,32,174,177,157,117,4,56
+       defb 0,96,64,255,250,64,101,1
+       defb 23,23,11,5,2,1,0,0
+       defb 0,67,2,3,131,112,143,240
+       defb 1,11,7,15,62,249,199,63
+       defb 32,32,64,128,0,0,0,0
+       defb 95,185,80,226,212,184,189,195
 bcol   equ $
        defb 7
-       defb 4
-       defb 4
+       defb 7
        defb 2
-       defb 4
+       defb 2
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 56
+       defb 2
+       defb 7
+       defb 7
+       defb 2
+       defb 2
+       defb 2
+       defb 7
+       defb 2
+       defb 2
+       defb 2
+       defb 2
+       defb 2
+       defb 56
+       defb 7
+       defb 2
+       defb 2
+       defb 2
+       defb 7
+       defb 2
+       defb 2
+       defb 2
+       defb 2
+       defb 2
+       defb 2
+       defb 2
+       defb 7
+       defb 2
+       defb 2
+       defb 2
+       defb 2
+       defb 2
+       defb 7
+       defb 7
+       defb 56
+       defb 2
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 56
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 56
+       defb 56
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 56
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 7
+       defb 56
+       defb 7
+       defb 56
+       defb 2
+       defb 2
+       defb 2
+       defb 16
        defb 5
-       defb 40
-       defb 71
-       defb 120
-       defb 71
-       defb 4
+       defb 5
+       defb 2
+       defb 1
+       defb 1
+       defb 1
+       defb 1
+       defb 1
+       defb 1
+       defb 5
+       defb 5
+       defb 2
+       defb 1
+       defb 1
+       defb 1
+       defb 8
+       defb 1
+       defb 8
+       defb 1
+       defb 1
+       defb 1
+       defb 8
+       defb 1
+       defb 1
+       defb 1
+       defb 1
+       defb 1
+       defb 8
+       defb 8
+       defb 1
+       defb 56
 bprop  equ $
        defb 0
-       defb 1
-       defb 1
-       defb 7
-       defb 1
-       defb 7
-       defb 7
        defb 0
-       defb 1
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
+       defb 0
        defb 0
        defb 0
 sprgfx equ $
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,16,24,24,24,24,208,8,240,6,96,30,0,28
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,4,6,6,6,6,52,2,188,1,152,7,0,7
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,129,129,129,129,129,141,0,111,0,230,1,192,1
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,64,32,96,96,96,96,35,64,27,192,121,128,112,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,3,0,3,128,0,96,2,96,2,192,30,192,30,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,64,0,192,0,224,0,24,0,152,0,176,7,176,7,128
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,80,0,48,0,56,0,6,0,38,0,44,1,236,1,224
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,20,0,12,0,14,128,1,128,9,0,11,0,123,0,120
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,3,64,35,32,116,24,56,24,24,112,0,96
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,64,0,208,8,200,29,6,14,6,6,28,0,24
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,52,2,50,135,65,131,129,1,135,0,6
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,13,128,140,97,208,96,224,192,97,128,1
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,16,24,24,24,24,16,8,96,7,96,6,48,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,4,6,6,6,6,4,2,216,1,152,1,12,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,129,129,129,129,129,129,0,118,0,102,0,3,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,64,32,96,96,96,96,32,64,29,128,25,128,0,192
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,160,0,192,1,192,6,0,6,64,2,64,1,96,0,120
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,40,0,48,0,112,1,128,1,144,0,144,0,88,0,30
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,12,0,28,0,96,0,100,0,36,0,22,128,7
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,128,2,0,3,0,7,0,24,0,25,0,9,128,5,224,1
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,128,2,192,4,192,24,34,24,28,8,24,4,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,32,0,176,1,48,134,8,6,7,2,6,1,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,44,0,76,33,130,193,129,128,129,0,64
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,11,0,19,136,96,112,96,96,32,0,16
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,32,48,48,48,48,16,16,16,8,48,12,112,12
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,8,12,12,12,12,4,4,4,2,12,3,28,3
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,130,3,3,3,3,1,1,129,0,195,0,199,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,128,32,192,192,192,192,64,64,32,64,48,192,49,192
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,16,12,12,12,12,8,8,16,8,48,12,48,14
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,4,3,3,3,3,2,2,4,2,12,3,140,3
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,65,192,192,192,192,128,128,129,0,195,0,227,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,64,16,48,48,48,48,32,32,32,64,48,192,56,192
-       defb 0,0,6,192,9,56,62,254,16,28,38,194,34,74,27,84,3,8,48,20,56,44,28,232,29,144,29,112,29,104,30,24
-       defb 0,0,1,176,2,78,143,191,4,7,137,176,136,146,6,213,0,194,12,5,14,11,7,58,7,100,7,92,7,90,7,134
-       defb 0,0,0,108,128,147,227,239,193,1,34,108,162,36,65,181,128,48,67,1,195,130,129,206,1,217,1,215,129,214,129,225
-       defb 0,0,0,27,224,36,248,251,112,64,8,155,40,137,80,109,32,12,80,192,176,224,160,115,64,118,192,117,160,117,96,120
-       defb 0,0,6,192,9,56,62,254,16,28,38,194,34,74,27,84,3,8,48,20,40,44,76,244,93,242,157,250,221,139,222,251
-       defb 0,0,1,176,2,78,143,191,4,7,137,176,136,146,6,213,0,194,12,5,10,11,19,61,151,124,167,126,247,98,247,190
-       defb 0,0,0,108,128,147,227,239,193,1,34,108,162,36,65,181,128,48,67,1,194,130,68,207,37,223,169,223,189,216,189,239
-       defb 0,0,0,27,224,36,248,251,112,64,8,155,40,137,80,109,32,12,80,192,176,160,209,51,201,119,234,119,47,118,239,123
-       defb 0,0,3,96,28,144,127,124,56,8,67,100,82,68,42,216,16,208,40,12,52,28,23,56,9,184,14,184,22,184,24,120
-       defb 0,0,0,216,7,36,31,223,14,2,16,217,20,145,10,182,4,52,10,3,13,7,5,206,2,110,3,174,5,174,6,30
-       defb 0,0,0,54,1,201,199,247,131,128,68,54,69,36,130,173,1,13,194,128,195,65,129,115,128,155,128,235,129,107,129,135
-       defb 0,0,128,13,64,114,241,253,32,224,145,13,17,73,96,171,64,67,48,160,112,208,224,92,224,38,224,58,224,90,224,97
-       defb 0,0,3,96,28,144,127,124,56,8,67,100,82,196,42,216,16,0,40,12,52,20,47,50,79,186,95,185,209,187,223,123
-       defb 0,0,0,216,7,36,31,223,14,2,16,217,20,177,10,182,4,0,10,3,13,5,139,204,147,238,87,238,244,110,247,222
-       defb 0,0,0,54,1,201,199,247,131,128,68,54,69,44,130,173,1,0,194,128,67,65,34,243,164,251,149,251,189,27,189,247
-       defb 0,0,128,13,64,114,241,253,32,224,145,13,17,75,96,171,0,64,48,160,80,208,200,188,233,62,229,126,239,70,239,125
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,128,3,128,204,0,208,240,96,60,0,2,0,6,0,6
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,96,0,224,51,0,52,60,24,15,128,0,128,1,128,1
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,0,56,12,192,13,15,198,3,32,0,96,0,96,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,14,3,48,195,67,241,128,8,0,24,0,24,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,128,1,192,0,51,15,11,60,6,64,0,96,0,96,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,96,0,112,192,12,195,194,143,1,16,0,24,0,24,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,0,28,48,3,176,240,99,192,4,0,6,0,6,0
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,7,204,0,44,60,24,240,1,0,1,128,1,128
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,60,0,55,96,18,192,17,184,49,236,113,140
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0,13,216,4,176,4,110,12,123,28,99
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,192,3,118,1,44,129,27,195,30,199,24
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,240,128,221,0,75,224,70,176,199,49,198
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,60,6,236,3,72,29,136,55,140,49,142
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,1,187,0,210,7,98,13,227,140,99
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,192,3,192,110,128,52,129,216,195,120,227,24
-       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,240,0,176,27,32,13,32,118,48,222,56,198
+       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,128,1,128,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,96,0,96,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,0,24,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+       defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 frmlst equ $
-       defb 0,3
-       defb 3,3
-       defb 6,2
-       defb 8,2
-       defb 10,2
-       defb 12,2
-       defb 14,2,16,0
-nmedat defb 0,1,128,64,255
+       defb 0,1,1,0
+nmedat defb 0,0,112,80,255
+       defb 0,0,112,80,255
 NUMOBJ equ 1
 objdta equ $
        defb 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,255,0,0,255,0,0
@@ -835,7 +547,7 @@ font   equ $
        defb 112,136,32,64,64,32,136,112
 jtab   equ $
        defb 99
-keys   defb 34,26,38,37,16,31,1,36,28,20,12
+keys   defb 35,27,29,28,16,31,1,36,28,20,12
 
 
 ; Game engine code --------------------------------------------------------------
@@ -1265,11 +977,11 @@ debkey call vsync          ; update scrolling, sounds etc.
        inc e               ; is it 255?
        jr nz,debkey        ; no - loop until key is released.
        ret
-
+	
 ; Delay routine.
-
+		
 delay  push bc             ; store loop counter.
-       call vsync          ; wait for interrupt.
+       call vsync         ; wait for interrupt.
        pop bc              ; restore counter.
        djnz delay          ; repeat.
        ret
@@ -2041,7 +1753,6 @@ setsa0 ex de,hl            ; flip table and screen address.
        call setpal         ; set up ULAplus palette.
 rpblc2 call inishr         ; initialise particle engine.
 evintr call evnt12         ; call intro/menu event.
-
        ld hl,MAP           ; block properties.
        ld de,MAP+1         ; next byte.
        ld bc,767           ; size of property map.
@@ -2097,15 +1808,15 @@ rstrt0 xor a               ; zero in accumulator.
        ld (restfl),a       ; reset restart flag.
        ld (deadf),a        ; reset dead flag.
 	   
-	IF INFRONT = 1
+	IF INFRONT = 2
 		; equivale a USER 4 en startscreen
 		call inibloc			; MEIGA 2025 necesario en scroll en desarrrollo
 	ENDIF
 
 	; RAM7 contiene una pantalla de tránsito ya cargada
 	; mostrar tránsito en RAM7
-		;call SetState_Show7_Bank0
-
+		;call ShowShadow
+		
 	; dibujar nueva pantalla del juego en 4000
 	; fondo, tiles, sprites iniciales, etc.
 	   call droom          ; show screen layout.
@@ -2117,7 +1828,7 @@ rstrt0 xor a               ; zero in accumulator.
 	   call shwob          ; draw objects.
 
 	; ahora se ve RAM5 con la nueva escena
-		;call SetState_Show5_Bank0
+		;call ShowNormal
 
 	IF MASKAGD > 0
 		ld ix,sprtab        ; address of sprite table, even sprites.
@@ -2146,7 +1857,6 @@ rstrt1 ;jp bsortx			; skip screen layout.			*** controll FROM scripts rstrt1
 	
 	IF ULABUFFER = 1
 		call InitULABuffers
-		;call bank0
 	ENDIF
 	
 mloop
@@ -2158,7 +1868,8 @@ mloop
 
 	IF ULABUFFER = 1
 		; Conmuta Screen Buffer debería estar despues de evnt11 despues de In Front Plugin
-			;call FlipBufferSafe
+		; Doble
+			call ShowShadow
 	ENDIF
 
 	IF SCROLL = 1
@@ -2191,15 +1902,15 @@ mloop
 		ld ix,sprtab+TABSIZ ; address of first odd sprite.
 		call dspr           ; display odd sprites.
 		jr endsistmask
-sistmask	
-		call vsync
+sistmask
+		call vsync			; vsync3f si ULABuffer
 		call SHOW_Sprites
 		; aqui debería volver a RAMdeJuego desde ULABuffer
 		IF ULABUFFER = 1
 			; Conmuta Screen Buffer debería estar despues de evnt11 despues de In Front Plugin
 				call FlipBufferSafe
 		ENDIF
-		call vsync
+		call vsync			; vsync3f si ULABuffer
 endsistmask
 	ENDIF
 	
@@ -2210,7 +1921,7 @@ endsistmask
 
 	; II En primer plano
 
-		IF INFRONT = 1
+		IF INFRONT = 2
 			; In Front Plugin, Puede ir aquí o justo despues de dspr7
 
 			; push hl
@@ -2227,6 +1938,7 @@ endsistmask
 	; C Impresiones en Fondo: Objetos y bloques
 	   ld ix,ssprit        ; point to spare sprite for spawning purposes.
 evlp1  call evnt10         ; called once per main loop.
+		;call ShowNormal
 
 		IF SCROLL = 1
 			; movimiento de fondo automatico
@@ -2254,8 +1966,8 @@ bsortx
 
 		IF MASKAGD = 1		;incluir con rutina mascara _bucle_estable
 			;call bsort_inv
-			call bsort          ; sort sprites.
 			call pass_solapamiento
+			call bsort          ; sort sprites.
 			;ld a,(NCol)
 			;ld (varn),a	
 		ENDIF
@@ -3139,7 +2851,7 @@ droom1 push af             ; store column counter.
        and a               ; is it the empty block? es = 0 ?
        jr z,mroom2         ; yes, draw this block Transparency
 	   
-	IF INFRONT = 1
+	IF INFRONT = 2
 mroom5 call mpattr		   ; tiles in front ON
 	ELSE
 mroom5 ; tiles in front off	   
@@ -4835,7 +4547,7 @@ fx1
 Sound48kBeeperMod
 
 PluginMod
-	IF INFRONT = 1
+	IF INFRONT = 2
 		include "PRINTinFRONTadventureMOD.asm"
 	ENDIF
 
@@ -4854,6 +4566,48 @@ user1
 
 plsnd  ret
 DEBUG  equ mloop
-ibloc  jp initsc
-rbloc  ret
+wbloc  ld hl,(pbptr)
+       push af
+       ld de,(dispx)
+       ld a,(scno)
+       ld (hl),a
+       inc hl
+       ld (hl),e
+       inc hl
+       ld (hl),d
+       inc hl
+       pop af
+       ld (hl),a
+       inc hl
+       ld (pbptr),hl
+       ret
+ibloc  ld hl,eop
+       ld (pbptr),hl
+       jp initsc
+rbloc  ld hl,eop
+rbloc2 ld bc,4
+       ld de,(pbptr)
+       and a
+rbloc1 push hl
+       sbc hl,de
+       pop hl
+       ret nc
+       ld a,(scno)
+       cp (hl)
+       jr z,rbloc0
+       add hl,bc
+       jr rbloc1
+rbloc0 inc hl
+       ld e,(hl)
+       inc hl
+       ld d,(hl)
+       ld (dispx),de
+       inc hl
+       ld a,(hl)
+       inc hl
+       push hl
+       call pattr
+       pop hl
+       jr rbloc2
+pbptr  defw eop
 eop    equ $

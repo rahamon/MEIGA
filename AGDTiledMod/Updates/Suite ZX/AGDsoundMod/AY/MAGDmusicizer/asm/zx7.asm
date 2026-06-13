@@ -1,17 +1,27 @@
 ; zx7 einar saukas
 zx7bin:
 	
-		call dzx7_turbo
+		;call dzx7_turbo
+		call dzx7_standard
 
 		ret
-				
-dzx7_turbo:
+
+; -----------------------------------------------------------------------------
+; ZX7 decoder by Einar Saukas, Antonio Villena & Metalbrain
+; "Standard" version (69 bytes only)
+; -----------------------------------------------------------------------------
+; Parameters:
+;   HL: source address (compressed data)
+;   DE: destination address (decompressing)
+; -----------------------------------------------------------------------------
+
+dzx7_standard:
         ld      a, $80
 dzx7s_copy_byte_loop:
-        ldi                             		;' copy literal byte
+        ldi                             ; copy literal byte
 dzx7s_main_loop:
         call    dzx7s_next_bit
-        jr      nc, dzx7s_copy_byte_loop 		;' next bit indicates either literal or sequence
+        jr      nc, dzx7s_copy_byte_loop ; next bit indicates either literal or sequence
 
 ; determine number of bits used for length (Elias gamma coding)
         push    de
@@ -43,7 +53,7 @@ dzx7s_rld_next_bit:
         rl      d                       ; insert next bit into D
         jr      nc, dzx7s_rld_next_bit  ; repeat 4 times, until bit marker is out
         inc     d                       ; add 128 to DE
-        srl	d							; retrieve fourth bit from D
+        srl	d			; retrieve fourth bit from D
 dzx7s_offset_end:
         rr      e                       ; insert fourth bit into E
 
@@ -63,3 +73,5 @@ dzx7s_next_bit:
         inc     hl
         rla
         ret
+
+; -----------------------------------------------------------------------------

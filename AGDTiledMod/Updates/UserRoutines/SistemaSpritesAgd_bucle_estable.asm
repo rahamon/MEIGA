@@ -6,32 +6,23 @@
 LASTIX	equ (NUMSPR -1 ) * TABSIZ
 
 vsync3f push hl
-		ld a,(23672)        ; clock low.
-		rra
-		rra
-		ld hl,clock         ; last clock reading.
-vsync3f0
-		ld a,(23672)        ; current clock reading.
-		cp (hl)             ; are they the same?
-		jr z,vsync3f0         ; yes, wait until clock changes.
-		ld (hl),a          ; set new clock reading.
-		pop hl
-		ret
-
+        call vsync	; frena el tiempo
+		ld hl,clock
+vsync30 ld a,(23672)
+		;rra
+		rra			; acelera el tiempo, Usar con cautela
+        cp (hl)
+        jr z,vsync30
+        ld (hl),a
+        pop hl
+        ret
+		
 MASKAGDopt	defb MASKAGD
 
 ;---------------------------------------------------------------------------
 ; Bucle entero para mloop
 ;---------------------------------------------------------------------------
 SHOW_Sprites
-		ld ix,sprtab
-		call RESTAURA_Fondo_C			; borra sprites que clisionan
-		ld ix,sprtab
-		call PRINT_Sprites_NC			; borra y pinta sprites que no colisionan.
-		call PRINT_Sprites_C			; pinte sprites que colisionan
-		ret
-
-SHOW_Sprites2
 		ld ix,sprtab
 		call PRINT_Sprites_NC			; borra y pinta sprites que no colisionan.
 		push ix
@@ -40,6 +31,15 @@ SHOW_Sprites2
 		pop ix
 		call PRINT_Sprites_C			; pinta sprites que colisionan
 		ret
+		
+SHOW_Sprites2
+		ld ix,sprtab
+		call RESTAURA_Fondo_C			; borra sprites que clisionan
+		ld ix,sprtab
+		call PRINT_Sprites_NC			; borra y pinta sprites que no colisionan.
+		call PRINT_Sprites_C			; pinte sprites que colisionan
+		ret
+		
 ;---------------------------------------------------------------------------
 ; Restaura Fondo en Colisiones: Recupera fondos desde delante hacia detras 
 ; Despues de ZSort: desde NUMSPR hasta NCol(excluido)
@@ -184,25 +184,47 @@ prisnc1	ld a,(ix+5)				; type of new sprite.
 		inc a					; Nuevo activo?
 		jr nz,prisnc4			; SI, antes tambien asi que se MUEVE
 prisnc6	CALL RESTAURA_Fondo		; REMOVE: antes habilitado pero ahora des-habilitado
-		jp dspr2
+		jp prisnc2
 
 prisnc4	ld a,(ix+4)         ; old y.
 		cp (ix+9)           ; compare with new value.
 		jr nz,prisnc7         ; they differ, need to redraw.
+		;call vsync3f
 		ld a,(ix+3)         ; old x.
 		cp (ix+8)           ; compare against new value.
 		jr nz,prisnc7         ; they differ, need to redraw.
+		;call vsync3f
 		ld a,(ix+2)         ; old frame.
 		cp (ix+7)           ; compare against new value.
 		jr nz,prisnc7         ; they differ, need to redraw.
+		;call vsync3f		; aqui mejor eleccion
 		ld a,(ix+1)         ; old image.
 		cp (ix+6)           ; compare against new value.
-		jp z,prisnc2          ; everything is the same, don't redraw.
+		jp z,prisnc9          ; everything is the same, don't redraw.
+		
 
-prisnc7	CALL RESTAURA_Fondo		; MEIGA 10
+prisnc7	
+		CALL RESTAURA_Fondo		; MEIGA 10
 		call PRINT_Sprite		; MEIGA 10
-		jp prisnc2				; MEIGA 10
-   
+	; MEIGA 12: si Y < salta para sincronizar con TV, SOLO PARA PACO TIME ATTACK
+		ld a,(ix+8)      		
+		cp 144            		
+		jr nc,prisnc9
+		cp 64
+		jr c,prisnc9
+		;call vsync3f
+		jp prisnc2				; MEIGA 10	
+prisnc9 ld a,(ix+5)				; MEIGA 12 si es tipo 9 o menos sincroniza
+	; hasta Ncol/z_counter sprites
+		;ld hl,NCol
+		ld hl,z_counter
+		ld a,(hl)
+		cp 5					; maximo tipos de sprites
+		jp nc,prisnc2			; MEIGA 12
+		;jp nz,prisnc2
+		;call vsync3f			; comentar si ULABuffer SOLO PARA PACO TIME ATTACK
+		jp prisnc2				; MEIGA 12
+		
 prisnc3 call PRINT_Sprite		; show single sprite.
 		; show
 		jp prisnc2
@@ -312,7 +334,7 @@ dlbptr	defw dline_savebk_and_print_new
 ; HL la posicion en pantalla
 ; ----------------------------------------------------------------------
 dline_savebk_and_print_new
-;Primer byte
+print_new_Primer_byte
 		ld a,(hl)			; craga fondo 
 		ld (ix+18),a		;+0 guarda en buffer sprite
 		ld (ix+68),a		;+0 guarda en buffer sprite
@@ -338,10 +360,10 @@ dline_savebk_and_print_new
 		and c               ; aplica SIMASK lateral derecha
 		or (hl)             ; OR with what's there.
 		ld (hl),a           ; bung it in.
-		
 		inc l               ; pasa a siguiente byte de pantalla
-		inc l               ; next screen address.	   
-;Segundo byte
+		inc l               ; next screen address.
+		
+print_new_Segundo_byte
 		ld a,(hl)			; craga linea
 		ld (ix+19),a		;+1
 		ld (ix+69),a		;+1
@@ -367,10 +389,10 @@ dline_savebk_and_print_new
 		and b               ; aplica SIMASK lateral izquierda
 		or (hl)             ; OR with what's there.
 		ld (hl),a           ; bung it in.
-		
 		inc de              ; point to next line of data
 		dec l               ; mueve cursor de pantalla una celda a la izquierda
-;Tercer byte
+	
+print_new_Tercer_byte
 		ld a,(hl)
 		ld (ix+20),a		;+2
 		ld (ix+70),a		;+2
@@ -389,7 +411,7 @@ dline_savebk_and_print_new
 		
 		inc de              ; point to next line of data.
 		dec l               ; retrocede una más, para próxima línea
-	   
+
 		; Avanzar IX
 		push bc
 		ld bc,3

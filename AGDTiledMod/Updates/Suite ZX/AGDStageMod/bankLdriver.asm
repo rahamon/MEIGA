@@ -4,8 +4,10 @@
 			org 24832
 			
 STAGES	 	equ 49152
-Levelbank	equ 1
-RoomBank	equ 7
+Levelbank	equ 7
+RoomBank	equ 1
+BlockBank	equ 3
+
 
 			; Level Data sections sizes
 			; include "SECsizes.asm"
@@ -14,8 +16,8 @@ RoomBank	equ 7
 			jp InstallBankL
 
 InstallBankL: 	
-			ld a,16					; for Divmmc
-			ld (23388),a 
+			;ld a,16					; for Divmmc
+			;ld (23388),a 
 			;push iy
 			;di
 			
@@ -34,8 +36,8 @@ InstallBankL:
 
 exit:
 			;pop iy					; for Divmmc
-			;ei
 			
+			ei
 			ret 
 			; rutinas para mover memoria entre bloques del modelo 128k
 			; rutinas para cambiar de páginado de bloques

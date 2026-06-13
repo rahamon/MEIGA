@@ -1,4 +1,16 @@
 @echo off
+rem Esquema de Bancos MODO A
+rem ;----0----,----1----,----2!---,----3----,----4----,----5----,----6!---,----7----,
+rem ; sistema ,Levelbank, ZERObank,BlockBank,musica FX,ULAbuffer,SplashScr, RoomBank,	MODO shadowSCR B, No usar ZERObank, tampoco SplashScr
+rem -----------------------
+
+rem PARA HACER: Modificar sistema para: "no compilar ZBank, no generar cargador ZERO, no incluir secciones Zero en bancos"
+rem										"Manejar una MODESQUEMA para activar o desactivar compilado"
+rem -----------------------
+rem Para hacer Esquema de Bancos VERSION 14
+rem ;----0----,----1----,----2!---,----3----,----4----,----5----,----6----,----7----,
+rem ; sistema ,Levelbank, sistema , RoomBank,musica FX,ULAbuffer,BlockBank,shadowSCR,	MODO shadowSCR B, No usar ZERObank, tampoco SplashScr
+
 rem setlocal enabledelayedexpansion
 rem set "folder_path=%~dp0"
 set /a indice=0
@@ -7,6 +19,7 @@ set /a desplazamiento=0
 set /a desplazamientoZ=0
 set /a desplazamientoRbank=0
 set /a desplazamientoZbank=0
+set /a desplazamientoBbank=0
 set /a Nuevodesplazamiento=0
 set "offset="
 rem /f "tokens=*"
@@ -26,11 +39,14 @@ rem Por cada Seccion bin en Stages\Bank
 		rem nombre sin extension
 		set nombre=%%~na
 		set size=%%~za
-		if "!nombre:~4,-4!" neq "ZERO" (
-			call :writeasm
-		) else (
-			call :writeasmZ
-			)
+		rem Mejor NO DISTINGUIR ZERO de los demás
+			rem	if "!nombre:~4,-4!" neq "ZERO" (
+			rem		call :writeasm
+			rem	) else (
+			rem		call :writeasmZ
+			rem		)
+			
+		call :writeasm
 	)
 
 :medicion_limite
@@ -38,7 +54,8 @@ rem medicion limite
 	if %mmodel% gtr 1 (
 		echo Total datos en Banco de niveles: %desplazamiento%		>> StagesBank.txt
 		echo Total datos en Banco de Rooms: %desplazamientoRbank%		>> StagesBank.txt
-		echo Total datos en Banco ZERO: %desplazamientoZ%		>> StagesBank.txt
+		rem echo Total datos en Banco ZERO: %desplazamientoZ%		>> StagesBank.txt
+		echo Total datos en Banco de Blocks: %desplazamientoBbank% >> StagesBank.txt
 		)
 		
 	if %mmodel% gtr 1 (
@@ -48,13 +65,13 @@ rem medicion limite
 			echo Try another Compilation, Bank memory chip capacity exceeded for model %mmodel%
 			)
 		)
-	if %mmodel% gtr 1 (
-		if %desplazamientoZ% gtr 16384 (
-			echo Bank ZERO memory chip capacity exceeded for model %mmodel%		>> StagesBank.txt
-			echo+ 		>> StagesBank.txt
-			echo Try another Compilation, Bank ZERO memory chip capacity exceeded for model %mmodel%
-			)
-		)
+	REM if %mmodel% gtr 1 (
+		REM if %desplazamientoBbank% gtr 16384 (
+			REM echo Bank ZERO memory chip capacity exceeded for model %mmodel%		>> StagesBank.txt
+			REM echo+ 		>> StagesBank.txt
+			REM echo Try another Compilation, Bank ZERO memory chip capacity exceeded for model %mmodel%
+			REM )
+		REM )
 		
 goto fin
 
@@ -76,7 +93,7 @@ rem calculo desplazamiento en banco
 	for %%m in ( "%archivo%.zx7" ) do (
 		set /a Nuevodesplazamiento=%%~zm
 			if %mmodel% gtr 1 (
-			echo 	%nombre%		%%~zm bites		>> StagesBank.txt
+			echo 	%nombre%		%%~zm bitesComp		>> StagesBank.txt
 			)
 		)
 
@@ -88,22 +105,71 @@ rem calculo desplazamiento en banco
 		set "LbankTipo=Levelbank"
 		
 	rem ;AGD SECdepack.asm included to de stracted
-		echo 		ld hl,secbin%indice%			;%nombre%		>> SECdepack.asm
+		rem echo 		ld hl,secbin%indice%			;%nombre%		>> SECdepack.asm
+		if "%tipo%" == "Scr" (
+			echo 	;%nombre% 			>> SECdepack.asm
+			echo 		ld hl,secbin%indice%					>> SECdepack.asm
+			set "LbankTipo=RoomBank"
+		) else if "%tipo%" == "Blk" (
+			echo 	;%nombre% 			>> SECdepack.asm
+			echo 		ld hl,secbin%indice%					>> SECdepack.asm
+			set "LbankTipo=BlockBank"
+		) else (
+			echo 	;%nombre% 			>> ZSECdepack.asm
+			echo 		ld hl,secbin%indice%					>> ZSECdepack.asm
+		)
 		if %indice% == 1 (
-			echo 		ld de,STAGES					>> SECdepack.asm
+			rem echo 		ld de,STAGES					>> SECdepack.asm
+				if "%tipo%" == "Scr" (
+					echo 		ld de,STAGES					>> SECdepack.asm
+					echo 		;call zx7bin					>> SECdepack.asm	
+					echo 		ld bc,%Nuevodesplazamiento%						;LONG		>> SECdepack.asm
+					echo 		ld a,%LbankTipo%				>> SECdepack.asm
+					echo 		call SaveToBank					; swap y vuelve a bank0		>> SECdepack.asm
+					echo+		>> SECdepack.asm					
+				) else if "%tipo%" == "Blk" (
+					echo 		ld de,STAGES					>> SECdepack.asm
+					echo 		;call zx7bin					>> SECdepack.asm	
+					echo 		ld bc,%Nuevodesplazamiento%						;LONG		>> SECdepack.asm
+					echo 		ld a,%LbankTipo%				>> SECdepack.asm
+					echo 		call SaveToBank					; swap y vuelve a bank0		>> SECdepack.asm
+					echo+		>> SECdepack.asm					
+				) else (
+					echo 		ld de,STAGES					>> ZSECdepack.asm
+					echo 		;call zx7bin					>> ZSECdepack.asm	
+					echo 		ld bc,%Nuevodesplazamiento%						;LONG		>> ZSECdepack.asm
+					echo 		ld a,%LbankTipo%				>> ZSECdepack.asm
+					echo 		call SaveToBank					; swap y vuelve a bank0		>> ZSECdepack.asm
+					echo+		>> SECdepack.asm					
+				)
 			) else (
 				if "%tipo%" == "Scr" (
-					echo 		ld de,STAGES + %desplazamientoRbank%			>> SECdepack.asm
-					set "LbankTipo=RoomBank"
+					echo        ld de,STAGES + %desplazamientoRbank% >> SECdepack.asm
+					rem set "LbankTipo=RoomBank"
+					echo 		;call zx7bin					>> SECdepack.asm	
+					echo 		ld bc,%Nuevodesplazamiento%						;LONG		>> SECdepack.asm
+					echo 		ld a,%LbankTipo%				>> SECdepack.asm
+					echo 		call SaveToBank					; swap y vuelve a bank0		>> SECdepack.asm
+					echo+		>> SECdepack.asm
+				) else if "%tipo%" == "Blk" (
+					echo        ld de,STAGES + %desplazamientoBbank% >> SECdepack.asm
+					rem set "LbankTipo=BlockBank"
+					echo 		;call zx7bin					>> SECdepack.asm	
+					echo 		ld bc,%Nuevodesplazamiento%						;LONG		>> SECdepack.asm
+					echo 		ld a,%LbankTipo%				>> SECdepack.asm
+					echo 		call SaveToBank					; swap y vuelve a bank0		>> SECdepack.asm
+					echo+		>> SECdepack.asm
 				) else (
-					echo 		ld de,STAGES + %desplazamiento%			>> SECdepack.asm
+					echo        ld de,STAGES + %desplazamiento% >> ZSECdepack.asm
+					REM Cargador Banco niveles a parte para evitar desborde de datos
+					REM Deberia existir uno para cada banco: PARA DESARROLLAR
+					echo 		;call zx7bin					>> ZSECdepack.asm	
+					echo 		ld bc,%Nuevodesplazamiento%						;LONG		>> ZSECdepack.asm
+					echo 		ld a,%LbankTipo%				>> ZSECdepack.asm
+					echo 		call SaveToBank					; swap y vuelve a bank0		>> ZSECdepack.asm
+					echo+		>> SECdepack.asm
 				)
 			)
-		echo 		;call zx7bin							>> SECdepack.asm	
-		echo 		ld bc,%Nuevodesplazamiento%						;LONGSCREENS equ 2796 aprox			>> SECdepack.asm
-		echo 		ld a,%LbankTipo%			>> SECdepack.asm
-		echo 		call SaveToBank					; swap y vuelve a bank0			>> SECdepack.asm
-		echo+		>> SECdepack.asm
 	
 	rem ;AGD Setup Sections
 		echo %etiqueta%:							>> Setupsections.asm
@@ -112,11 +178,22 @@ rem calculo desplazamiento en banco
 			echo 		ld hl,STAGES					>> Setupsections.asm
 			) else (
 				if "%tipo%" == "Scr" (
-					echo 		ld hl,STAGES + %desplazamientoRbank%			>> Setupsections.asm
-					echo 		ld a,RoomBank			>> Setupsections.asm
-					echo 		ld ^(Lbank^),a			>> Setupsections.asm		
+					echo        ld hl,STAGES + %desplazamientoRbank% >> Setupsections.asm
+					echo        ld a,RoomBank >> Setupsections.asm
+					echo        ld ^(Lbank^),a >> Setupsections.asm
+				) else if "%tipo%" == "Blk" (
+					echo        ld hl,STAGES + %desplazamientoBbank% >> Setupsections.asm
+					echo        ld a,BlockBank >> Setupsections.asm
+					echo        ld ^(Lbank^),a >> Setupsections.asm
 				) else (
-					echo 		ld hl,STAGES + %desplazamiento%			>> Setupsections.asm
+					echo        ld hl,STAGES + %desplazamiento% >> Setupsections.asm
+					REM if "!nombre:~4,-4!" neq "ZERO" (
+						REM echo        ld a,ZERObank >> Setupsections.asm
+						REM echo        ld ^(Lbank^),a >> Setupsections.asm
+					REM ) else (
+						REM echo        ld a,Levelbank >> Setupsections.asm
+						REM echo        ld ^(Lbank^),a >> Setupsections.asm
+					REM )
 				)
 			)
 		echo 		;ld bc,SECLEN%indice%				>> Setupsections.asm
@@ -124,11 +201,21 @@ rem calculo desplazamiento en banco
 		echo 		;ret									>> Setupsections.asm
 
 	rem ;AGD SECtions.asm included to be stracted
-		echo secbin%indice%							>> SECtions.asm
-		echo 		incbin "%nombre_archivo%.zx7"		>> SECtions.asm
-		
+		if "%tipo%" == "Scr" (
+			echo secbin%indice%							>> SECtions.asm
+			echo 		incbin "%nombre_archivo%.zx7"		>> SECtions.asm
+		) else if "%tipo%" == "Blk" (
+			echo secbin%indice%							>> SECtions.asm
+			echo 		incbin "%nombre_archivo%.zx7"		>> SECtions.asm
+		) else (
+			echo secbin%indice%							>> ZSECtions.asm
+			echo 		incbin "%nombre_archivo%.zx7"		>> ZSECtions.asm
+		)
+	
 	if "%tipo%" == "Scr" (
 		set /a desplazamientoRbank=%desplazamientoRbank% + %Nuevodesplazamiento%
+	) else if "%tipo%" == "Blk" (
+		set /a desplazamientoBbank=%desplazamientoBbank% + %Nuevodesplazamiento%
 	) else (
 		set /a desplazamiento=%desplazamiento% + %Nuevodesplazamiento%
 	)
@@ -174,7 +261,7 @@ rem calculo desplazamiento en bancoZ
 	rem ;AGD Setup Sections
 		echo %etiqueta%:							>> Setupsections.asm
 		echo ;%tipo%:								>> Setupsections.asm
-		if %indice% == 1 (
+		if %indiceZ% == 1 (
 			echo 		ld hl,STAGES					>> Setupsections.asm
 		) else (
 			echo 		ld hl,STAGES + %desplazamientoZ%			>> Setupsections.asm

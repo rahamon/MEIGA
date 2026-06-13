@@ -13,26 +13,29 @@ setlocal enabledelayedexpansion
 		echo.
 		
 	:: Verificar si Python disponible
+	echo Verificando si Python es instalado...
 		where python >nul 2>nul
 		if %errorlevel% neq 0 (
 			echo Python no instalado o no en el PATH. Abortando...
+			echo Procede a instalarlo en tu sisitema
+			echo Disponible en https://apps.microsoft.com/
 			exit /b 1
 		)
 
-	echo Verificando Pillow instalado...
+	echo Verificando si Pillow es instalado...
 		python -c "import PIL" >nul 2>nul
 		if %errorlevel% neq 0 (
 			echo Pillow no encontrado. Instalando Pillow...
-			python -m pip install pillow
+			python -m pip install pillow >nul
 		) else (
 			echo Pillow ya instalado.
 		)
 
-	echo Verificando numpy instalado...
+	echo Verificando si numpy es instalado...
 		python -c "import numpy" >nul 2>nul
 		if %errorlevel% neq 0 (
 			echo numpy no encontrado. Instalando numpy...
-			python -m pip install numpy
+			python -m pip install numpy >nul
 		) else (
 			echo numpy ya instalado.
 		)
@@ -118,6 +121,8 @@ setlocal enabledelayedexpansion
 
 :: Check Core
 :: MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalarlo previamente
+	echo MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalarlo previamente
+	echo Disponible en https://jonathan-cauldwell.itch.io/multi-platform-arcade-game-designer
 	if not exist "..\Suite ZX\AGD\CompilerZX.exe" (
 		:: Load form
 			rem python seleccionar_archivo.py compiler

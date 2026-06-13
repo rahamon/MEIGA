@@ -92,12 +92,14 @@ rem Por cada Tap del Stage ***
 		copy ..\Stages\%nombre_archivo% ..\AssemblyStage\		>nul
 		rem echo Pasmo --tap --name %Tapename:~3,9% ..\Stages\%nombre_archivo% %Tapename:~3,9%.tap
 		if not "%nombre_archivo%" == "Symbol*.asm" (
-			echo %nombre_archivo% y Tapename:%Tapename%
+			rem echo %nombre_archivo% y Tapename:%Tapename:~3,9%
+			rem echo ..\Tools\Pasmo --tap --name %Tapename:~3,9% %nombre_archivo% Tap%Tapename:~3,9%.tap
 			..\Tools\Pasmo --tap --name %Tapename:~3,9% %nombre_archivo% %Tapename:~3,9%.tap
 			rem debug task
 				rem ..\SjasmPlus\sjasmplus.exe %nombre_archivo% --lst=%Tapename:~3,9%.txt
 				rem copy %Tapename:~3,9%.txt ..\Realase\
 		)
+		
 	goto:eof
 	
 

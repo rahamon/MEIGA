@@ -54,7 +54,6 @@ showSplashparam
 		; hl = direccion origen
 		; de = destino address
 		; bc = longitud
-		
 		push bc
 		di				; everyone wait a minute!
 		ld b,a			; I want to see this memory bank, variable a introducida para propósito general
@@ -71,7 +70,6 @@ UnzipB
 		; a = banco origen/destino
 		; hl = direccion origen
 		; de = destino address
-
 		di				; everyone wait a minute!
 		ld b,a			; I want to see this memory bank, variable a introducida para propósito general
 		call bankb		; switch to that bank

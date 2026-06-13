@@ -426,11 +426,11 @@ debkey call vsync          ; update scrolling, sounds etc.
        inc e               ; is it 255?
        jr nz,debkey        ; no - loop until key is released.
        ret
-
+	
 ; Delay routine.
-
+		
 delay  push bc             ; store loop counter.
-       call vsync          ; wait for interrupt.
+       call vsync         ; wait for interrupt.
        pop bc              ; restore counter.
        djnz delay          ; repeat.
        ret
@@ -1202,7 +1202,6 @@ setsa0 ex de,hl            ; flip table and screen address.
        call setpal         ; set up ULAplus palette.
 rpblc2 call inishr         ; initialise particle engine.
 evintr call evnt12         ; call intro/menu event.
-
        ld hl,MAP           ; block properties.
        ld de,MAP+1         ; next byte.
        ld bc,767           ; size of property map.
@@ -1258,15 +1257,15 @@ rstrt0 xor a               ; zero in accumulator.
        ld (restfl),a       ; reset restart flag.
        ld (deadf),a        ; reset dead flag.
 	   
-	IF INFRONT = 1
+	IF INFRONT = 2
 		; equivale a USER 4 en startscreen
 		call inibloc			; MEIGA 2025 necesario en scroll en desarrrollo
 	ENDIF
 
 	; RAM7 contiene una pantalla de tránsito ya cargada
 	; mostrar tránsito en RAM7
-		;call SetState_Show7_Bank0
-
+		;call ShowShadow
+		
 	; dibujar nueva pantalla del juego en 4000
 	; fondo, tiles, sprites iniciales, etc.
 	   call droom          ; show screen layout.
@@ -1278,7 +1277,7 @@ rstrt0 xor a               ; zero in accumulator.
 	   call shwob          ; draw objects.
 
 	; ahora se ve RAM5 con la nueva escena
-		;call SetState_Show5_Bank0
+		;call ShowNormal
 
 	IF MASKAGD > 0
 		ld ix,sprtab        ; address of sprite table, even sprites.
@@ -1307,7 +1306,6 @@ rstrt1 ;jp bsortx			; skip screen layout.			*** controll FROM scripts rstrt1
 	
 	IF ULABUFFER = 1
 		call InitULABuffers
-		;call bank0
 	ENDIF
 	
 mloop
@@ -1319,7 +1317,8 @@ mloop
 
 	IF ULABUFFER = 1
 		; Conmuta Screen Buffer debería estar despues de evnt11 despues de In Front Plugin
-			;call FlipBufferSafe
+		; Doble
+			call ShowShadow
 	ENDIF
 
 	IF SCROLL = 1
@@ -1352,15 +1351,15 @@ mloop
 		ld ix,sprtab+TABSIZ ; address of first odd sprite.
 		call dspr           ; display odd sprites.
 		jr endsistmask
-sistmask	
-		call vsync
+sistmask
+		call vsync			; vsync3f si ULABuffer
 		call SHOW_Sprites
 		; aqui debería volver a RAMdeJuego desde ULABuffer
 		IF ULABUFFER = 1
 			; Conmuta Screen Buffer debería estar despues de evnt11 despues de In Front Plugin
 				call FlipBufferSafe
 		ENDIF
-		call vsync
+		call vsync			; vsync3f si ULABuffer
 endsistmask
 	ENDIF
 	
@@ -1371,7 +1370,7 @@ endsistmask
 
 	; II En primer plano
 
-		IF INFRONT = 1
+		IF INFRONT = 2
 			; In Front Plugin, Puede ir aquí o justo despues de dspr7
 
 			; push hl
@@ -1388,6 +1387,7 @@ endsistmask
 	; C Impresiones en Fondo: Objetos y bloques
 	   ld ix,ssprit        ; point to spare sprite for spawning purposes.
 evlp1  call evnt10         ; called once per main loop.
+		;call ShowNormal
 
 		IF SCROLL = 1
 			; movimiento de fondo automatico
@@ -1415,8 +1415,8 @@ bsortx
 
 		IF MASKAGD = 1		;incluir con rutina mascara _bucle_estable
 			;call bsort_inv
-			call bsort          ; sort sprites.
 			call pass_solapamiento
+			call bsort          ; sort sprites.
 			;ld a,(NCol)
 			;ld (varn),a	
 		ENDIF
@@ -2300,7 +2300,7 @@ droom1 push af             ; store column counter.
        and a               ; is it the empty block? es = 0 ?
        jr z,mroom2         ; yes, draw this block Transparency
 	   
-	IF INFRONT = 1
+	IF INFRONT = 2
 mroom5 call mpattr		   ; tiles in front ON
 	ELSE
 mroom5 ; tiles in front off	   
@@ -3996,7 +3996,7 @@ fx1
 Sound48kBeeperMod
 
 PluginMod
-	IF INFRONT = 1
+	IF INFRONT = 2
 		include "PRINTinFRONTadventureMOD.asm"
 	ENDIF
 

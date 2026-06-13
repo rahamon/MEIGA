@@ -1,3 +1,6 @@
+
+; Idea uasar para colocar objetos o sprites en modo adventure
+
 ; modificar rutina para interruptor on-off putblock in front
 ; infront on usa adventure mode asm modificada.
 ; infront off usa la rutina standard.

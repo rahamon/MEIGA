@@ -1,3 +1,4 @@
+; PROTOTIPO
 ; Notas: variables temporales candidatas:
 ; Cursor: chary, charx
 ; Comandos: varrnd, varobj, varopt

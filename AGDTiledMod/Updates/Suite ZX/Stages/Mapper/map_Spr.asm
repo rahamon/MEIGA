@@ -20,7 +20,9 @@ UpdateLevelBankformatSprites
 			add hl,bc
 			ld (SprDataCode + 2),hl
 			ld (gspra0+10),hl
-		; frmlst o
+			;ret 		; MEIGA test, comentar para volver a version original
+			
+		; frmlst
 			ld hl,(SprDataCode + 4)
 			add hl,bc
 			ld (SprDataCode + 4),hl

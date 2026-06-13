@@ -35,12 +35,6 @@ AY 			equ $
 AYFX 		equ $
 playSelected	equ $
 
-bankP	equ $				;echo
-ConectA	equ $			;echo
-VIDEOToRAM7	equ $		;echo
-bank0	equ $				;echo
-resetecho	equ $			;echo
-waitIRQ	equ $			;echo
 		
 
 ; El propio Engine0 que queremos medir

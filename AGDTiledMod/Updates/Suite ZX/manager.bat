@@ -20,7 +20,7 @@
 	:: Adventure Mode Plugin
 		rem 0 = Disable (recomendado)
 		rem 1 = Enable
-		set adventure=0
+		set adventure=1
 		
 	:: Score records Plugin
 		rem 0 = Disable (recomendado)
@@ -30,10 +30,10 @@
 	:: Convert Stage Zero Mod
 		rem 0 = Disable
 		rem 1 = Enable 
-		set LevelEnabled=0
+		set LevelEnabled=1
 		rem set "ConvertMode=ConvertGame"
 		rem set "ConvertMode=EditStages"
-		set "ConvertMode=ConvertGame"
+		set "ConvertMode=EditStages"
 
 	:: Sound Mod
 		rem 0 = Standard
@@ -50,6 +50,7 @@
 		rem aqui le pasamos selection basename MEIGA10
 		rem set gamename=Test
 		set "gamename=%~1"
+		rem set "gamename=Paco"
 
 :main
 	:: PluginMod tests en desarrollo

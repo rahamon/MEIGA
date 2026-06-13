@@ -12,7 +12,6 @@ REM test conversion
 		echo ERROR al escoger modo Levels
 		exit
 	)
-	
 
 :main
 set tipoSPR=0
@@ -222,6 +221,7 @@ rem --------------------------------------------------------------------
 	cls
 	rem pause
 	rem call :BorrarZEROASMs
+	
 	set "nStage="
 	call :ListaStages
 	echo " - Enter the name of the Scenario to Create/Edit? (6 letters)
@@ -369,7 +369,8 @@ rem --------------------------------------------------------------------
 		if exist ..\Stages\Selected\SEC_*.asm del ..\Stages\Selected\SEC_*.asm
 		call :BorrarStageASMs
 		call :AcualizaStageBank
-		goto FormStageSlots
+		goto AddStage
+		rem goto FormStageSlots
 		
 :AcualizaStageBank
 	rem Actualiza Bank para volver a crear
@@ -390,7 +391,8 @@ rem --------------------------------------------------------------------
 				) else (
 				echo 		%%~na		>> StagesBank.txt
 				)
-				copy ..\Stages\%%a.asm ..\Stages\Bank		>nul
+				echo ..\Stages\%%a.asm ..\Stages\Bank		
+				copy ..\Stages\%%a.asm ..\Stages\Bank		
 			)
 		)
 		echo+ 		>> StagesBank.txt
@@ -479,16 +481,19 @@ rem Stage Mod MEIGA 2024 por Ramon Fernandez Ameijeiras
 rem --------------------------------------------------------------------
 	
 :ConvertGame
-rem limpieza inicial
-	if exist ..\Stages\Tap*.asm del ..\Stages\Tap*.asm		>nul
-	if exist ..\Stages\*ZERO*.asm del ..\Stages\*ZERO*.asm		>nul
-	if exist ..\Stages\Common\*ZERO*.asm del ..\Stages\Common\*ZERO*.asm		>nul
 
-rem ReLoad Bank
-	call :AcualizaStageBank
-		
-rem Selecciona Datos del JUEGO en AssemblyStage
-	call Seccionar ZERO
+	REm PREPARA Secciones ZERO
+	rem limpieza inicial
+		if exist ..\Stages\Tap*.asm del ..\Stages\Tap*.asm		>nul
+		if exist ..\Stages\*ZERO*.asm del ..\Stages\*ZERO*.asm		>nul
+		if exist ..\Stages\Common\*ZERO*.asm del ..\Stages\Common\*ZERO*.asm		>nul
+
+	rem ReLoad Bank
+		call :AcualizaStageBank
+			
+	rem Selecciona Datos del JUEGO en AssemblyStage
+	rem Crea todas las SEC_ZERO_*.asm
+		call Seccionar ZERO
 	rem SELECCIONA SECCIONES Stage ZERO
 		for %%a in (Spr Scr Blk Msg Ene Map Obj Eve) do (
 			move SEC_ZERO_%%a.asm ..\Stages\		>nul
@@ -502,17 +507,33 @@ rem Selecciona Datos del JUEGO en AssemblyStage
 			)
 	rem CORRECCION codificacion texto
 		..\tools\fart --remove --c-style CommonData.asm "\xA0"		>nul
-
-	rem MIDE y Edita Slots.asm y Poninters.asm a partir de asms en Bank, 128k y 48k
+	
+	rem MIDE y CREA Slots a partir de asms en Bank, 128k y 48k
+	rem Crea Setupsections.asm
+	rem Crea SlotOrgs.asm
+	rem Crea Slots.asm
+	rem Crea Poninters.asm	
+	rem Prepara ZeroLoader: ZEROBank.asm y Old_ZSetupsections.asm: NO NECESARIO
 		copy ..\Stages\SEC_ZERO*.asm ..\Stages\Bank\		>nul
 		call BuildSlots %mmodel%
-	rem Edita Stage ZERO, 128k y 48k
+		
+	Rem SI Juego Base es minimo: Contiene menu y pantallas de menu POCO MAS
+		rem Entonces Podemos Pensar en Cada STAGE como Entidad para CARGA y volver a ZERO
+		rem Implica Compilar práticamente un StageZERO o lo que viene siendo StageMENU
+	Rem SI NO, es decir, el juego base contiene MUCHOS elmentos del juego; entonces StageZERO no es necesario
+	
+	rem CREA StageZERO 128k: NO NECESARIO para todas las Secciones
+	rem Crea StageZERO modo B: SOLO las secciones con versiones en otros Stages
 		copy ..\Stages\SEC_ZERO*.asm ..\Stages\Selected\		>nul
 		call WriteStage ZERO
 		call :AcualizaStageBank
 		if exist ..\Stages\Selected\*.asm del ..\Stages\Selected\*.asm		>nul
-	REM rem trae fuentes ZERO para AssemblyStage, 48k y 128k
-		copy ..\Stages\SEC_ZERO*.asm ..\AssemblyStage\		>nul
+		
+	Rem SI NO FUESE NECESARIO StageZERO
+		rem BORRAR SatgeZERO
+	
+	REM rem MUEVE fuentes ZERO para AssemblyStage, 48k y 128k
+		if exist ..\Stages\SEC_ZERO* copy ..\Stages\SEC_ZERO*.asm ..\AssemblyStage\		>nul
 
 :CompilaTODO		
 	rem Compila TODO Data in Bank, bin para 48k y para el 128k los zx7
@@ -539,7 +560,7 @@ rem Selecciona Datos del JUEGO en AssemblyStage
 					del ..\Stages\Bank\%%~na_temp.asm
 				) else (		
 					..\tools\Pasmo.exe --bin ..\Stages\Bank\%%~nxa ..\Stages\Bank\%%~na.bin
-					..\tools\zx7 ..\Stages\Bank\%%~na.bin		>nul
+					..\tools\zx7 ..\Stages\Bank\%%~na.bin		
 				)
 			)
 		)
@@ -547,13 +568,22 @@ rem Selecciona Datos del JUEGO en AssemblyStage
 		echo+ 	>> StagesBank.txt
 		echo Tamaño de Datos en Game		>> StagesBank.txt
 		for %%a in ("..\Stages\Bank\*.bin") do (
-			echo 	%%~na	%%~za		>> StagesBank.txt
+			echo 	%%~na	%%~za	BitesBIN	>> StagesBank.txt
 		)
 		echo+ 			>> StagesBank.txt
-	rem Trae Binarios a AssemblyStage, 128k
+	rem Trae Binarios comprimidos a AssemblyStage, 128k
 		copy ..\Stages\Bank\SEC_*.zx7 ..\AssemblyStage\		>nul
-		
-	rem Edita resto de asembles Para Banco de datos, 128k
+
+	rem Edita asembles Para Banco de datos, 128k
+		rem CREA para Player/bank7driver SECsizes.asm
+		rem CREA para Player Setupsections.asm
+		rem CREA para bank7driver SECdepack.asm
+		rem CREA para bank7driver SECtions.asm
+		rem CREA ZEROLoader tambien aqui, candidato a desaparecer para 128k
+			rem CREA ZSECsizes.asm
+			rem CREA para Player ZERO Setupsections.asm
+			rem CREA ZSECdepack.asm
+			rem CREA ZSECtions.asm
 		call Stagesizer
 		rem Limpia todos los binarios
 			if exist ..\Stages\Bank\*.bin* del ..\Stages\Bank\*.bin*		>nul
@@ -620,7 +650,7 @@ rem Selecciona Datos del JUEGO en AssemblyStage
 	echo error
 	pause
 	exit
-	
+
 :RealaseStage
 	
 	GOTO:EOF

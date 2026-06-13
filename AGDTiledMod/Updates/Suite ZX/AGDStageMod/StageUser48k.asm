@@ -1,7 +1,7 @@
 
 ; MEIGA 2024 Ramon Fernandez Ameijeiras
 ; StageUser48k
-
+	
 	; check loading cassette
 	; Indica si el Escenario tiene varias cargas desde cinta de paginas de datos 0=ready,255=Stop
 		ld a,(playkey)
@@ -24,7 +24,7 @@
 		jp nz,NewStage48	; is NOT the same stage -> Load new Stage
 		
 		ret					; revisar!
-			
+	
 	; Fix screens in this Stage from OffSetDesplazamiento
 FixScreen		; no debería estar aqui***
 		ld hl,FixedDe48
@@ -34,7 +34,7 @@ FixScreen		; no debería estar aqui***
 		; TEST
 		;ld hl,roomtb
 		;ld a,(hl)
-		ld (varn),a
+		;ld (varn),a
 		;call droom	
 		ret
 		
@@ -60,6 +60,7 @@ NewStage48
 setupStageTape
 		ld (TapeNamePointer),hl		; actualiza StagePointer
 		
+;PLAY CASSETTE KEY
 	;playcassete
 		ld a,0
 		ld (playkey),a				; S = 0 -> "play again"

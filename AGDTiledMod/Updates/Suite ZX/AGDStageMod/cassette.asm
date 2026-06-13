@@ -3,7 +3,7 @@
 		
 			call StageUpdate
 				
-	; STOP el cassette
+	; STOP el cassette KEY COMMAND
 			ld a,255
 			ld (playkey),a					; Stop cassette
 
@@ -16,7 +16,8 @@ FirstGame	defb 0
 			call SetMapStartPo
 			
 			; opcional, call evnt12 o call evnt13 para menu de carga o screen X para menu de juego...
-			;call redraw			solucion menos mala
+			;call redraw			;solucion menos mala
+			
 			jp mloop
 		
 firstg		ld a,1
@@ -50,7 +51,7 @@ FixedPo		defb 0		; fijado nuevo mapa flag
 			ld (FixedPo),a
 			ret
 			
-; LOAD ""CODE			
+; LOAD ""CODE
 loadTape
 			ld hl,10072
 			exx

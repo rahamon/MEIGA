@@ -145,12 +145,6 @@ print("Archivos GIMP.gpl y Photoshop.act generados correctamente.")
 
 print("Imagen y JSON generados correctamente.")
 
-guardar_como_gpl(palette_rgb)
-guardar_como_act(palette_rgb)
-print("Archivos GIMP.gpl y Photoshop.act generados correctamente.")
-
-print("Imagen y JSON generados correctamente.")
-
 # Crear archivo TSX correspondiente a la imagen PNG sin propiedades, con nombre "Armony"
 def crear_tsx(nombre_imagen, nombre_tsx, ancho_tile, alto_tile, num_tiles):
     tsx = f'''<?xml version="1.0" encoding="UTF-8"?>

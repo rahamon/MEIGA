@@ -4,7 +4,10 @@
 			org 24832
 			
 STAGES	 	equ 49152
-ZERObank	equ 3
+Levelbank	equ 7
+RoomBank	equ 1
+BlockBank	equ 3
+ZERObank	equ 2
 
 			; Level Data sections sizes
 			; include "SECsizes.asm"
