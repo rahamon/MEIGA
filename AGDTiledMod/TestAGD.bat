@@ -99,7 +99,7 @@
 		
 :Terminando
 	:: limpieza final
-		set FILES=ENVIROMENT.agd DEFINEBLOCKS.agd DEFINESPRITE.agd DEFINEOBJECT.agd DEFINESCREEN.agd MAP.agd DEFINEFONT.agd DEFINEPALETTE.agd DEFINEJUMP.agd MESSAGEEVENTGAME.agd DEFINESCRIPTS.agd DEFAULTENVIROMENT.tmx DEFAULTPALETE.agd DefineObjects.py DefineScreen.py DefineSprites.py EMPTYMESSAGES.agd EMPTYCRIPTS.agd DefineEnviroment.py DefineMap.py MPAGDClass.json DefineFont.py validation_status.json DefinePalette.py DefineBlock.py
+		set FILES=ENVIROMENT.agd DEFINEBLOCKS.agd DEFINESPRITE.agd DEFINEOBJECT.agd DEFINESCREEN.agd MAP.agd DEFINEFONT.agd DEFINEPALETTE.agd DEFINEJUMP.agd MESSAGEEVENTGAME.agd DEFINESCRIPTS.agd DEFAULTENVIROMENT.tmx DEFAULTPALETE.agd DefineObjects.py DefineScreen.py DefineSprites.py EMPTYMESSAGES.agd EMPTYCRIPTS.agd DefineEnviroment.py DefineMap.py MPAGDClass.json DefineFont.py validation_status.json DefinePalette.py DefineBlock.py paleta_rgb_por_atributo.json
 
 		rem Recorrer archivos y borrarlos
 		for %%F in (%FILES%) do (
@@ -164,7 +164,7 @@
 		cd /d "%meiga_dir%"
 		
 	:: Mueve estos archivos
-		set FILES=DEFAULTENVIROMENT.tmx DEFAULTPALETE.agd DefineObjects.py DefineScreen.py DefineSprites.py EMPTYMESSAGES.agd EMPTYCRIPTS.agd DefineEnviroment.py DefineMap.py MPAGDClass.json DefineFont.py validation_status.json DefinePalette.py DefineBlock.py ParserLog.py
+		set FILES=DEFAULTENVIROMENT.tmx DEFAULTPALETE.agd DefineObjects.py DefineScreen.py DefineSprites.py EMPTYMESSAGES.agd EMPTYCRIPTS.agd DefineEnviroment.py DefineMap.py MPAGDClass.json paleta_rgb_por_atributo.json DefineFont.py validation_status.json DefinePalette.py DefineBlock.py ParserLog.py
 
 		rem Recorrer archivos y borrarlos
 		for %%F in (%FILES%) do (
@@ -209,14 +209,31 @@
 				if exist "%current_dir%\*.asm" copy /Y "%current_dir%\*.asm" "UserRoutines\" >nul
 
 			:: ReloadZX Opciones de Sonido y Levels
+				cd /d "%meiga_dir%"
+				rem instalacion de opciones
 				if exist "AGDTiledMod\TmxEnviromentToBat.py" (
+					rem limpieza inicial
+						if exist Enviroment.bat del Enviroment.bat
 					copy "AGDTiledMod\TmxEnviromentToBat.py" "%project_dir%"
 					cd /d "%project_dir%"
 					Python TmxEnviromentToBat.py
-					if exist TmxEnviromentToBat.py del TmxEnviromentToBat.py
 					if exist Enviroment.bat copy Enviroment.bat "%meiga_dir%\Suite ZX"
+					if exist TmxEnviromentToBat.py del TmxEnviromentToBat.py
 					)
-
+					
+			:: ReloadZX Opciones de Plugins
+				cd /d "%meiga_dir%"
+				rem instalacion de opciones
+				if exist "AGDTiledMod\TmxUnpluggedToAsm.py" (
+					rem limpieza inicial
+						if exist Unplugged.asm del Unplugged.asm
+					copy "AGDTiledMod\TmxUnpluggedToAsm.py" "%project_dir%"
+					cd /d "%project_dir%"
+					python TmxUnpluggedToAsm.py ENVIROMENT.tmx Unplugged.asm
+					if exist Unplugged.asm copy Unplugged.asm "%meiga_dir%\Suite ZX"
+					if exist TmxUnpluggedToAsm.py del TmxUnpluggedToAsm.py
+					)
+					
 			cd /d "%meiga_dir%"
 			cd "Suite ZX"
 			:: Traer fuentes de sonido, pantallas, Escenarios
@@ -239,7 +256,7 @@
 	GOTO:EOF
 
 :Copiador
-	:: Sound a MEIGA\Suite ZX\Sound
+	:: Sound a MEIGA\Suite ZX\Sound debemos estar en meiga_dir
 		rem Limpiezas en Suite ZX
 			if exist "Sound\Tune_*.asm" del "Sound\Tune_*.asm" >nul
 			if exist "Sound\fx.asm" del "Sound\fx.asm" >nul
@@ -273,9 +290,7 @@
 	:: Realase
 		rem nada que hacer
 	:: Seleccion
-		rem si queremos usar GeneraAGD para hacer pruebas sin usar el editor Tiled
-		if exist "%project_dir%\seleccion.bat" copy "%project_dir%\seleccion.bat" "%meiga_dir%\seleccion.bat" 
-		pause
+		if exist "%project_dir%\seleccion.bat" copy "%project_dir%\seleccion.bat" "%meiga_dir%\seleccion.bat"
 	
 	GOTO:EOF
 	
