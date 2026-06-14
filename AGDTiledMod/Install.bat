@@ -11,6 +11,15 @@ setlocal enabledelayedexpansion
 		call VersionMeiga
 		echo	INSTALACION MEIGA %version_meiga%
 		echo.
+
+	:: Verificar si Tiled disponible
+		where tiled.exe >nul 2>nul
+		if %errorlevel% neq 0 (
+			echo Tiled no instalado o no en el PATH. Abortando...
+			echo Procede a instalarlo en tu sisitema
+			echo Disponible en https://www.mapeditor.org/
+			exit /b 1
+		)		
 		
 	:: Verificar si Python disponible
 	echo Verificando si Python es instalado...
