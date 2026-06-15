@@ -40,7 +40,7 @@ if %indice% gtr 1 ( set "offset=%offset% + MUSLEN%oldindice%" )
 rem ;AGD irinclude.asm
 echo 		cp %indice%								>> irinclude.asm
 echo 		call z,mus%indice%						>> irinclude.asm
-echo			%indice%: %nombre%					>> SelectTunes.txt
+echo			%indice%: %nombre% !size! bytes		>> SelectTunes.txt
 rem echo+  >> irinclude.asm
 
 rem ;AGD musicsizes.asm

@@ -20,7 +20,7 @@
 	:: Adventure Mode Plugin
 		rem 0 = Disable (recomendado)
 		rem 1 = Enable
-		set adventure=1
+		set adventure=0
 		
 	:: Score records Plugin
 		rem 0 = Disable (recomendado)
@@ -30,7 +30,7 @@
 	:: Convert Stage Zero Mod
 		rem 0 = Disable
 		rem 1 = Enable 
-		set LevelEnabled=1
+		set LevelEnabled=0
 		rem set "ConvertMode=ConvertGame"
 		rem set "ConvertMode=EditStages"
 		set "ConvertMode=EditStages"
@@ -40,7 +40,7 @@
 		rem 1 = ZX Spectrum 48k Beeper
 		rem 2 = ZX Spectrum 128/+2/+3 AY-3-8912 Vortex Tracker II PT3
 		rem 3 = ZX Spectrum 128/+2/+3 AY-3-8912 Arkos Traker
-		set modsnd=2
+		set modsnd=0
 		
 	:: Screens Bank Mod
 		rem six additional screens to download from Memory Banks

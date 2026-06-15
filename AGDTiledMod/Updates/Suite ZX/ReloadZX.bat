@@ -435,6 +435,9 @@ rem Compilar
 			echo Compilation ZX Spectrum 128/+2/+3 AY-3-8912 Vortex Tracker II
 			..\tools\rasm FX4BANK.asm -o FX4BANK
 			call :printlist FX4BANK
+			for %%F in (FX4BANK.bin) do (
+					echo Tamaño de FX4BANK.bin: %%~zF bytes >> ..\Realase\SelectTunes.txt
+				)
 			..\tools\zx7 FX4BANK.bin
 			echo+
 			echo Compiling Music...

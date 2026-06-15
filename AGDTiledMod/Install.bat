@@ -150,6 +150,8 @@ setlocal enabledelayedexpansion
 	echo.
 	echo Instalacion en %parent% completa.
 	echo Prueba ahora a ejecutar la nueva version
+	echo Editor Recomendado NOTEPAD++ para editar tus scripts
+	echo Disoonible en https://notepad-plus-plus.org/
 	pause
 	GOTO:EOF
 	EXIT

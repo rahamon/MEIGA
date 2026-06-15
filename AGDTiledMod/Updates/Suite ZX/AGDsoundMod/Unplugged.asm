@@ -18,4 +18,4 @@ ULAPLUS			equ 0		; enable on/off
 INFRONT			equ 0		; Waterblock inFront
 SCROLL			equ 0		; scroll on/off necesita ULABUFFER y MASKAGD modificado
 ULABUFFER 		equ 0		; debe ser 1 si scroll = 1 para evitar parpadeos
-MASKAGD			equ 1		; Masck, opcion 2 es estable
+MASKAGD			equ 0		; Masck, opcion 2 es estable
