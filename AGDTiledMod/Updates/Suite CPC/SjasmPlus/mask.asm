@@ -1,5 +1,0 @@
-
-
-putmask	
-     ret
- 
