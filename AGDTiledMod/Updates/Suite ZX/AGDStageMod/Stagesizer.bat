@@ -59,18 +59,17 @@ rem medicion limite
 		)
 		
 	if %mmodel% gtr 1 (
-		set /a BANK_LIMIT=16384
-		if %desplazamiento% gtr %BANK_LIMIT% (
+		if %desplazamiento% gtr 16384 (
 			echo ERROR: LevelBank excede 16K: %desplazamiento% bytes >> StagesBank.txt
 			echo ERROR: LevelBank excede 16K: %desplazamiento% bytes
 			)
 
-		if %desplazamientoRbank% gtr %BANK_LIMIT% (
+		if %desplazamientoRbank% gtr 16384 (
 			echo ERROR: RoomBank excede 16K: %desplazamientoRbank% bytes >> StagesBank.txt
 			echo ERROR: RoomBank excede 16K: %desplazamientoRbank% bytes
 			)
 
-		if %desplazamientoBbank% gtr %BANK_LIMIT% (
+		if %desplazamientoBbank% gtr 16384 (
 			echo ERROR: BlockBank excede 16K: %desplazamientoBbank% bytes >> StagesBank.txt
 			echo ERROR: BlockBank excede 16K: %desplazamientoBbank% bytes
 			)		
