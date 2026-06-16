@@ -1,5 +1,7 @@
 ; Installer BankL
 ; Cargador en banco para proposito general
+; Si el descomprimido pasa de #FFFF dentro del banco → corrupción segura.
+; Si el comprimido pasa de #BFFF en memoria base → posible corrupción/cruce con #C000.
 
 			org 24832
 			
@@ -48,5 +50,8 @@ Datos:
 			include "SECtions.asm"
 			;defs 4,0
 			
+    IF $ > #C000
+        ERROR "El cargador Levels datos ZX7 sobrepasa #C000"
+    ENDIF			
 			
 			

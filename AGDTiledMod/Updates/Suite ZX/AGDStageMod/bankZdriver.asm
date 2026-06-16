@@ -48,5 +48,8 @@ Datos:
 			include "ZSECtions.asm"
 			;defs 4,0
 			
+    IF $ > #C000
+        ERROR "El cargador Zero datos ZX7 sobrepasa #C000"
+    ENDIF			
 			
 			

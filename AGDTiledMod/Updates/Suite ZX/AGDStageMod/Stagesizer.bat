@@ -59,20 +59,23 @@ rem medicion limite
 		)
 		
 	if %mmodel% gtr 1 (
-		if %desplazamiento% gtr 16384 (
-			echo Bank memory chip capacity exceeded for model %mmodel%		>> StagesBank.txt
-			echo+ 		>> StagesBank.txt
-			echo Try another Compilation, Bank memory chip capacity exceeded for model %mmodel%
+		set /a BANK_LIMIT=16384
+		if %desplazamiento% gtr %BANK_LIMIT% (
+			echo ERROR: LevelBank excede 16K: %desplazamiento% bytes >> StagesBank.txt
+			echo ERROR: LevelBank excede 16K: %desplazamiento% bytes
 			)
+
+		if %desplazamientoRbank% gtr %BANK_LIMIT% (
+			echo ERROR: RoomBank excede 16K: %desplazamientoRbank% bytes >> StagesBank.txt
+			echo ERROR: RoomBank excede 16K: %desplazamientoRbank% bytes
+			)
+
+		if %desplazamientoBbank% gtr %BANK_LIMIT% (
+			echo ERROR: BlockBank excede 16K: %desplazamientoBbank% bytes >> StagesBank.txt
+			echo ERROR: BlockBank excede 16K: %desplazamientoBbank% bytes
+			)		
 		)
-	REM if %mmodel% gtr 1 (
-		REM if %desplazamientoBbank% gtr 16384 (
-			REM echo Bank ZERO memory chip capacity exceeded for model %mmodel%		>> StagesBank.txt
-			REM echo+ 		>> StagesBank.txt
-			REM echo Try another Compilation, Bank ZERO memory chip capacity exceeded for model %mmodel%
-			REM )
-		REM )
-		
+	
 goto fin
 
 rem pie
