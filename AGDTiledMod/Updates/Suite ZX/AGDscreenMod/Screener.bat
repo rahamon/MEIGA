@@ -28,6 +28,10 @@ rem cuenta screens
 			set "screenuno=%%f"
 		set /a screens+=1
 		call :renamescreens		>nul
+		if !screens! == 1 (
+			call :scrtap		>nul
+			pause
+			)
 		)
 
 rem pie
@@ -81,7 +85,7 @@ rem fin
 		..\tools\bin2tap -a 16384 "%screenuno%" -o SC.tap		>nul
 	rem limpia mocscreen
 		if exist mocscreen.scr del mocscreen.scr		>nul
-		echo SC.bat
+		echo SC.bat generada
 	GOTO:EOF
 	
 :scempty
