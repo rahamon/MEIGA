@@ -6,7 +6,7 @@
 			org 24832
 			
 STAGES	 	equ 49152
-Levelbank	equ 7
+Levelbank	equ 6
 RoomBank	equ 1
 BlockBank	equ 3
 

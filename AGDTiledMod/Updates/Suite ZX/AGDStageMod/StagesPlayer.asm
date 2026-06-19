@@ -5,7 +5,7 @@
 ; Call UserMod + 3
 ;
 STAGES		equ 49152
-Levelbank	equ 7
+Levelbank	equ 6
 ZERObank	equ 2
 RoomBank	equ 1
 BlockBank	equ 3		; MODO shadowSCR A
