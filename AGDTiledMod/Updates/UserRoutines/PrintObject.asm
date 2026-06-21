@@ -1,10 +1,23 @@
 
 ; Ilustrar object (a) en (dispx, dispy).
-; AT X Y
+; AT Y X
 ; LET A = objeto
 
-iluob	ld hl,(charx)
-		ld (dispx),hl
+iluob	ld hl,(charx)		; columna,linea
+
+		ld a,l
+		rlca
+		rlca
+		rlca
+		ld l,a		;/8
+
+		ld a,h
+		rlca
+		rlca
+		rlca
+		ld h,a		;/8
+
+		ld (dispx),hl		; x,y
 
 		ld a,(vara)
 		
