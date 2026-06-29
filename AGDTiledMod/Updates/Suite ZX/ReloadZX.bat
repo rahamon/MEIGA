@@ -336,7 +336,7 @@ rem modificaciones de código
 		rem editar fx.asm
 			..\tools\fart fx.asm "org " ";org "		>nul
 			
-		rem crear un carrier para 48k
+		rem modificar carrier para modelo 48k
 		if %LevelEnabled% == 1 (
 			..\tools\fart %1.asm "jp start" "include \"header.asm\""		>nul
 			rem echo ..\tools\fart Engine0.asm "vsync5 call plsnd" "vsync5 call plsnd48"

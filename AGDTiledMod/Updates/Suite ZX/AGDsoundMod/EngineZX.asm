@@ -2537,7 +2537,7 @@ gtblk  ld (hl),0           ; make it empty now.
        add hl,hl           ; x is now in h.
        ld e,h              ; put x in e.
        ld (dispx),de       ; set display coordinates.
-		ld (vara),de		; MEIGA 2026 (Paco)
+		ld (charx),de		; MEIGA 2026 (Paco)
        ld a,(colpat)       ; get collectable block used on this screen.
        rlca                ; multiply char by 8.
        rlca
