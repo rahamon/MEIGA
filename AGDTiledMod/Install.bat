@@ -11,28 +11,69 @@ setlocal enabledelayedexpansion
 		call VersionMeiga
 		echo	INSTALACION MEIGA %version_meiga%
 		echo.
+
+	:: Verificar si Tiled disponible
+		where tiled.exe >nul 2>nul
+		if %errorlevel% neq 0 (
+			if exist "C:\Program Files\Tiled\tiled.exe" (
+			    	set "TILED=C:\Program Files\Tiled\tiled.exe"
+			) else (
+    				set /p TILED="Introduce la ruta completa de tiled.exe: "
+				if not exist "%TILED%" (
+					echo Tiled no encontrado o no en el PATH. Abortando...
+					echo Procede a instalarlo en tu sistema
+					echo Disponible en https://www.mapeditor.org/
+					exit /b 1
+				)
+			)
+		)		
 		
 	:: Verificar si Python disponible
+	echo Verificando si Python es instalado...
 		where python >nul 2>nul
 		if %errorlevel% neq 0 (
-			echo Python no instalado o no en el PATH. Abortando...
+			echo Python no encontrado o no en el PATH. Abortando...
+			echo Procede a instalarlo en tu sistema
+			echo Disponible en https://apps.microsoft.com/
 			exit /b 1
 		)
+		for /f "delims=" %%P in ('where python 2^>nul') do (
+    			echo %%P | find /I "\WindowsApps\" >nul
+    			if not errorlevel 1 (
+        			echo Se ha detectado el alias de Python del Microsoft Store.
+				echo Python no instalado.
+				echo Se abre Python Manager o Microsoft Store para instalar Python.
+				REM echo Disponible en https://apps.microsoft.com/
+				REM pause
+				"%%P"
+        			exit /b 1
+    			)
+		)
 
-	echo Verificando Pillow instalado...
+	echo Verificando si Pillow es instalado...
 		python -c "import PIL" >nul 2>nul
 		if %errorlevel% neq 0 (
 			echo Pillow no encontrado. Instalando Pillow...
-			python -m pip install pillow
+			python -m pip install pillow >nul 2>nul
+			if %errorlevel% neq 0 (
+        			echo No se pudo Instalar Pillow.
+        			echo Es posible que Python no este instalado correctamente
+			        echo o que Windows este usando el alias del Microsoft Store.
+				echo Python no encontrado o no en el PATH. Abortando...
+				echo Procede a instalarlo en tu sistema
+				echo Disponible en https://apps.microsoft.com/
+				exit /b 1
+			)
+			echo Pillow instalado correctamente.
 		) else (
 			echo Pillow ya instalado.
 		)
 
-	echo Verificando numpy instalado...
+	echo Verificando si numpy es instalado...
 		python -c "import numpy" >nul 2>nul
 		if %errorlevel% neq 0 (
 			echo numpy no encontrado. Instalando numpy...
-			python -m pip install numpy
+			python -m pip install numpy >nul
 		) else (
 			echo numpy ya instalado.
 		)
@@ -117,7 +158,9 @@ setlocal enabledelayedexpansion
 	REM call :CrearLink
 
 :: Check Core
-:: MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalarlo previamente
+:: MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalar previamente
+	echo MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalarlo previamente
+	echo Disponible en https://jonathan-cauldwell.itch.io/multi-platform-arcade-game-designer
 	if not exist "..\Suite ZX\AGD\CompilerZX.exe" (
 		:: Load form
 			rem python seleccionar_archivo.py compiler
@@ -136,6 +179,8 @@ setlocal enabledelayedexpansion
 	echo.
 	echo Instalacion en %parent% completa.
 	echo Prueba ahora a ejecutar la nueva version
+	echo Editor Recomendado NOTEPAD++ para editar tus scripts
+	echo Disponible en https://notepad-plus-plus.org/
 	REM pause
 	GOTO:EOF
 	EXIT
