@@ -19,7 +19,7 @@ setlocal enabledelayedexpansion
 			    	set "TILED=C:\Program Files\Tiled\tiled.exe"
 			) else (
     				set /p TILED="Introduce la ruta completa de tiled.exe: "
-				if not exist "%TILED%" (
+					if not exist "%TILED%" (
 					echo Tiled no encontrado o no en el PATH. Abortando...
 					echo Procede a instalarlo en tu sistema
 					echo Disponible en https://www.mapeditor.org/
@@ -41,11 +41,11 @@ setlocal enabledelayedexpansion
     			echo %%P | find /I "\WindowsApps\" >nul
     			if not errorlevel 1 (
         			echo Se ha detectado el alias de Python del Microsoft Store.
-				echo Python no instalado.
-				echo Se abre Python Manager o Microsoft Store para instalar Python.
-				REM echo Disponible en https://apps.microsoft.com/
-				REM pause
-				"%%P"
+					echo Python no instalado.
+					echo Se abre Python Manager o Microsoft Store para instalar Python.
+					REM echo Disponible en https://apps.microsoft.com/
+					REM pause
+					"%%P"
         			exit /b 1
     			)
 		)
@@ -59,10 +59,10 @@ setlocal enabledelayedexpansion
         			echo No se pudo Instalar Pillow.
         			echo Es posible que Python no este instalado correctamente
 			        echo o que Windows este usando el alias del Microsoft Store.
-				echo Python no encontrado o no en el PATH. Abortando...
-				echo Procede a instalarlo en tu sistema
-				echo Disponible en https://apps.microsoft.com/
-				exit /b 1
+					echo Python no encontrado o no en el PATH. Abortando...
+					echo Procede a instalarlo en tu sistema
+					echo Disponible en https://apps.microsoft.com/
+					exit /b 1
 			)
 			echo Pillow instalado correctamente.
 		) else (
