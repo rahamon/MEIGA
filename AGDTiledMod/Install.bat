@@ -136,7 +136,7 @@ setlocal enabledelayedexpansion
 	echo.
 	echo Instalacion en %parent% completa.
 	echo Prueba ahora a ejecutar la nueva version
-	pause
+	REM pause
 	GOTO:EOF
 	EXIT
 
