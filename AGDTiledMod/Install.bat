@@ -30,6 +30,13 @@ setlocal enabledelayedexpansion
 		
 	:: Verificar si Python disponible
 	echo Verificando si Python es instalado...
+		Python --version >nul 2>nul
+		if %errorlevel% equ 0 (
+			Python --version
+			echo Python está instalado correctamente.
+			GOTO :TestPillow
+		)
+		
 		where python >nul 2>nul
 		if %errorlevel% neq 0 (
 			echo Python no encontrado o no en el PATH. Abortando...
@@ -50,6 +57,7 @@ setlocal enabledelayedexpansion
     			)
 		)
 
+:TestPillow
 	echo Verificando si Pillow es instalado...
 		python -c "import PIL" >nul 2>nul
 		if %errorlevel% neq 0 (
@@ -77,8 +85,28 @@ setlocal enabledelayedexpansion
 		) else (
 			echo numpy ya instalado.
 		)
-
+		
+:: Check Core
+:: MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalar previamente
+	echo MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalarlo previamente
+	echo Disponible en https://jonathan-cauldwell.itch.io/multi-platform-arcade-game-designer
+	if not exist "..\Suite ZX\AGD\CompilerZX.exe" (
+		:: Load form
+			rem python seleccionar_archivo.py compiler
+		:: Load Automático
+			python encuentra_CompilerZX.py
+		:: Instala Core
+			call Compiler
+			xcopy "!compiler_exe!" "..\Suite ZX\AGD\" /Y
+			xcopy "!compiler_dir!\*.asm" "..\Suite ZX\AGD\" /Y
+		:: Istala Suite
+			xcopy "Updates\Suite ZX" "..\Suite ZX" /E /I /Y >nul
+			xcopy "Updates\UserRoutines" "..\UserRoutines" /E /I /Y >nul
+	)
 	echo Comprobaciones completadas.
+
+	pause
+	exit
 
 :: Carpeta superior
 	set "current=%CD%"
@@ -157,24 +185,6 @@ setlocal enabledelayedexpansion
 
 	REM call :CrearLink
 
-:: Check Core
-:: MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalar previamente
-	echo MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalarlo previamente
-	echo Disponible en https://jonathan-cauldwell.itch.io/multi-platform-arcade-game-designer
-	if not exist "..\Suite ZX\AGD\CompilerZX.exe" (
-		:: Load form
-			rem python seleccionar_archivo.py compiler
-		:: Load Automático
-			python encuentra_CompilerZX.py
-		:: Instala Core
-			call Compiler
-			xcopy "!compiler_exe!" "..\Suite ZX\AGD\" /Y
-			xcopy "!compiler_dir!\*.asm" "..\Suite ZX\AGD\" /Y
-		:: Istala Suite
-			xcopy "Updates\Suite ZX" "..\Suite ZX" /E /I /Y >nul
-			xcopy "Updates\UserRoutines" "..\UserRoutines" /E /I /Y >nul
-	)
-	
 :Terminando
 	echo.
 	echo Instalacion en %parent% completa.
