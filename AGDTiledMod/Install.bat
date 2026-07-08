@@ -95,6 +95,10 @@ setlocal enabledelayedexpansion
 			rem python seleccionar_archivo.py compiler
 		:: Load Automático
 			python encuentra_CompilerZX.py
+			if errorlevel 1 (
+				echo No se pudo localizar el Compilador de MPAGD
+				exit /b 1
+			)
 		:: Instala Core
 			call Compiler
 			xcopy "!compiler_exe!" "..\Suite ZX\AGD\" /Y
@@ -104,9 +108,6 @@ setlocal enabledelayedexpansion
 			xcopy "Updates\UserRoutines" "..\UserRoutines" /E /I /Y >nul
 	)
 	echo Comprobaciones completadas.
-
-	pause
-	exit
 
 :: Carpeta superior
 	set "current=%CD%"
