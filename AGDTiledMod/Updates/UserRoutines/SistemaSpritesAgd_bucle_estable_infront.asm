@@ -323,6 +323,8 @@ gsprm0	; new frame
 ; Guarda fondo en spritebk y pinta sprite nuevo
 ;---------------------------------------------------------------------------
 PRINT_Sprite
+		ld l,(ix+8)         ; x
+		ld h,(ix+9)         ; y
 		call PrepareWaterMap
 		call PrepareWaterSkips_LineaAlta_Sprites
 gsmptr	call gsprm           ; HL = pantalla destino, DE = sprite mascara, BC = SIMASK

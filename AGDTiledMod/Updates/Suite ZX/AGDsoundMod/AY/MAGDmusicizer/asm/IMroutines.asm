@@ -2,8 +2,9 @@
 ;	IMsubroutines (BANCO 2!)
 ; ---------------------------------------------------------------------
 ; interrupt routine itself
-
-Saved7FFD defb 0
+MODEFXATTAC equ 1		; 0 Sound Mod, 1 MEIGA12
+MODECANAL	equ 0		; 0 CANAL A, 1 CANAL B, 2 CANAL C, para EFFECTOS
+Saved7FFD	defb 0
  
 ISR:
 		di
@@ -31,12 +32,18 @@ ISR:
 		ENDIF
 		
 ; Seccion de musica
+	IF MODEFXATTAC = 1
+		; si hay FX, pausa Vortex
+		ld a,(isOkfx)
+		and a
+		jr nz,skipplay
+	ENDIF
 		ld a,(ctrN)					; load a with ctrN
 		; Checking
 		cp 30
 		jr z,contplay				; clave 30 go to contplay	
 		cp 32
-		jr z,skipplay				; clave 32 go to skip play IS-MUTED
+		jr z,skipplay				; clave 32 go to SKIP play
 		; check songs
 		include "irinclude.asm"	
 		; check LOOP
@@ -45,7 +52,7 @@ ISR:
 		jr z,loopOFF				; clave 0 LoopOff: play una sola vez.
 		; check MUTE
 		cp 31
-		jr z, muteplay				; clave 31 this stops plackback and mutes AY (no music on launch. EmptySong).
+		jr z, muteplay				; clave 31 this STOPS plackback and mutes AY (no music on launch. EmptySong).
 		; todo sigue igual
 		ld a,30
 		ld (ctrN),a					; set clave 30 PLAYING
@@ -60,7 +67,7 @@ loopOFF	ld a,10
 
 muteplay:
 		ld a,32
-		ld (ctrN),a					; set clave skipplay MUTED
+		ld (ctrN),a					; set clave SKIP play MUTED
 		call bank4				 
 		call 49152 + 8				; MUTE audio 
 		jr skipplay
@@ -90,26 +97,23 @@ isOkfx	defb 0
 		jr z,skipplayFX				; nada que reproducir
 		call bank4
 		call FX4BANK + 8			; PLAY efectos de juego
-		ld a,(FX4BANK + 15)			; y Check RealaseFX
+
+		ld a,(FX4BANK + 15 + 8*MODECANAL)			; y Check RealaseFX
 		and a
 		jr nz,NextFrameFX			; no he acabado, sigue
 		xor a
 		ld (isOkfx),a				; al acabar resetea flag
-		; Chequea la musica esta en silence?
+
+	IF MODEFXATTAC = 1
 		ld a,(ctrN)
-		cp 31
-		jr z,skipplayFX				; continua en silence 
-		;
-		ld a,30
-		ld (ctrN),a					; set clave continuemusic
-		;ld (UMuted),a
-		jr skipplayFX
-		
+		cp 30
+		jr nz,skipplayFX
+		; estaba reproduciendo música,
+		; restaurar/reanudar Vortex
+		;call 49152 + 5
+	ENDIF
+
 NextFrameFX
-		ld a,32
-		ld (ctrN),a					; set clave SKIP musica
-		;ld (UMuted),a
-		
 skipplayFX
 		
 	; TICKER para ULABuffer y MASK MEIGA

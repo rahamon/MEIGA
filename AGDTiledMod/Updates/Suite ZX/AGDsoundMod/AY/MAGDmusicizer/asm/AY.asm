@@ -39,6 +39,7 @@ msetup:
 ; -----------------------------------------------------------------------------
 ; AY FX Routines
 ; -----------------------------------------------------------------------------
+
 			
 fxsnd	ret
 
@@ -68,12 +69,10 @@ Selectfx					; SELECT efecto
 		; lanzar el efecto (c)
 		ld a,c
 		;call FX4BANK + 5	 AFXPLAY
-		ld e,0
+		ld e,MODECANAL
 		call FX4BANK + 11	; AFXPLAYChannel
 		call bank0
 playSelected
-		ld a,31
-		ld (ctrN),a			; set clave Mute music
 		ld (isOkfx),a		; ALGO para PLAYFX
 		ret
 playSfx2

@@ -32,9 +32,14 @@ NUMTYP equ COLECT + 1      ; number of types.
 NUMSPR equ 12              ; number of sprites. maximo 10 con MASKAGD
 
 	IF MASKAGD = 0
-TABSIZ equ 17              ; size of each entry.
+		IF INFRONT = 1
+TABSIZ equ 17 + 1			; size of each entry. + helper(1=InfrontMap)MEIGA
+		ELSE
+TABSIZ equ 17	            ; size of each entry.
+		ENDIF
 	ELSE
-TABSIZ equ 17 + 1 + 48 + 1 + 1 + 48			; size + coor_Z + buffer_fondo + IMask + solapamiento + BufferPrint
+	; size(17) + coor_Z(1)+buffer_fondo(48)+IMask(1)+solapamiento(1)+BufferPrint(48)
+TABSIZ equ 17 + 1 + 48 + 1 + 1 + 48
 	ENDIF
 		
 SPRBUF equ NUMSPR * TABSIZ ; size of entire table.	
@@ -3268,7 +3273,9 @@ spmask defb 255,0,63,192,15,240,3,252
 ; sspric = both sprites, old (ix) and new (ix+5).
 
 	;IF MASKAGD = 0
-
+		IF INFRONT = 1
+			include "dline_front.asm"
+		ELSE
 sspria call gsprad         ; get old sprite address.
 sspri2 ld a,16             ; vertical lines.
 sspri0 ex af,af'           ; store line counter away in alternate registers.
@@ -3389,6 +3396,7 @@ nline  inc h               ; increment pixel.
        ret c               ; not yet.
        ld h,56             ; back to ROM.
        ret
+		ENDIF
 	ELSE
 		; MOVIDAS a header
 	ENDIF

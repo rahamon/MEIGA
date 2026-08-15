@@ -5,6 +5,12 @@
 ;
 ;	calve 2 pinta, 0 no pinta
 
+	IF MASKAGD = 1
+WaterMapDataPosition	equ 67
+	ELSE
+WaterMapDataPosition	equ 17
+	ENDIF
+
 WaterMapSprite	defb 0
 WaterSwitchLine	defb 8
 
@@ -20,12 +26,14 @@ PrepareWaterMap
 		; ld (varj),a
 		; ld (vark),a
 		
-		ld a,(ix+67)
+		ld a,(ix+WaterMapDataPosition)
 		and %00000001       ; conserva solape con sprites
-		ld (ix+67),a
+		ld (ix+WaterMapDataPosition),a
 		
-twater	ld l,(ix+8)         ; x
-		ld h,(ix+9)         ; y
+twater	;ld l,(ix+8)
+		;ld h,(ix+9)         
+        ;ld (dispx),hl
+        ;call tstbl
 		;ld a,l
         ;and 7
         ;ld b,a
@@ -45,7 +53,7 @@ twater_1
 		cp b                ; celda 1 
 		jr nz,twater_2
 		;ld (vare),a
-		set 1,(ix+67)
+		set 1,(ix+WaterMapDataPosition)
 		; xor a
 		; ld (skpr1+1),a
 		; ld (skres1+1),a
@@ -56,7 +64,7 @@ twater_2
 		cp b
 		jr nz,twater_3
 		;ld (varf),a
-		set 2,(ix+67)
+		set 2,(ix+WaterMapDataPosition)
 		; xor a
 		; ld (skpr3+1),a
 		; ld (skres3+1),a
@@ -72,7 +80,7 @@ twater_3
 		cp b
 		jr nz,twater_4
 		;ld (varg),a
-		set 3,(ix+67)
+		set 3,(ix+WaterMapDataPosition)
 		; xor a
 		; ld (skpr2+1),a
 		; ld (skres2+1),a
@@ -87,7 +95,7 @@ twater_row2
 		cp b
 		jr nz,twater_5
 		;ld (vari),a
-		set 4,(ix+67)
+		set 4,(ix+WaterMapDataPosition)
 		; xor a						; NO pinta
 		; ld (skpr1+1),a
 		; ld (skres1+1),a
@@ -98,7 +106,7 @@ twater_5
 		cp b
 		jr nz,twater_6
 		;ld (varj),a
-		set 5,(ix+67)
+		set 5,(ix+WaterMapDataPosition)
 		; xor a						; NO pinta
 		; ld (skpr3+1),a
 		; ld (skres3+1),a
@@ -113,13 +121,13 @@ twater_6
 		cp b
 		jr nz,twater_end
 		;ld (vark),a
-		set 6,(ix+67)
+		set 6,(ix+WaterMapDataPosition)
 		; xor a						; NO pinta
 		; ld (skpr2+1),a
 		; ld (skres2+1),a
 	   
 twater_end
-		ld a,(ix+67)
+		ld a,(ix+WaterMapDataPosition)
         ld (WaterMapSprite),a
 		ret
 
@@ -134,7 +142,7 @@ PrepareWaterSkips_Reset
 		ret
 
 ; --------------------------------------------------
-; Prepara los JR automodificados según (IX+67)
+; Prepara los JR automodificados según (IX+WaterMapDataPosition)
 ;
 ; bit = 0 -> guarda 2 -> JR +2 -> pinta
 ; bit = 1 -> guarda 0 -> JR +0 -> No Pinta
@@ -142,7 +150,7 @@ PrepareWaterSkips_Reset
 PrepareWaterSkips_LineaAlta_Sprites
 		push bc
 		call PrepareWaterSkips_Reset
-		ld a,(ix+67)
+		ld a,(ix+WaterMapDataPosition)
 		ld c,a
 ; bit 1 de WaterMap
 		ld a,c
@@ -180,7 +188,7 @@ PrepareWaterSkips_LineaAlta_Sprites
 PrepareWaterSkips_LineaBaja_Sprites
 		push bc
 		call PrepareWaterSkips_Reset
-		;ld a,(ix+67)
+		;ld a,(ix+WaterMapDataPosition)
 		ld a,(WaterMapSprite)
 		ld c,a
 ; bit 4 de WaterMap
