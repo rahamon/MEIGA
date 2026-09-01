@@ -26,6 +26,9 @@ CUSTOM equ DEADLY + 1      ; custom block.
 WATER  equ CUSTOM + 1      ; water block.
 COLECT equ WATER + 1       ; collectable block.
 NUMTYP equ COLECT + 1      ; number of types.
+	IF INFRONT = 1
+FRONT	equ NUMTYP + 1		; tipo 10
+	ENDIF
 
 ; Sprites.
 
@@ -33,13 +36,29 @@ NUMSPR equ 12              ; number of sprites. maximo 10 con MASKAGD
 
 	IF MASKAGD = 0
 		IF INFRONT = 1
-TABSIZ equ 17 + 1			; size of each entry. + helper(1=InfrontMap)MEIGA
+		; size of each entry(0-16)
+		; helper(17 InfrontMap)
+TABSIZ equ 17 + 1
 		ELSE
 TABSIZ equ 17	            ; size of each entry.
 		ENDIF
 	ELSE
-	; size(17) + coor_Z(1)+buffer_fondo(48)+IMask(1)+solapamiento(1)+BufferPrint(48)
-TABSIZ equ 17 + 1 + 48 + 1 + 1 + 48
+		IF INFRONT = 1
+		; size(0-16)
+		; Coor_Z(17)
+		; buffer_fondo(18-65)
+		; IMask(66)
+		; solapamiento(67)
+		; helper InfrontMap(68)
+TABSIZ equ 17 + 1 + 48 + 1 + 1 + 1
+		ELSE
+		; size(0-16)
+		; Coor_Z(17)
+		; buffer_fondo(18-65)
+		; IMask(66)
+		; solapamiento(67)
+TABSIZ equ 17 + 1 + 48 + 1 + 1
+		ENDIF
 	ENDIF
 		
 SPRBUF equ NUMSPR * TABSIZ ; size of entire table.	
@@ -532,7 +551,7 @@ vsync4 ld a,d              ; where we got to.
 vsynca ld (sndtyp),a       ; remember for next time.
 
 vsync1 ld a,(23672)        ; clock low.
-       rra                 ; rotate bit into carry.
+	   rra                 ; rotate bit into carry.
        call c,vsync5       ; time to play sound and do shrapnel/ticker stuff.
        ld hl,clock         ; last clock reading.
 vsync0 ld a,(23672)        ; current clock reading.
@@ -1334,12 +1353,12 @@ mloop
 		
 	IF MASKAGD = 0
 	; XOR routines
-			call vsync
 		; A Impresion desprites impares
+			call vsync
 			ld ix,sprtab        ; address of sprite table, even sprites.
 			call dspr           ; display even sprites.
-			call vsync
 		; B Impresion desprites pares	 
+			call vsync
 			ld ix,sprtab+TABSIZ ; address of first odd sprite.
 			call dspr           ; display odd sprites.
 	ELSE
@@ -1414,6 +1433,7 @@ evlp2  call evnt11         ; called once per main loop.
 		;include "cassettePlay.asm"
 
 bsortx
+	
 	IF MASKAGD = 0
 		call bsort          ; sort sprites.
 	ELSE
@@ -1674,10 +1694,12 @@ getob
 		and a
 		jr z,getob2
 	; borra Sprite
-		call RESTAURA_Fondo_NUEVO
+		;call RESTAURA_Fondo_NUEVO
+		call RESTAURA_Fondo
 	; pinta Objetos
 		call getob2
 	; Pinta sprite
+		;call LIMPIA_fondo
 		call PRINT_Sprite
 		ret
 		
@@ -1774,11 +1796,13 @@ drpob
 		;ei
 		jp nc,drpob2			; ninguno a la vista
 		ld ix,(okptr)
-	; borralo
-		call RESTAURA_Fondo_NUEVO	; restaura okptr-sprite
+	; borralo restaura okptr-sprite
+		;call RESTAURA_Fondo_NUEVO
+		call RESTAURA_Fondo
 	; pinta Objetos
 		call drpob2					; pinta obj
 	; y pinta esprite
+		; guarda fondo nuevo!!
 		call PRINT_Sprite			; pinta okptr-sprite
 		ret
 drpob2	
@@ -2504,7 +2528,8 @@ getcol	ld a,(MASKAGDopt)
 		call skany
 		ret c
 	; borra Sprite
-		call RESTAURA_Fondo_NUEVO
+		;call RESTAURA_Fondo_NUEVO
+		call RESTAURA_Fondo
 	; pinta Objetos
 		call getcol2
 	; Pinta sprite

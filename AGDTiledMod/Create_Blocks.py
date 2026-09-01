@@ -26,26 +26,50 @@ def decode_attribute(attribute):
 
     return flash, bright, paper_index, ink_index
 
+def read_agd(filename):
+    """Lee un archivo AGD probando varias codificaciones."""
+    encodings = ("utf-8-sig", "utf-8", "cp1252")
+
+    for encoding in encodings:
+        try:
+            with open(filename, "r", encoding=encoding) as f:
+                lines = f.readlines()
+
+            print(f"AGD leído usando {encoding}")
+            return lines
+
+        except UnicodeDecodeError:
+            pass
+
+    raise UnicodeError(
+        f"No se pudo decodificar el archivo '{filename}' "
+        f"usando: {', '.join(encodings)}"
+    )
+
 def parse_agd(agd_file):
     """Lee un archivo AGD y extrae la información de bloques."""
     blocks = []
     block_types = []
-    with open(agd_file, "r", encoding="utf-8") as file:
-        lines = file.readlines()
+
+    # Lee el AGD probando varias codificaciones
+    lines = read_agd(agd_file)
 
     i = 0
     while i < len(lines):
         line = lines[i].strip()
+
         if line.startswith("DEFINEBLOCK"):
             parts = line.split()
             block_type = parts[1] if len(parts) > 1 else "EMPTYBLOCK"
             block_types.append(block_type)
+
             i += 1
 
             if i < len(lines):
                 data = list(map(int, lines[i].strip().split()))
                 binary_block, attribute = data[:-1], data[-1]
                 blocks.append((binary_block, attribute))
+
         i += 1
 
     return blocks, block_types

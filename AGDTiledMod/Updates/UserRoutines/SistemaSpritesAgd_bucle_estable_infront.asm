@@ -5,17 +5,7 @@
 
 LASTIX	equ (NUMSPR -1 ) * TABSIZ
 
-vsync3f push hl
-        call vsync	; frena el tiempo
-		ld hl,clock
-vsync30 ld a,(23672)
-		;rra
-		rra			; acelera el tiempo, Usar con cautela
-        cp (hl)
-        jr z,vsync30
-        ld (hl),a
-        pop hl
-        ret
+		include "frameSpriteSync.asm"
 		
 MASKAGDopt	defb MASKAGD
 
@@ -184,7 +174,7 @@ prisnc1	ld a,(ix+5)				; type of new sprite.
 		inc a					; Nuevo activo?
 		jr nz,prisnc4			; SI, antes tambien asi que se MUEVE
 prisnc6	CALL RESTAURA_Fondo		; REMOVE: antes habilitado pero ahora des-habilitado
-		jp dspr2
+		jp prisnc2
 
 prisnc4	ld a,(ix+4)         ; old y.
 		cp (ix+9)           ; compare with new value.
@@ -202,28 +192,16 @@ prisnc4	ld a,(ix+4)         ; old y.
 		jp z,prisnc9          ; everything is the same, don't redraw.
 		
 
-prisnc7	
+prisnc7	;call vsync3g
 		CALL RESTAURA_Fondo		; MEIGA 10
 		call PRINT_Sprite		; MEIGA 10
 	; MEIGA 12: si Y < salta para sincronizar con TV, SOLO PARA PACO TIME ATTACK
-		ld a,(ix+8)      		
-		cp 144            		
-		jr nc,prisnc9
-		cp 64
-		jr c,prisnc9
-		;call vsync3f
-		jp prisnc2				; MEIGA 10	
-prisnc9 ld a,(ix+5)				; MEIGA 12 si es tipo 9 o menos sincroniza
-	; hasta Ncol sprites
-		;ld hl,NCol
-		;cp (hl)
-	; hasta 5 tipos de sprites
-		cp 5
-		jp nc,prisnc2			; MEIGA 12
-		;jp nz,prisnc2
-		;call vsync3f			; comentar si ULABuffer SOLO PARA PACO TIME ATTACK
-		jp prisnc2				; MEIGA 12
-		
+		; call vsyncy
+		jp prisnc2
+prisnc9
+	;MEIGA 12 si es tipo 9 o menos sincroniza
+		; call vsynct
+		jp prisnc2		
 prisnc3 call PRINT_Sprite		; show single sprite.
 		; show
 		jp prisnc2
@@ -234,9 +212,14 @@ prisnc3 call PRINT_Sprite		; show single sprite.
 RESTAURA_Fondo_NUEVO
 		call gspran
 		jr resfo00
-RESTAURA_Fondo:
-		call gsprad          ; HL = pantalla donde estaba sprite viejo
+RESTAURA_Fondo
+		ld l,(ix+3)         ; old x coordinate.
+		ld h,(ix+4)         ; old y coordinate.
+		ld (dispx),hl       ; set background coordinates.
+		call scadd
+		;call gsprad          ; HL = pantalla donde estaba sprite viejo
 							 ; DE = grafico
+							 
 resfo00	push ix              ; salvar IX original de la tabla de sprites
 		ld a,16             ; vertical lines.
 resfon0	ex af,af'           ; 'store line counter away in alternate registers.
@@ -250,30 +233,30 @@ dlaptr	defw dline_bk_restore
 		pop ix               ; restaurar IX original
 		ret
 
-dline_bk_restore:
-skres1	defb $18
-		defb $02 			;jr $+4
-		jr skipresbit1
+dline_bk_restore
+;skres1	defb $18
+;		defb $02 			;jr $+4
+;		jr skipresbit1
 		; Restaurar 3 bytes
 		ld a,(ix+18)
 		ld (hl),a
-skipresbit1
+;skipresbit1
 		inc l               ; pasa a siguiente byte de pantalla
 		inc l               ; next screen address.
-skres2	defb $18
-		defb $02 			;jr $+4
-		jr skipresbit2
+;skres2	defb $18
+;		defb $02 			;jr $+4
+;		jr skipresbit2
 		ld a,(ix+19)
 		ld (hl),a
-skipresbit2
+;skipresbit2
 		;inc de              ; next graphic.
 		dec l               ; mueve cursor de pantalla una celda a la izquierda
-skres3	defb $18
-		defb $02 			;jr $+4
-		jr skipresbit3
+;skres3	defb $18
+;		defb $02 			;jr $+4
+;		jr skipresbit3
 		ld a,(ix+20)
 		ld (hl),a
-skipresbit3
+;skipresbit3
 		;inc de              ; point to next line of data.
 		dec l               ; retrocede una más, para próxima línea
 		
@@ -342,7 +325,7 @@ dlbptr	defw dline_savebk_and_print_new
 		;push hl
 		;ld hl,WaterSwitchLine
 		;cp (hl)
-        cp 7
+        cp 8
 		call z,PrepareWaterSkips_LineaBaja_Sprites
 		;pop hl
 		pop af
@@ -362,7 +345,7 @@ dline_savebk_and_print_new
 print_new_Primer_byte
 		ld a,(hl)			; craga fondo 
 		ld (ix+18),a		;+0 guarda en buffer sprite
-		ld (ix+68),a		;+0 guarda en buffer sprite
+		;ld (ix+68),a		;+0 guarda en buffer sprite
 skpr1	defb $18
 		defb $02 			;jr $+4
 		jr skipbit1
@@ -401,7 +384,7 @@ skipbit1
 print_new_Segundo_byte
 		ld a,(hl)			; craga linea
 		ld (ix+19),a		;+1
-		ld (ix+69),a		;+1
+		;ld (ix+69),a		;+1
 skpr2	defb $18
 		defb $02 			;jr $+4
 		jr skipbit2
@@ -440,7 +423,7 @@ skipbit2
 print_new_Tercer_byte
 		ld a,(hl)
 		ld (ix+20),a		;+2
-		ld (ix+70),a		;+2
+		;ld (ix+70),a		;+2
 skpr3	defb $18
 		defb $02 			;jr $+4
 		jr skipbit3

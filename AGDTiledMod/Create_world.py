@@ -72,12 +72,36 @@ def generate_world_json(map_matrix, screen_width, screen_height):
         "maps": maps
     }
 
+def read_agd2(filename):
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            return f.readlines()
+    except UnicodeDecodeError:
+        with open(filename, "r", encoding="cp1252") as f:
+            return f.readlines()
 
+def read_agd(filename):
+    encodings = ("utf-8-sig", "utf-8", "cp1252")
+
+    for encoding in encodings:
+        try:
+            with open(filename, "r", encoding=encoding) as f:
+                lines = f.readlines()
+
+            print(f"AGD leído usando {encoding}")
+            return lines
+
+        except UnicodeDecodeError:
+            pass
+
+    raise UnicodeError(
+        f"No se pudo decodificar el archivo '{filename}'"
+    )
+ 
 def main(input_agd):
     screen_width, screen_height = get_screen_dimensions_from_tmx(ENVIROMENT_FILE)
 
-    with open(input_agd, encoding="utf-8") as f:
-        lines = f.readlines()
+    lines = read_agd(input_agd)
 
     map_matrix, width, start_screen = parse_map_block(lines)
     if not map_matrix:
@@ -88,6 +112,7 @@ def main(input_agd):
 
     with open("MAP.world", "w", encoding="utf-8") as f:
         json.dump(world_data, f, indent=2)
+
     print("Archivo MAP.world generado correctamente.")
 
 

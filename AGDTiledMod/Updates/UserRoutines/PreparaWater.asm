@@ -2,11 +2,12 @@
 ; Entrada:
 ;   B = tipo de bloque agua = WATERBLOCK
 ;   IX = sprite/objeto
+;   Coordenadas en HL
 ;
 ;	calve 2 pinta, 0 no pinta
 
 	IF MASKAGD = 1
-WaterMapDataPosition	equ 67
+WaterMapDataPosition	equ 68
 	ELSE
 WaterMapDataPosition	equ 17
 	ENDIF
@@ -14,8 +15,18 @@ WaterMapDataPosition	equ 17
 WaterMapSprite	defb 0
 WaterSwitchLine	defb 8
 
+PrepareWaterMap_Old
+        ld l,(ix+3)
+        ld h,(ix+4)
+        jp PrepareWaterMap
+
+PrepareWaterMap_New
+        ld l,(ix+8)
+        ld h,(ix+9)
+        jp PrepareWaterMap
+
 PrepareWaterMap
-		call PrepareWaterSkips_Reset
+		;call PrepareWaterSkips_Reset		;<- descomentar si falla
 		
 	;test
 		; xor a
@@ -151,6 +162,7 @@ PrepareWaterSkips_LineaAlta_Sprites
 		push bc
 		call PrepareWaterSkips_Reset
 		ld a,(ix+WaterMapDataPosition)
+		;ld a,(WaterMapSprite)
 		ld c,a
 ; bit 1 de WaterMap
 		ld a,c

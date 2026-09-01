@@ -6,11 +6,11 @@
 LASTIX	equ (NUMSPR -1 ) * TABSIZ
 
 vsync3f push hl
-        call vsync	; frena el tiempo
+        ;call vsync	; frena el tiempo
 		ld hl,clock
 vsync30 ld a,(23672)
 		;rra
-		rra			; acelera el tiempo, Usar con cautela
+		;rra			; acelera el tiempo, Usar con cautela
         cp (hl)
         jr z,vsync30
         ld (hl),a
@@ -55,7 +55,7 @@ resra0	ld a,(NCol)
 		
 		cp b
 		jr z,resrb9			; hasta NCol
-
+		
 		push bc             ; store loop counter for now.
 
         ld a,(ix+0)         ; get sprite type.
@@ -133,7 +133,7 @@ prisc1 ld a,(ix+5)         ; type of new sprite.
        inc a               ; is this enabled?
        jr z,prisc2         ; REMOVEME, estaba habilitado ahora está des-habilitado.
 prisc7 call PRINT_Sprite   ; APARECE o se MUEVE, show single sprite.
-       jp prisc2
+	   jp prisc2
 
 ;---------------------------------------------------------------------------
 ; Restaura e Imprime sprites.
@@ -157,7 +157,8 @@ prisnc5 ld a,(ix+5)			; tipo nuevo
         inc a
         jr nz,prisnc3		; APARECE, está habilitado anteriormente estaba des-habilitado
 		; VACIO
-prisnc2 push ix
+prisnc2 
+		push ix
         pop hl
         ld e,l
         ld d,h
@@ -203,7 +204,7 @@ prisnc4	ld a,(ix+4)         ; old y.
 		jp z,prisnc9          ; everything is the same, don't redraw.
 		
 
-prisnc7	
+prisnc7 
 		CALL RESTAURA_Fondo		; MEIGA 10
 		call PRINT_Sprite		; MEIGA 10
 	; MEIGA 12: si Y < salta para sincronizar con TV, SOLO PARA PACO TIME ATTACK
@@ -225,7 +226,8 @@ prisnc9 ld a,(ix+5)				; MEIGA 12 si es tipo 9 o menos sincroniza
 		;call vsync3f			; comentar si ULABuffer SOLO PARA PACO TIME ATTACK
 		jp prisnc2				; MEIGA 12
 		
-prisnc3 call PRINT_Sprite		; show single sprite.
+prisnc3 
+		call PRINT_Sprite		; show single sprite.
 		; show
 		jp prisnc2
 	   
@@ -235,7 +237,7 @@ prisnc3 call PRINT_Sprite		; show single sprite.
 RESTAURA_Fondo_NUEVO
 		call gspran
 		jr resfo00
-RESTAURA_Fondo:
+RESTAURA_Fondo
 		call gsprad          ; HL = pantalla donde estaba sprite viejo
 							 ; DE = grafico
 resfo00	push ix              ; salvar IX original de la tabla de sprites
@@ -337,7 +339,7 @@ dline_savebk_and_print_new
 print_new_Primer_byte
 		ld a,(hl)			; craga fondo 
 		ld (ix+18),a		;+0 guarda en buffer sprite
-		ld (ix+68),a		;+0 guarda en buffer sprite
+;		ld (ix+68),a		;+0 guarda en buffer sprite
 		; maskSprite
 		exx
 		push bc
@@ -366,7 +368,7 @@ print_new_Primer_byte
 print_new_Segundo_byte
 		ld a,(hl)			; craga linea
 		ld (ix+19),a		;+1
-		ld (ix+69),a		;+1
+;		ld (ix+69),a		;+1
 		; maskSprite
 		exx
 		push bc
@@ -395,7 +397,7 @@ print_new_Segundo_byte
 print_new_Tercer_byte
 		ld a,(hl)
 		ld (ix+20),a		;+2
-		ld (ix+70),a		;+2
+;		ld (ix+70),a		;+2
 		; maskSprite
 		exx
 		ld a,(de)

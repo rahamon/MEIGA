@@ -36,6 +36,26 @@ def ulaplus_byte_to_rgb(byte, bright=None):
 
     return (r, g, b)
 
+# Leer archivos AGD probando varias codificaciones
+def read_agd(filename):
+    encodings = ("utf-8-sig", "utf-8", "cp1252")
+
+    for encoding in encodings:
+        try:
+            with open(filename, "r", encoding=encoding) as f:
+                lines = f.readlines()
+
+            print(f"AGD leído usando {encoding}")
+            return lines
+
+        except UnicodeDecodeError:
+            pass
+
+    raise UnicodeError(
+        f"No se pudo decodificar el archivo '{filename}'"
+    )
+
+
 # Si usamos la paleta estándar
 if use_standard:
     print("Usando paleta estándar del ZX Spectrum...")
@@ -53,8 +73,13 @@ else:
         "DEFINEMESSAGES", "DEFINEFONT", "DEFINEJUMP", "DEFINECONTROLS"
     ]
 
-    with open(agd_path, "r", encoding="utf-8") as file:
-        lines = file.readlines()
+    # Antes:
+    # with open(agd_path, "r", encoding="utf-8") as file:
+    #     lines = file.readlines()
+
+    # Ahora:
+    lines = read_agd(agd_path)
+
 
     palette_section = []
     in_palette = False

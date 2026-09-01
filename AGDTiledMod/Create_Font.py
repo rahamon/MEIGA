@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 from PIL import Image
 
 def parse_definefont(agd_file):
-    with open(agd_file, encoding='utf-8') as f:
+    with open(agd_file, "r", encoding="utf-8", errors="replace") as f:
         lines = f.readlines()
 
     font_data = []

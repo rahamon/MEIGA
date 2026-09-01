@@ -11,6 +11,26 @@ TILESET_SOURCE_SPRITES = "Sprites.tsx"
 FIRST_GID = 1
 SPRITE_GID_OFFSET = 256
 
+def read_agd(filename):
+    """Lee un archivo AGD probando varias codificaciones."""
+    encodings = ("utf-8-sig", "utf-8", "cp1252")
+
+    for encoding in encodings:
+        try:
+            with open(filename, "r", encoding=encoding) as f:
+                lines = f.readlines()
+
+            print(f"✅ AGD leído usando codificación: {encoding}")
+            return lines
+
+        except UnicodeDecodeError:
+            continue
+
+    raise UnicodeError(
+        f"No se pudo decodificar el archivo '{filename}' "
+        f"usando: {', '.join(encodings)}"
+    )
+
 def load_type_names(json_path):
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -170,8 +190,11 @@ def main():
         print("❌ Archivos no encontrados.")
         return
 
-    with open(agd_path, encoding="utf-8") as f:
-        agd_lines = f.readlines()
+    # with open(agd_path, encoding="utf-8") as f:
+    #    agd_lines = f.readlines()
+    
+    # Leer AGD probando varias codificaciones
+    agd_lines = read_agd(agd_path)
 
     map_width, map_height, win_x, win_y = parse_definewindow(agd_lines)
     screens = parse_agd_screens(agd_lines, map_width, map_height)

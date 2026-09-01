@@ -13,6 +13,7 @@ secciones = [
     "EVENT SPRITETYPE1",
     "EVENT SPRITETYPE2",
     "EVENT SPRITETYPE3",
+    
     "EVENT SPRITETYPE4",
     "EVENT SPRITETYPE5",
     "EVENT SPRITETYPE6",
@@ -36,7 +37,7 @@ secciones = [
 secciones_normalizadas = {s.lower(): s for s in secciones}
 secciones_extraidas = {s: [] for s in secciones}
 
-with open(agd_path, "r", encoding="utf-8") as file:
+with open(agd_path, "r", encoding="utf-8", errors="replace") as file:
     lines = file.readlines()
 
 seccion_actual = None

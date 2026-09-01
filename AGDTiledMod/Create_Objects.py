@@ -27,7 +27,7 @@ def load_palette_from_json(json_path):
     return palette
 
 def parse_agd_defineobjects(agd_file):
-    with open(agd_file, encoding="utf-8") as f:
+    with open(agd_file, encoding="utf-8", errors="replace") as f:
         lines = [line.strip() for line in f if line.strip()]
 
     objects = []
