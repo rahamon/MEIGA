@@ -67,7 +67,7 @@ setupStageTape
 		ret
    
 TapeNamePointer
-		defw TapZERO
+		;defw TapZERO
 
 ; world
 ; Tapename

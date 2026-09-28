@@ -3,7 +3,7 @@ rem Compila un volumen de cinta con los Escenarios
 rem +++ obligar a 6 caracteres por nombre
 rem CARA B
 	set /a indice=0
-	set indZERO=
+	set /a indZERO=0
 rem Cabecera Selector
 
 rem Volumen Cabecera

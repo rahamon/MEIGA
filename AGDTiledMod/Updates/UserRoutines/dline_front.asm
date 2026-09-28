@@ -1,35 +1,31 @@
+
 ; Mod IN-FRONT WATER BLOCK
 ;---------------------------------------------------------------------------
 ; PRINT_Sprite
 ;---------------------------------------------------------------------------
-PrepareWaterMap_Old
-        ld l,(ix+3)
-        ld h,(ix+4)
-        jp PrepareWaterMap
 
-PrepareWaterMap_New
-        ld l,(ix+8)
-        ld h,(ix+9)
-        jp PrepareWaterMap
+			include "frameSpriteSync.asm"
 
-sspria
-        call PrepareWaterMap_Old
+sspria	
+		call PrepareWaterMap_Old
         call PrepareWaterSkips_LineaAlta_Sprites
         call gsprad
         jp prisp00
 
 ssprib
-        call PrepareWaterMap_New
+		call PrepareWaterMap_New
         call PrepareWaterSkips_LineaAlta_Sprites
         call gspran
         jp prisp00
-
+		
 sspric
+        call vsync3g
+
         call sspria
         call ssprib
         ret
-		
-prisp00	;push ix              ; salvar IX original de la tabla de sprites
+
+prisp00	push ix              ; salvar IX original de la tabla de sprites
 		ld a,16             ; vertical lines contador.
 prispr0	ex af,af'           ; 'store line counter away in alternate registers.
 		defb $CD
@@ -47,7 +43,7 @@ dlbptr	defw dline
 		;or a
 		jp nz,prispr0
 		call PrepareWaterSkips_Reset
-		;pop ix               ; restaurar IX original
+		pop ix               ; restaurar IX original
 		ret
 		
 dline

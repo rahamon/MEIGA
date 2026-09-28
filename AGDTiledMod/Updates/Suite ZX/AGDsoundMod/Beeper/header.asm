@@ -7,7 +7,8 @@ TAPEMODE	equ 1
 			
 			jp start				;org+0
 			jp StageInstaller		;org+3
-DefTape_ptr	defw TapZERO			;org+6
+DefTape_ptr	defw TapeNamePointer	;org+6
+;DefTape_ptr	defw TapZERO			;org+6
 
 
 

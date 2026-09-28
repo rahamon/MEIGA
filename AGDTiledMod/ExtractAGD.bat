@@ -97,7 +97,7 @@
 			python Create_world.py "%nombre%"
 		
 		:: Crea DEFINEPALETTE.agd y extrae la paletaULA+ o la paleta standard (ExtraerPalette.py "%nombre%" --standard)
-			python Create_Palette.py "%nombre%" 
+			python Create_Palette.py "%nombre%" --standard
 		:: DEFINEBLOCK
 			rem python Create_Blocks.py "%nombre%" Blocks.tsx Blocks.png
 			python Create_Blocks.py "%nombre%" Blocks.tsx Blocks.png
