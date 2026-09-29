@@ -193,6 +193,7 @@ rem editar macro ZEROMOD para activar FixScreen y navegar entre Niveles o Stages
 
 :: Actualizar Stages en Proyecto si ConvertMode = ""
 	rem Trae Stages desde Proyecto
+	if %LevelEnabled% == 1 (
 		if not %ConvertMode% == "ConvertGame" (
 			rem Leer las variables de seleccion
 				call ..\..\seleccion
@@ -207,6 +208,7 @@ rem editar macro ZEROMOD para activar FixScreen y navegar entre Niveles o Stages
 						if exist "%project_dir%\Stages\SEC_ZERO_*.asm" del "%project_dir%\Stages\SEC_ZERO_*.asm" > nul
 				)
 		)
+	)
 	rem ... Version 9
 			
 :: Sound Mod MEIGA 2025 por Ramon Fernandez Ameijeiras
