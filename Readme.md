@@ -1,4 +1,4 @@
-# MEIGA 2025
+# MEIGA 2026
 
 Entorno de desarrollo, conversión y compilación para Diseño de juegos para ZX SPECTRUM, con integración en Tiled y ampliación del motor original AGD.
 
