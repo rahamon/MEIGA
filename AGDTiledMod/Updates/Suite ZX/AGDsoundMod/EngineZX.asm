@@ -32,7 +32,7 @@ FRONT	equ NUMTYP + 1		; tipo 10
 
 ; Sprites.
 
-NUMSPR equ 12              ; number of sprites. maximo 10 con MASKAGD
+NUMSPR equ 16              ; number of sprites. maximo 10 con MASKAGD
 
 	IF MASKAGD = 0
 		IF INFRONT = 1
@@ -970,7 +970,7 @@ laserm ld a,(ix+5)         ; y position.
        jr trailk           ; destroy laser.
 
 dots   defb 128,64,32,16,8,4,2,1
-
+		
 ; Plot, preserving de.
 
 plotde push de             ; put de on stack.
@@ -1352,6 +1352,7 @@ mloop
 	ENDIF
 		
 	IF MASKAGD = 0
+	;
 	; XOR routines
 		; A Impresion desprites impares
 			call vsync
@@ -1381,7 +1382,9 @@ sistmask
 		; aqui debería volver a RAMdeJuego desde ULABuffer
 		IF ULABUFFER = 1
 			; Conmuta Screen Buffer debería estar despues de evnt11 despues de In Front Plugin
+			IF SCROLL = 0
 				call FlipBufferSafe
+			ENDIF
 		ENDIF
 		call vsync			; vsync3f si ULABuffer
 endsistmask
@@ -1389,7 +1392,10 @@ endsistmask
 	
 	IF ULABUFFER = 1
 		; Conmuta Screen Buffer debería estar despues de evnt11 despues de In Front Plugin
-			;call FlipBufferSafe
+			IF SCROLL = 0
+				call FlipBufferSafe
+			ENDIF
+			;call FlipBufferSafe_ByThirds
 	ENDIF
 
 	; II En primer plano
@@ -1435,7 +1441,8 @@ evlp2  call evnt11         ; called once per main loop.
 bsortx
 	
 	IF MASKAGD = 0
-		call bsort          ; sort sprites.
+		; COMENTAR BSORT para ajustar solapamiento de segmentos de big-sprites
+		;call bsort          ; sort sprites.
 	ELSE
 
 		IF MASKAGD = 1		;incluir con rutina mascara _bucle_estable
@@ -2681,7 +2688,11 @@ tded1  ld a,(dispx)        ; vertical position.
        ld a,(hl)           ; fetch final type.
        ret                 ; return with final type in accumulator.
 
+TESTBLOCKX equ 1
 
+	IF TESTBLOCKX = 1
+		include "TestBlockPlusBlockx.asm"
+	ELSE
 ; Fetch block type at (dispx, dispy).
 
 tstbl  ld a,(dispx)        ; fetch x coord.
@@ -2704,7 +2715,8 @@ tstbl  ld a,(dispx)        ; fetch x coord.
        add hl,de           ; point to address.
        ld a,(hl)           ; fetch byte there.
        ret
-
+	ENDIF
+	
 ; Jump - if we can.
 ; Requires initial speed to be set up in accumulator prior to call.
 
@@ -3609,7 +3621,7 @@ grav0  ld a,(ix+14)        ; get distance to move.
        jr nc,gravu         ; it's up.
 gravd  ld b,a              ; set pixels to move.
 gravd0 call cangd          ; can we go down?
-       jr nz,gravst        ; can't move down, so stop.
+	   jr nz,gravst        ; can't move down, so stop.
        inc (ix+8)          ; adjust new x coord.
        djnz gravd0
        ret
