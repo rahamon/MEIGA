@@ -1,8 +1,8 @@
 # MEIGA 2025
 
-Entorno de desarrollo, conversión y compilación para proyectos AGD, con integración en Tiled y ampliación del motor original.
+Entorno de desarrollo, conversión y compilación para Diseño de juegos para ZX SPECTRUM, con integración en Tiled y ampliación del motor original AGD.
 
-MEIGA permite transformar, editar y compilar proyectos AGD utilizando un flujo de trabajo moderno, manteniendo compatibilidad con el formato original y extendiendo sus capacidades.
+MEIGA permite transformar, editar y compilar proyectos JUEGOS ZX SPECTRUM utilizando un flujo de trabajo moderno, manteniendo compatibilidad con el formato original y extendiendo sus capacidades.
 
 
 
@@ -25,18 +25,16 @@ El objetivo es proporcionar un sistema completo, modular y controlable para el d
 * Compilación completa del proyecto desde MEIGA
 * Generación automática de tilesets y mapas
 * Procesamiento de:
-
   * bloques (`DEFINEBLOCK`)
   * sprites (`DEFINESPRITE`)
   * objetos (`DEFINEOBJECT`)
   * fuentes (`DEFINEFONT`)
   * mensajes y eventos
-* Reconstrucción completa del archivo `.agd`
 * Separación de datos en recursos editables
 
 
 
-## Extensiones del motor AGD
+## Extensiones del motor original AGD
 
 MEIGA no solo trabaja con el formato original, sino que amplía sus capacidades mediante múltiples sistemas desarrollados durante los últimos años:
 
@@ -61,7 +59,7 @@ MEIGA no solo trabaja con el formato original, sino que amplía sus capacidades 
 * **Gestión de pantalla**
   Sistemas avanzados de desplazamiento y actualización gráfica.
 
-Estas extensiones permiten superar las limitaciones del AGD original manteniendo compatibilidad.
+Estas extensiones permiten superar las prestaciones del AGD original manteniendo compatibilidad.
 
 
 
@@ -69,11 +67,10 @@ Estas extensiones permiten superar las limitaciones del AGD original manteniendo
 
 1. Archivo original `.agd`
 2. Conversión a recursos editables:
-
    * Mapas (`.tmx`)
    * Tilesets (`.tsx`, `.png`)
 3. Edición en Tiled
-4. Reconstrucción del `.agd`
+4. Reconstrucción del juego
 5. Compilación final desde MEIGA
 
 
@@ -82,7 +79,7 @@ Estas extensiones permiten superar las limitaciones del AGD original manteniendo
 
 MEIGA es una implementación independiente que:
 
-* Reinterpreta el flujo de desarrollo de AGD
+* Reinterpreta el flujo de desarrollo y diseño
 * Integra herramientas modernas
 * Permite compilación autónoma
 * Amplía las capacidades del motor original
@@ -93,7 +90,7 @@ MEIGA es una implementación independiente que:
 
 MEIGA es compatible con proyectos basados en MPAGD:
 
-* Utiliza el formato `.agd` como base
+* Utiliza el formato `.agd` como base de datos
 * Implementa su propio sistema de procesamiento y compilación
 * No reutiliza código del proyecto original.
 
