@@ -86,7 +86,7 @@ setlocal enabledelayedexpansion
 			echo numpy ya instalado.
 		)
 		
-:: Check Core
+:: Check Core.
 :: MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalar previamente
 	echo MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalarlo previamente
 	echo Disponible en https://jonathan-cauldwell.itch.io/multi-platform-arcade-game-designer
