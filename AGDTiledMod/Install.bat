@@ -102,7 +102,7 @@ setlocal enabledelayedexpansion
 		:: Instala Core
 			call Compiler
 			xcopy "!compiler_exe!" "..\Suite ZX\AGD\" /Y
-			xcopy "!compiler_dir!\*.asm" "..\Suite ZX\AGD\" /Y
+			rem xcopy "!compiler_dir!\*.asm" "..\Suite ZX\AGD\" /Y
 		:: Istala Suite
 			xcopy "Updates\Suite ZX" "..\Suite ZX" /E /I /Y >nul
 			xcopy "Updates\UserRoutines" "..\UserRoutines" /E /I /Y >nul

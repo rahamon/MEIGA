@@ -1,1 +1,6 @@
 * text=auto eol=crlf
+
+# Excluir archivos de gestión en las descargas de los usuarios
+.gitignore export-ignore
+.gitattributes export-ignore
+**/.gitignore export-ignore
