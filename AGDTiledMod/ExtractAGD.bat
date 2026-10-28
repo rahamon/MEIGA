@@ -137,8 +137,8 @@
 		
 	:: Crear Proyecto Tiled
 		Copy "TiledAGD.Default-Project" "%project_name%.tiled-project" >nul
-	:: Importa nuevo MPAGDClass en Tiled
-		copy "MPAGDClass_prototipo.json" "%project_dir%\MPAGDClass.json"
+	:: Importa nuevo MPAGDClass en Tiled, ya hecho en LoadMod
+		REM copy "MPAGDClass_prototipo.json" "%project_dir%\MPAGDClass.json"
 
 		
 	:: Crear world access en el editor tiled
@@ -212,14 +212,14 @@
 	:: Abre Proyecto
 		start "MEIGA" "%project_name%.tiled-project"
 		
-	:: reset configuracion
-		endlocal
-		
 	:: regresa a MEIGA
 		cd /d "%meiga_dir%"
 		
-	GOTO:EOF
+	:: reset configuracion
+		endlocal
+		
 	EXIT
+	GOTO:EOF
 
 :LoadMod
 	:: Mueve estos archivos
