@@ -3,7 +3,7 @@
 
 			org 24832
 
-Databank	equ 6
+Screenbank	equ 6
 			;include "screensizes.asm"
 			jp InstallBankS 
 
