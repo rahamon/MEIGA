@@ -137,8 +137,8 @@
 		
 	:: Crear Proyecto Tiled
 		Copy "TiledAGD.Default-Project" "%project_name%.tiled-project" >nul
-	:: Importa nuevo MPAGDClass en Tiled, ya hecho en LoadMod
-		REM copy "MPAGDClass_prototipo.json" "%project_dir%\MPAGDClass.json"
+	:: Importa nuevo MPAGDClass en Tiled, ya esta copiado desde LoadMod.
+		REM copy "MPAGDClass.json" "%project_dir%\MPAGDClass.json"
 
 		
 	:: Crear world access en el editor tiled
@@ -234,5 +234,5 @@
 				echo Archivo no encontrado: AGDTiledMod%model%\%%F
 			)
 		)
-		
 	GOTO:EOF
+		
