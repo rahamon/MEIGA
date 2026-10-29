@@ -36,6 +36,13 @@ rem cuenta screens
 
 rem pie
 	echo 			ret				>> ScreenSelector.asm
+	if %screens% geq 1 (
+		echo		; muestra la primera como pantalla de carga	de %screens%		>> LoadDataScreens.asm
+		echo			ld hl,$c000			>> LoadDataScreens.asm
+		echo			ld a,Screenbank			>> LoadDataScreens.asm
+		echo			call showSplash			>> LoadDataScreens.asm
+		)
+		
 rem montaje
 :main
 	rem echo screens:%screens% para mod:%machinmod%
@@ -85,7 +92,7 @@ rem fin
 		..\tools\bin2tap -a 16384 "%screenuno%" -o SC.tap		>nul
 	rem limpia mocscreen
 		if exist mocscreen.scr del mocscreen.scr		>nul
-		echo SC.bat generada
+		echo SC.bat
 	GOTO:EOF
 	
 :scempty
@@ -145,7 +152,7 @@ rem fin
 	echo 			ld de,$c000 + %desplazamiento%			>> LoadDataScreens.asm
 	rem echo 			ld de,$c000 + (%screens%-1)*2800				; org %desplazamiento%			>> LoadDataScreens.asm
 	echo 			ld bc,%Nuevodesplazamiento%						;LONGSCREENS equ 2796 aprox			>> LoadDataScreens.asm
-	echo 			ld a,Databank			>> LoadDataScreens.asm
+	echo 			ld a,Screenbank			>> LoadDataScreens.asm
 	echo 			call SaveToBank					; swap y vuelve a bank0			>> LoadDataScreens.asm
 	echo+		>> LoadDataScreens.asm
 	
