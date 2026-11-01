@@ -124,7 +124,7 @@ En desarrollo activo.
 
 ## Licencia
 
-(Pendiente de definir)
+Puedes usarlo, respeta su autoría.
 
 
 
