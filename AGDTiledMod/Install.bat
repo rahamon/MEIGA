@@ -86,6 +86,10 @@ setlocal enabledelayedexpansion
 			echo numpy ya instalado.
 		)
 		
+:: Istala Suite
+	xcopy "Updates\Suite ZX" "..\Suite ZX" /E /I /Y >nul
+	xcopy "Updates\UserRoutines" "..\UserRoutines" /E /I /Y >nul
+	
 :: Check Core.
 :: MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalar previamente
 	echo MEIGA usa el Compilador de MPAGD 10.7 es necesario isntalarlo previamente
@@ -103,9 +107,6 @@ setlocal enabledelayedexpansion
 			call Compiler
 			xcopy "!compiler_exe!" "..\Suite ZX\AGD\" /Y
 			rem xcopy "!compiler_dir!\*.asm" "..\Suite ZX\AGD\" /Y
-		:: Istala Suite
-			xcopy "Updates\Suite ZX" "..\Suite ZX" /E /I /Y >nul
-			xcopy "Updates\UserRoutines" "..\UserRoutines" /E /I /Y >nul
 	)
 	echo Comprobaciones completadas.
 
